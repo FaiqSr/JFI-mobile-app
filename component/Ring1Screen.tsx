@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { FormInformation } from './FormInformation';
-import { FormProduct } from './FormProduct'; // Menggunakan FormProduct khusus Ring 1
+import { FormProduct } from './FormProduct';
 import { FormTime } from './FormTime';
 import { FormQuantity } from './FormQuantity';
 

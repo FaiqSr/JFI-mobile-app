@@ -65,12 +65,6 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = ({
   setNomorSO,
   jobDescription,
   setJobDescription,
-  jobNoted,
-  setJobNoted,
-  product,
-  setProduct,
-  materialType,
-  setMaterialType,
   size,
   setSize,
   classVal,
@@ -109,13 +103,11 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = ({
 }) => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 32 }}>
-      {/* HEADER */}
       <Text style={styles.headerTitle}>Production Sealing Element</Text>
       <Text style={styles.headerSubtitle}>
         Fill in the required information, product details, and production quantities.
       </Text>
 
-      {/* CARD 1: INFORMATION */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Information</Text>
 
@@ -153,7 +145,6 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = ({
         </View>
       </View>
 
-      {/* CARD 2: TYPE */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Type</Text>
         <View style={styles.rowTwoCol}>
@@ -180,7 +171,6 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = ({
         </View>
       </View>
 
-      {/* CARD 3: MATERIAL */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Material</Text>
 
@@ -231,7 +221,6 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = ({
         </View>
       </View>
 
-      {/* CARD 4: TIME & ACTIVITIES */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Time & Activities</Text>
 
@@ -263,7 +252,6 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = ({
           </Text>
         </TouchableOpacity>
 
-        {/* DOWNTIME FIELDS */}
         <View style={styles.rowTwoCol}>
           <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
             <Text style={styles.label}>Ganti Order - A</Text>

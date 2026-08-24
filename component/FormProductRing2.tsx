@@ -69,7 +69,6 @@ export const FormProductRing2: React.FC<FormProductRing2Props> = ({
         </View>
       </View>
 
-      {/* Tambahan Khusus Ring 2 */}
       <CustomInput
         label="Work Type"
         placeholder="Enter work type"

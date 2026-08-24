@@ -9,7 +9,6 @@ interface HomeScreenProps {
 export const HomeScreen = ({ onNavigate }: HomeScreenProps) => {
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Logo */}
       <View style={styles.logoContainer}>
         <Image
           source={require('../assets/logoapps.png')}
@@ -18,7 +17,6 @@ export const HomeScreen = ({ onNavigate }: HomeScreenProps) => {
         />
       </View>
 
-      {/* Title Badge & Divider */}
       <View style={styles.badgeContainer}>
         <Text style={styles.badgeText}>WORK SHEET</Text>
       </View>
@@ -29,7 +27,6 @@ export const HomeScreen = ({ onNavigate }: HomeScreenProps) => {
         <View style={styles.line} />
       </View>
 
-      {/* Menu Buttons */}
       <View style={styles.menuContainer}>
         <MenuButton title="RING 1" onPress={() => onNavigate('RING_1')} />
         <MenuButton title="RING 2" onPress={() => onNavigate('RING_2')} />

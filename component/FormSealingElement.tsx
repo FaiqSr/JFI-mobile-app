@@ -3,19 +3,16 @@ import { View, Text, StyleSheet } from 'react-native';
 import { CustomInput } from './CustomInput';
 
 interface FormSealingElementProps {
-  // Information
   namaOperator: string;
   setNamaOperator: (v: string) => void;
   nomorSO: string;
   setNomorSO: (v: string) => void;
   jobDescription: string;
   setJobDescription: (v: string) => void;
-  // Type
   size: string;
   setSize: (v: string) => void;
   classVal: string;
   setClassVal: (v: string) => void;
-  // Material
   hoop: string;
   setHoop: (v: string) => void;
   filler: string;
@@ -29,7 +26,6 @@ interface FormSealingElementProps {
 export const FormSealingElement: React.FC<FormSealingElementProps> = (props) => {
   return (
     <>
-      {/* Information Card */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Information</Text>
         <CustomInput
@@ -52,7 +48,6 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = (props) => 
         />
       </View>
 
-      {/* Type Card */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Type</Text>
         <View style={styles.row}>

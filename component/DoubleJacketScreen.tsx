@@ -109,7 +109,6 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
         parseIntegerInput={props.parseIntegerInput}
       />
 
-      {/* Card Quantity Khusus Double Jacket (Berampingan) */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Quantity</Text>
         <View style={styles.row}>

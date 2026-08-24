@@ -49,7 +49,6 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
 }) => {
   return (
     <>
-      {/* 1. Card Information */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Information</Text>
 
@@ -67,7 +66,6 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           onChangeText={setNomorSO}
         />
 
-        {/* Product Name & Product Type Berampingan */}
         <View style={styles.row}>
           <View style={styles.col}>
             <CustomInput
@@ -95,11 +93,9 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
         />
       </View>
 
-      {/* 2. Card Size */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Size</Text>
 
-        {/* ID & OD Berampingan */}
         <View style={styles.row}>
           <View style={styles.col}>
             <CustomInput
@@ -127,11 +123,9 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
         />
       </View>
 
-      {/* 3. Card Material */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Material</Text>
 
-        {/* METAL & FILLER Berampingan */}
         <View style={styles.row}>
           <View style={styles.col}>
             <CustomInput
