@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#0F172A',
     marginBottom: 4,
-    marginTop: 16,
+    marginTop: 30,
   },
   headerSubtitle: {
     fontFamily: 'Hanuman',
