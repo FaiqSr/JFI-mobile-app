@@ -1,11 +1,12 @@
 import React from 'react';
 import { ScrollView, Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import { FormInformation } from './FormInformation';
-import { FormProductRing2 } from './FormProductRing2';
-import { FormTime } from './FormTime';
-import { FormQuantity } from './FormQuantity';
 
-interface Ring2ScreenProps {
+import { FormInformationSE } from '../component/forms/FormInformationSE';
+import { FormSealingElement } from '../component/forms/FormSealingElement';
+import { FormTime } from '../component/forms/FormTime';
+import { FormQuantity } from '../component/forms/FormQuantity';
+
+export interface SealingElementScreenProps {
   namaOperator: string;
   setNamaOperator: (v: string) => void;
   nomorSO: string;
@@ -14,16 +15,24 @@ interface Ring2ScreenProps {
   setJobDescription: (v: string) => void;
   jobNoted: string;
   setJobNoted: (v: string) => void;
-  product: string;
-  setProduct: (v: string) => void;
-  materialType: string;
-  setMaterialType: (v: string) => void;
   size: string;
   setSize: (v: string) => void;
   classVal: string;
   setClassVal: (v: string) => void;
-  workType: string;
-  setWorkType: (v: string) => void;
+  notedSize: string;
+  setNotedSize: (v: string) => void;
+  hoop: string;
+  setHoop: (v: string) => void;
+  thickness: string;
+  setThickness: (val: string) => void;
+  filler: string;
+  setFiller: (v: string) => void;
+  ir: string;
+  setIr: (v: string) => void;
+  orVal: string;
+  setOrVal: (v: string) => void;
+  materialNoted: string;
+  setMaterialNoted: (v: string) => void;
   startTimestamp: number | null;
   stopTimestamp: number | null;
   isStarted: boolean;
@@ -49,7 +58,7 @@ interface Ring2ScreenProps {
   onClear: () => void;
 }
 
-export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
+export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props) => {
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContent}
@@ -57,12 +66,12 @@ export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets={true}
     >
-      <Text style={styles.pageTitle}>Production Ring 2</Text>
+      <Text style={styles.pageTitle}>Production Sealing Element</Text>
       <Text style={styles.pageSubtitle}>
         Fill in the required information, product details, and production quantities.
       </Text>
 
-      <FormInformation
+      <FormInformationSE
         namaOperator={props.namaOperator}
         setNamaOperator={props.setNamaOperator}
         nomorSO={props.nomorSO}
@@ -73,17 +82,25 @@ export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
         setJobNoted={props.setJobNoted}
       />
 
-      <FormProductRing2
-        product={props.product}
-        setProduct={props.setProduct}
-        materialType={props.materialType}
-        setMaterialType={props.setMaterialType}
+      <FormSealingElement
         size={props.size}
         setSize={props.setSize}
-        classVal={props.classVal}
-        setClassVal={props.setClassVal}
-        workType={props.workType}
-        setWorkType={props.setWorkType}
+        className={props.classVal}
+        setClassName={props.setClassVal}
+        thickness={props.thickness}
+        setThickness={props.setThickness}
+        notedSize={props.notedSize}
+        setNotedSize={props.setNotedSize}
+        hoop={props.hoop}
+        setHoop={props.setHoop}
+        filler={props.filler}
+        setFiller={props.setFiller}
+        ir={props.ir}
+        setIr={props.setIr}
+        orVal={props.orVal}
+        setOrVal={props.setOrVal}
+        materialNoted={props.materialNoted}
+        setMaterialNoted={props.setMaterialNoted}
       />
 
       <FormTime
@@ -131,7 +148,7 @@ export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  scrollContent: { padding: 20, paddingTop: 30, paddingBottom: 40, backgroundColor: '#F8F9FA' },
+  scrollContent: { padding: 20, paddingTop: 45, paddingBottom: 40, backgroundColor: '#F8F9FA' },
   pageTitle: { fontSize: 26, fontFamily: 'Hanuman', color: '#101828', marginBottom: 6 },
   pageSubtitle: { fontSize: 13, color: '#667085', fontFamily: 'Hanuman', marginBottom: 20, lineHeight: 18 },
   actionRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },

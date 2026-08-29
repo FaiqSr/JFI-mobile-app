@@ -1,30 +1,38 @@
 import React from 'react';
 import { ScrollView, Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import { FormDoubleJacket } from './FormDoubleJacket';
-import { FormTime } from './FormTime';
-import { CustomInput } from './CustomInput';
 
-interface DoubleJacketScreenProps {
+import { FormInformationDJG } from '../component/forms/FormInformationDJG';
+import { FormDoubleJacket } from '../component/forms/FormDoubleJacket';
+import { FormTime } from '../component/forms/FormTime';
+import { FormQuantityDJG } from '../component/forms/FormQuantityDJG';
+
+export interface DoubleJacketScreenProps {
   namaOperator: string;
   setNamaOperator: (v: string) => void;
   nomorSO: string;
   setNomorSO: (v: string) => void;
-  productName: string;
-  setProductName: (v: string) => void;
   jobDescription: string;
   setJobDescription: (v: string) => void;
-  workType?: string;
-  setWorkType?: (v: string) => void;
+  jobNoted: string;
+  setJobNoted: (v: string) => void;
+  productName: string;
+  setProductName: (v: string) => void;
+  productType: string;
+  setProductType: (v: string) => void;
   idVal: string;
   setIdVal: (v: string) => void;
   odVal: string;
   setOdVal: (v: string) => void;
   thickness: string;
   setThickness: (v: string) => void;
+  notedSize?: string;
+  setNotedSize?: (v: string) => void;
   metal: string;
   setMetal: (v: string) => void;
   filler: string;
   setFiller: (v: string) => void;
+  materialNoted?: string;
+  setMaterialNoted?: (v: string) => void;
   startTimestamp: number | null;
   stopTimestamp: number | null;
   isStarted: boolean;
@@ -60,12 +68,12 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets={true}
     >
-      <Text style={styles.pageTitle}>Production Double Jacket Gasket</Text>
+      <Text style={styles.pageTitle}>Production Double Jacketed</Text>
       <Text style={styles.pageSubtitle}>
         Fill in the required information, product details, and production quantities.
       </Text>
 
-      <FormDoubleJacket
+      <FormInformationDJG
         namaOperator={props.namaOperator}
         setNamaOperator={props.setNamaOperator}
         nomorSO={props.nomorSO}
@@ -74,18 +82,27 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
         setProductName={props.setProductName}
         jobDescription={props.jobDescription}
         setJobDescription={props.setJobDescription}
-        workType={props.workType}
-        setWorkType={props.setWorkType}
+        jobNoted={props.jobNoted}
+        setJobNoted={props.setJobNoted}
+      />
+
+      <FormDoubleJacket
         idVal={props.idVal}
         setIdVal={props.setIdVal}
         odVal={props.odVal}
         setOdVal={props.setOdVal}
+        productType={props.productType}
+        setProductType={props.setProductType}
         thickness={props.thickness}
         setThickness={props.setThickness}
+        notedSize={props.notedSize}
+        setNotedSize={props.setNotedSize}
         metal={props.metal}
         setMetal={props.setMetal}
         filler={props.filler}
         setFiller={props.setFiller}
+        materialNoted={props.materialNoted}
+        setMaterialNoted={props.setMaterialNoted}
       />
 
       <FormTime
@@ -109,29 +126,13 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
         parseIntegerInput={props.parseIntegerInput}
       />
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Quantity</Text>
-        <View style={styles.row}>
-          <View style={styles.col}>
-            <CustomInput
-              label="Finish Good"
-              placeholder="0"
-              value={props.finishGood === 0 ? '' : props.finishGood.toString()}
-              onChangeText={(text) => props.setFinishGood(props.parseIntegerInput(text))}
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={styles.col}>
-            <CustomInput
-              label="Rework"
-              placeholder="0"
-              value={props.rework === 0 ? '' : props.rework.toString()}
-              onChangeText={(text) => props.setRework(props.parseIntegerInput(text))}
-              keyboardType="numeric"
-            />
-          </View>
-        </View>
-      </View>
+      <FormQuantityDJG
+        finishGood={props.finishGood}
+        setFinishGood={props.setFinishGood}
+        rework={props.rework}
+        setRework={props.setRework}
+        parseIntegerInput={props.parseIntegerInput}
+      />
 
       <View style={styles.actionRow}>
         <TouchableOpacity style={styles.actionButtonHalf} onPress={props.onBack}>
@@ -151,13 +152,9 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
 };
 
 const styles = StyleSheet.create({
-  scrollContent: { padding: 20, paddingTop: 30, paddingBottom: 40, backgroundColor: '#F8F9FA' },
+  scrollContent: { padding: 20, paddingTop: 45, paddingBottom: 40, backgroundColor: '#F8F9FA' },
   pageTitle: { fontSize: 26, fontFamily: 'Hanuman', color: '#101828', marginBottom: 6 },
   pageSubtitle: { fontSize: 13, color: '#667085', fontFamily: 'Hanuman', marginBottom: 20, lineHeight: 18 },
-  card: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 16, marginBottom: 16, borderWidth: 1, borderColor: '#EAECF0' },
-  cardTitle: { fontSize: 18, fontFamily: 'Hanuman', color: '#101828', marginBottom: 16 },
-  row: { flexDirection: 'row', justifyContent: 'space-between' },
-  col: { width: '48%' },
   actionRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
   actionButtonHalf: { backgroundColor: '#000000', paddingVertical: 12, borderRadius: 10, alignItems: 'center', width: '48%' },
   clearButtonFull: { backgroundColor: '#CC0000', paddingVertical: 12, borderRadius: 10, alignItems: 'center', width: '100%' },

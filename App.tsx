@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,12 +8,24 @@ import {
   View,
 } from 'react-native';
 import { useFonts } from 'expo-font';
-import { HomeScreen } from './component/HomeScreen';
-import { Ring1Screen } from './component/Ring1Screen';
-import { Ring2Screen } from './component/Ring2Screen';
-import { Ring3Screen } from './component/Ring3Screen';
-import { SealingElementScreen } from './component/SealingElementScreen';
-import { DoubleJacketScreen } from './component/DoubleJacketScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { HomeScreen } from './src/screen/HomeScreen';
+import { Ring1Screen } from './src/screen/Ring1Screen';
+import { Ring2Screen } from './src/screen/Ring2Screen';
+import { Ring3Screen } from './src/screen/Ring3Screen';
+import { SealingElementScreen } from './src/screen/SealingElementScreen';
+import { DoubleJacketScreen } from './src/screen/DoubleJacketScreen';
+
+import { ScreenType, ScreenFormData, initialFormState } from './src/type/FormType';
+import {
+  submitProductionData,
+  getRingProps,
+  getSealingProps,
+  getDoubleJacketProps,
+} from './src/api/FormService';
+
+const DRAFT_KEY = '@app_form_draft_v3';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -21,44 +33,78 @@ export default function App() {
     Hanuman: require('./assets/Hanuman-Regular.ttf'),
   });
 
-  const [currentScreen, setCurrentScreen] = useState<
-    'HOME' | 'RING_1' | 'RING_2' | 'RING_3' | 'SEALING_ELEMENT' | 'DOUBLE_JACKETED'
-  >('HOME');
-
-  const [namaOperator, setNamaOperator] = useState('');
-  const [nomorSO, setNomorSO] = useState('');
-  const [jobDescription, setJobDescription] = useState('');
-  const [jobNoted, setJobNoted] = useState('');
-  const [product, setProduct] = useState('');
-  const [materialType, setMaterialType] = useState('');
-  const [size, setSize] = useState('');
-  const [classVal, setClassVal] = useState('');
-  const [workType, setWorkType] = useState('');
-
-  const [startTimestamp, setStartTimestamp] = useState<number | null>(null);
-  const [stopTimestamp, setStopTimestamp] = useState<number | null>(null);
-  const [isStarted, setIsStarted] = useState(false);
-
-  const [gantiOrder, setGantiOrder] = useState<number>(0);
-  const [repair, setRepair] = useState<number>(0);
-  const [materialTunggu, setMaterialTunggu] = useState<number>(0);
-  const [operatorTime, setOperatorTime] = useState<number>(0);
-  const [maintenance, setMaintenance] = useState<number>(0);
-  const [checking, setChecking] = useState<number>(0);
-  const [finishGood, setFinishGood] = useState<number>(0);
-  const [hoop, setHoop] = useState('');
-  const [filler, setFiller] = useState('');
-  const [ir, setIr] = useState('');
-  const [orVal, setOrVal] = useState('');
-
-  const [productName, setProductName] = useState('');
-  const [idVal, setIdVal] = useState('');
-  const [odVal, setOdVal] = useState('');
-  const [thickness, setThickness] = useState('');
-  const [metal, setMetal] = useState('');
-  const [rework, setRework] = useState<number>(0);
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>('HOME');
+  const [formsData, setFormsData] = useState<Record<string, ScreenFormData>>({
+    RING_1: { ...initialFormState },
+    RING_2: { ...initialFormState },
+    RING_3: { ...initialFormState },
+    SEALING_ELEMENT: { ...initialFormState },
+    DOUBLE_JACKETED: { ...initialFormState },
+  });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isRestored, setIsRestored] = useState(false);
+
+  const updateFormField = <K extends keyof ScreenFormData>(
+    screen: ScreenType,
+    field: K,
+    value: ScreenFormData[K]
+  ) => {
+    setFormsData((prev) => ({
+      ...prev,
+      [screen]: {
+        ...prev[screen],
+        [field]: value,
+      },
+    }));
+  };
+
+  useEffect(() => {
+    const loadSavedDraft = async () => {
+      try {
+        const jsonDraft = await AsyncStorage.getItem(DRAFT_KEY);
+        if (jsonDraft !== null) {
+          const draft = JSON.parse(jsonDraft);
+          if (draft.currentScreen) setCurrentScreen(draft.currentScreen);
+          if (draft.formsData) setFormsData(draft.formsData);
+        }
+      } catch (e) {
+        console.error('Gagal memuat draf:', e);
+      } finally {
+        setIsRestored(true);
+      }
+    };
+
+    loadSavedDraft();
+  }, []);
+
+  useEffect(() => {
+    if (!isRestored) return;
+
+    const timer = setTimeout(async () => {
+      try {
+        const draftData = { currentScreen, formsData };
+        await AsyncStorage.setItem(DRAFT_KEY, JSON.stringify(draftData));
+      } catch (e) {
+        console.error('Gagal menyimpan draf:', e);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [isRestored, currentScreen, formsData]);
+
+  const handleClear = useCallback(() => {
+    if (currentScreen === 'HOME') return;
+
+    setFormsData((prev) => ({
+      ...prev,
+      [currentScreen]: { ...initialFormState },
+    }));
+  }, [currentScreen]);
+
+  const handleNavigate = useCallback((screen: ScreenType) => {
+    setCurrentScreen(screen);
+  }, []);
 
   useEffect(() => {
     const backAction = () => {
@@ -69,7 +115,10 @@ export default function App() {
       return false;
     };
 
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
     return () => backHandler.remove();
   }, [currentScreen]);
 
@@ -87,220 +136,57 @@ export default function App() {
   };
 
   const handleToggleStartStop = () => {
-    if (!isStarted) {
-      setStartTimestamp(Date.now());
-      setStopTimestamp(null);
-      setIsStarted(true);
-    } else {
-      setStopTimestamp(Date.now());
-      setIsStarted(false);
-    }
-  };
+    if (currentScreen === 'HOME') return;
+    const currentData = formsData[currentScreen];
 
-  const handleClear = () => {
-    setNamaOperator('');
-    setNomorSO('');
-    setJobDescription('');
-    setJobNoted('');
-    setProduct('');
-    setMaterialType('');
-    setSize('');
-    setClassVal('');
-    setWorkType('');
-    setStartTimestamp(null);
-    setStopTimestamp(null);
-    setIsStarted(false);
-    setGantiOrder(0);
-    setRepair(0);
-    setMaterialTunggu(0);
-    setOperatorTime(0);
-    setMaintenance(0);
-    setChecking(0);
-    setFinishGood(0);
-    setHoop('');
-    setFiller('');
-    setIr('');
-    setOrVal('');
-    setProductName('');
-    setIdVal('');
-    setOdVal('');
-    setThickness('');
-    setMetal('');
-    setRework(0);
+    if (!currentData.isStarted) {
+      updateFormField(currentScreen, 'startTimestamp', Date.now());
+      updateFormField(currentScreen, 'stopTimestamp', null);
+      updateFormField(currentScreen, 'isStarted', true);
+    } else {
+      updateFormField(currentScreen, 'stopTimestamp', Date.now());
+      updateFormField(currentScreen, 'isStarted', false);
+    }
   };
 
   const handleSimpan = async () => {
-    const BASE_URL = 'http://192.168.30.188/produksi';
+    if (currentScreen === 'HOME') return;
+    const activeData = formsData[currentScreen];
 
-    let endpoint = '';
-    let payload: any = {};
-
-    const strStart = startTimestamp ? formatHHMM(startTimestamp) : '';
-    const strEnd = stopTimestamp ? formatHHMM(stopTimestamp) : '';
-
-    switch (currentScreen) {
-      case 'RING_1':
-        endpoint = '/api/ring-satu';
-        payload = {
-          namaOperator,
-          jobDescription,
-          notedJobdesc: jobNoted || '',
-          soNo: nomorSO,
-          materialType,
-          productName: product || productName,
-          size,
-          class: classVal,
-          timeStart: strStart,
-          timeEnd: strEnd,
-          gantiOrderA: gantiOrder,
-          repairB: repair,
-          materialTungguC: materialTunggu,
-          operatorD: operatorTime,
-          maintenanceE: maintenance,
-          checkingF: checking,
-          finishGoodFG: finishGood,
-        };
-        break;
-
-      case 'RING_2':
-        endpoint = '/api/ring-dua';
-        payload = {
-          namaOperator,
-          jobDescription,
-          notedJobdesc: jobNoted || '',
-          soNo: nomorSO,
-          workType,
-          materialType,
-          productName: product || productName,
-          size,
-          class: classVal,
-          timeStart: strStart,
-          timeEnd: strEnd,
-          gantiOrderA: gantiOrder,
-          repairB: repair,
-          materialTungguC: materialTunggu,
-          operatorD: operatorTime,
-          maintenanceE: maintenance,
-          checkingF: checking,
-          finishGoodFG: finishGood,
-        };
-        break;
-
-      case 'RING_3':
-        endpoint = '/api/ring-tiga';
-        payload = {
-          namaOperator,
-          jobDescription,
-          notedJobdesc: jobNoted || '',
-          productName: product || productName,
-          materialType,
-          size,
-          class: classVal,
-          thickness: thickness || '',
-          notedSizeOrClass: '',
-          timeStart: strStart,
-          timeEnd: strEnd,
-          gantiOrderA: gantiOrder,
-          repairB: repair,
-          materialTungguC: materialTunggu,
-          operatorD: operatorTime,
-          maintenanceE: maintenance,
-          checkingF: checking,
-          finishGoodFG: finishGood,
-        };
-        break;
-
-      case 'DOUBLE_JACKETED':
-        endpoint = '/api/djg';
-        payload = {
-          namaOperator,
-          productName: product || productName,
-          soNo: nomorSO,
-          jobDescription,
-          typeProduct: workType || '',
-          innerDiameter: idVal,
-          outerDiameter: odVal,
-          thickness: thickness || '',
-          timeStart: strStart,
-          timeEnd: strEnd,
-          fg: finishGood,
-          metal: parseIntegerInput(metal),
-          filler: parseIntegerInput(filler),
-        };
-        break;
-
-      case 'SEALING_ELEMENT':
-        endpoint = '/api/se';
-        payload = {
-          namaOperator,
-          soNo: nomorSO,
-          jobDescription,
-          size,
-          class: classVal,
-          hoop,
-          filler,
-          innerRing: ir,
-          outerRing: orVal,
-          timeStart: strStart,
-          timeEnd: strEnd,
-          gantiOrderA: gantiOrder,
-          repairB: repair,
-          materialTungguC: materialTunggu,
-          operatorD: operatorTime,
-          maintenanceE: maintenance,
-          checkingF: checking,
-          finishGoodFG: finishGood,
-        };
-        break;
-
-      default:
-        Alert.alert('Error', 'Layar tidak dikenali.');
-        return;
+    if (!activeData.startTimestamp) {
+      Alert.alert('Gagal', 'Tombol START belum ditekan!');
+      return;
     }
+    if (activeData.isStarted || !activeData.stopTimestamp) {
+      Alert.alert(
+        'Gagal',
+        'Tombol STOP belum ditekan! Silakan tekan STOP terlebih dahulu.'
+      );
+      return;
+    }
+
+    const strStart = formatHHMM(activeData.startTimestamp);
+    const strEnd = formatHHMM(activeData.stopTimestamp);
 
     try {
       setIsLoading(true);
-
-      const response = await fetch(`${BASE_URL}${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const rawText = await response.text();
-      let result: any = {};
-
-      try {
-        result = JSON.parse(rawText);
-      } catch (e) {
-        Alert.alert('Server Error', `Server mengembalikan format non-JSON (Status ${response.status})`);
-        setIsLoading(false);
-        return;
-      }
-
-      if (response.status === 201 || response.ok) {
-        Alert.alert('Sukses', result.message || 'Data produksi berhasil disimpan.');
+      const isSuccess = await submitProductionData(
+        currentScreen,
+        activeData,
+        strStart,
+        strEnd
+      );
+      if (isSuccess) {
         handleClear();
-      } else if (response.status === 400) {
-        const errorDetails = result.errors
-          ? result.errors.map((e: any) => `- ${e.field}: ${e.message}`).join('\n')
-          : result.message;
-        Alert.alert('Validasi Gagal (400)', errorDetails || 'Mohon periksa kembali inputan Anda.');
-      } else {
-        Alert.alert('Error', result.message || `Terjadi kesalahan server (${response.status})`);
       }
     } catch (error) {
-      Alert.alert('Koneksi Gagal', 'Tidak dapat terhubung ke server backend.');
-      console.error('Error POST API:', error);
+      Alert.alert('Kendala Jaringan', `${error}`);
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !isRestored) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#000000" />
@@ -308,247 +194,52 @@ export default function App() {
     );
   }
 
+  // Helper options untuk dikirimkan ke mapper di FormService
+  const helperOptions = {
+    formsData,
+    updateFormField,
+    handleToggleStartStop,
+    formatHHMM,
+    parseIntegerInput,
+    handleNavigate,
+    handleSimpan,
+    handleClear,
+  };
+
+  const renderScreen = () => {
+    switch (currentScreen) {
+      case 'HOME':
+        return <HomeScreen onNavigate={handleNavigate} />;
+
+      case 'RING_1':
+        return <Ring1Screen {...getRingProps('RING_1', helperOptions)} />;
+
+      case 'RING_2':
+        return <Ring2Screen {...getRingProps('RING_2', helperOptions)} />;
+
+      case 'RING_3':
+        return <Ring3Screen {...getRingProps('RING_3', helperOptions)} />;
+
+      case 'SEALING_ELEMENT':
+        return <SealingElementScreen {...getSealingProps(helperOptions)} />;
+
+      case 'DOUBLE_JACKETED':
+        return <DoubleJacketScreen {...getDoubleJacketProps(helperOptions)} />;
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {currentScreen === 'HOME' && (
-        <HomeScreen onNavigate={(screen: any) => setCurrentScreen(screen)} />
+      {isLoading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
       )}
 
-      {currentScreen === 'RING_1' && (
-        <Ring1Screen
-          namaOperator={namaOperator}
-          setNamaOperator={setNamaOperator}
-          nomorSO={nomorSO}
-          setNomorSO={setNomorSO}
-          jobDescription={jobDescription}
-          setJobDescription={setJobDescription}
-          jobNoted={jobNoted}
-          setJobNoted={setJobNoted}
-          product={product}
-          setProduct={setProduct}
-          materialType={materialType}
-          setMaterialType={setMaterialType}
-          size={size}
-          setSize={setSize}
-          classVal={classVal}
-          setClassVal={setClassVal}
-          startTimestamp={startTimestamp}
-          stopTimestamp={stopTimestamp}
-          isStarted={isStarted}
-          handleToggleStartStop={handleToggleStartStop}
-          formatHHMM={formatHHMM}
-          gantiOrder={gantiOrder}
-          setGantiOrder={setGantiOrder}
-          repair={repair}
-          setRepair={setRepair}
-          materialTunggu={materialTunggu}
-          setMaterialTunggu={setMaterialTunggu}
-          operatorTime={operatorTime}
-          setOperatorTime={setOperatorTime}
-          maintenance={maintenance}
-          setMaintenance={setMaintenance}
-          checking={checking}
-          setChecking={setChecking}
-          finishGood={finishGood}
-          setFinishGood={setFinishGood}
-          parseIntegerInput={parseIntegerInput}
-          onBack={() => setCurrentScreen('HOME')}
-          onSave={handleSimpan}
-          onClear={handleClear}
-        />
-      )}
-
-      {currentScreen === 'RING_2' && (
-        <Ring2Screen
-          namaOperator={namaOperator}
-          setNamaOperator={setNamaOperator}
-          nomorSO={nomorSO}
-          setNomorSO={setNomorSO}
-          jobDescription={jobDescription}
-          setJobDescription={setJobDescription}
-          jobNoted={jobNoted}
-          setJobNoted={setJobNoted}
-          product={product}
-          setProduct={setProduct}
-          materialType={materialType}
-          setMaterialType={setMaterialType}
-          size={size}
-          setSize={setSize}
-          classVal={classVal}
-          setClassVal={setClassVal}
-          workType={workType}
-          setWorkType={setWorkType}
-          startTimestamp={startTimestamp}
-          stopTimestamp={stopTimestamp}
-          isStarted={isStarted}
-          handleToggleStartStop={handleToggleStartStop}
-          formatHHMM={formatHHMM}
-          gantiOrder={gantiOrder}
-          setGantiOrder={setGantiOrder}
-          repair={repair}
-          setRepair={setRepair}
-          materialTunggu={materialTunggu}
-          setMaterialTunggu={setMaterialTunggu}
-          operatorTime={operatorTime}
-          setOperatorTime={setOperatorTime}
-          maintenance={maintenance}
-          setMaintenance={setMaintenance}
-          checking={checking}
-          setChecking={setChecking}
-          finishGood={finishGood}
-          setFinishGood={setFinishGood}
-          parseIntegerInput={parseIntegerInput}
-          onBack={() => setCurrentScreen('HOME')}
-          onSave={handleSimpan}
-          onClear={handleClear}
-        />
-      )}
-
-      {currentScreen === 'RING_3' && (
-        <Ring3Screen
-          namaOperator={namaOperator}
-          setNamaOperator={setNamaOperator}
-          nomorSO={nomorSO}
-          setNomorSO={setNomorSO}
-          jobDescription={jobDescription}
-          setJobDescription={setJobDescription}
-          jobNoted={jobNoted}
-          setJobNoted={setJobNoted}
-          product={product}
-          setProduct={setProduct}
-          materialType={materialType}
-          setMaterialType={setMaterialType}
-          size={size}
-          setSize={setSize}
-          classVal={classVal}
-          setClassVal={setClassVal}
-          startTimestamp={startTimestamp}
-          stopTimestamp={stopTimestamp}
-          isStarted={isStarted}
-          handleToggleStartStop={handleToggleStartStop}
-          formatHHMM={formatHHMM}
-          gantiOrder={gantiOrder}
-          setGantiOrder={setGantiOrder}
-          repair={repair}
-          setRepair={setRepair}
-          materialTunggu={materialTunggu}
-          setMaterialTunggu={setMaterialTunggu}
-          operatorTime={operatorTime}
-          setOperatorTime={setOperatorTime}
-          maintenance={maintenance}
-          setMaintenance={setMaintenance}
-          checking={checking}
-          setChecking={setChecking}
-          finishGood={finishGood}
-          setFinishGood={setFinishGood}
-          parseIntegerInput={parseIntegerInput}
-          onBack={() => setCurrentScreen('HOME')}
-          onSave={handleSimpan}
-          onClear={handleClear}
-        />
-      )}
-
-      {currentScreen === 'SEALING_ELEMENT' && (
-        <SealingElementScreen
-          namaOperator={namaOperator}
-          setNamaOperator={setNamaOperator}
-          nomorSO={nomorSO}
-          setNomorSO={setNomorSO}
-          jobDescription={jobDescription}
-          setJobDescription={setJobDescription}
-          jobNoted={jobNoted}
-          setJobNoted={setJobNoted}
-          product={product}
-          setProduct={setProduct}
-          materialType={materialType}
-          setMaterialType={setMaterialType}
-          size={size}
-          setSize={setSize}
-          classVal={classVal}
-          setClassVal={setClassVal}
-          hoop={hoop}
-          setHoop={setHoop}
-          filler={filler}
-          setFiller={setFiller}
-          ir={ir}
-          setIr={setIr}
-          orVal={orVal}
-          setOrVal={setOrVal}
-          startTimestamp={startTimestamp}
-          stopTimestamp={stopTimestamp}
-          isStarted={isStarted}
-          handleToggleStartStop={handleToggleStartStop}
-          formatHHMM={formatHHMM}
-          gantiOrder={gantiOrder}
-          setGantiOrder={setGantiOrder}
-          repair={repair}
-          setRepair={setRepair}
-          materialTunggu={materialTunggu}
-          setMaterialTunggu={setMaterialTunggu}
-          operatorTime={operatorTime}
-          setOperatorTime={setOperatorTime}
-          maintenance={maintenance}
-          setMaintenance={setMaintenance}
-          checking={checking}
-          setChecking={setChecking}
-          finishGood={finishGood}
-          setFinishGood={setFinishGood}
-          parseIntegerInput={parseIntegerInput}
-          onBack={() => setCurrentScreen('HOME')}
-          onSave={handleSimpan}
-          onClear={handleClear}
-        />
-      )}
-
-      {currentScreen === 'DOUBLE_JACKETED' && (
-        <DoubleJacketScreen
-          namaOperator={namaOperator}
-          setNamaOperator={setNamaOperator}
-          nomorSO={nomorSO}
-          setNomorSO={setNomorSO}
-          productName={productName}
-          setProductName={setProductName}
-          jobDescription={jobDescription}
-          setJobDescription={setJobDescription}
-          workType={workType}
-          setWorkType={setWorkType}
-          idVal={idVal}
-          setIdVal={setIdVal}
-          odVal={odVal}
-          setOdVal={setOdVal}
-          thickness={thickness}
-          setThickness={setThickness}
-          metal={metal}
-          setMetal={setMetal}
-          filler={filler}
-          setFiller={setFiller}
-          startTimestamp={startTimestamp}
-          stopTimestamp={stopTimestamp}
-          isStarted={isStarted}
-          handleToggleStartStop={handleToggleStartStop}
-          formatHHMM={formatHHMM}
-          gantiOrder={gantiOrder}
-          setGantiOrder={setGantiOrder}
-          repair={repair}
-          setRepair={setRepair}
-          materialTunggu={materialTunggu}
-          setMaterialTunggu={setMaterialTunggu}
-          operatorTime={operatorTime}
-          setOperatorTime={setOperatorTime}
-          maintenance={maintenance}
-          setMaintenance={setMaintenance}
-          checking={checking}
-          setChecking={setChecking}
-          finishGood={finishGood}
-          setFinishGood={setFinishGood}
-          rework={rework}
-          setRework={setRework}
-          parseIntegerInput={parseIntegerInput}
-          onBack={() => setCurrentScreen('HOME')}
-          onSave={handleSimpan}
-          onClear={handleClear}
-        />
-      )}
+      {renderScreen()}
     </SafeAreaView>
   );
 }
@@ -562,5 +253,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999,
   },
 });

@@ -1,11 +1,12 @@
 import React from 'react';
 import { ScrollView, Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import { FormInformation } from './FormInformation';
-import { FormProduct } from './FormProduct';
-import { FormTime } from './FormTime';
-import { FormQuantity } from './FormQuantity';
 
-interface Ring3ScreenProps {
+import { FormInformationRing2 } from '../component/forms/FormInformationRing2';
+import { FormProductRing2 } from '../component/forms/FormProductRing2';
+import { FormTime } from '../component/forms/FormTime';
+import { FormQuantity } from '../component/forms/FormQuantity';
+
+interface Ring2ScreenProps {
   namaOperator: string;
   setNamaOperator: (v: string) => void;
   nomorSO: string;
@@ -18,8 +19,14 @@ interface Ring3ScreenProps {
   setProduct: (v: string) => void;
   materialType: string;
   setMaterialType: (v: string) => void;
+  materialNoted: string;              
+  setMaterialNoted: (v: string) => void; 
+  thickness: string;                  
+  setThickness: (v: string) => void;  
   size: string;
   setSize: (v: string) => void;
+  notedSize: string;
+  setNotedSize: (val: string) => void;
   classVal: string;
   setClassVal: (v: string) => void;
   startTimestamp: number | null;
@@ -47,7 +54,7 @@ interface Ring3ScreenProps {
   onClear: () => void;
 }
 
-export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
+export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContent}
@@ -55,12 +62,12 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets={true}
     >
-      <Text style={styles.pageTitle}>Production Ring 3</Text>
+      <Text style={styles.pageTitle}>Production Ring 2</Text>
       <Text style={styles.pageSubtitle}>
         Fill in the required information, product details, and production quantities.
       </Text>
 
-      <FormInformation
+      <FormInformationRing2
         namaOperator={props.namaOperator}
         setNamaOperator={props.setNamaOperator}
         nomorSO={props.nomorSO}
@@ -71,15 +78,22 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
         setJobNoted={props.setJobNoted}
       />
 
-      <FormProduct
+      <FormProductRing2
         product={props.product}
         setProduct={props.setProduct}
         materialType={props.materialType}
         setMaterialType={props.setMaterialType}
+        materialNoted={props.materialNoted}
+        setMaterialNoted={props.setMaterialNoted}
+        thickness={props.thickness}
+        setThickness={props.setThickness}
         size={props.size}
         setSize={props.setSize}
         classVal={props.classVal}
         setClassVal={props.setClassVal}
+        /* --- DITERUSKAN KE FORM PRODUCT --- */
+        notedSize={props.notedSize}
+        setNotedSize={props.setNotedSize}
       />
 
       <FormTime
@@ -127,7 +141,7 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  scrollContent: { padding: 20, paddingTop: 30, paddingBottom: 40, backgroundColor: '#F8F9FA' },
+  scrollContent: { padding: 20, paddingTop: 45, paddingBottom: 40, backgroundColor: '#F8F9FA' },
   pageTitle: { fontSize: 26, fontFamily: 'Hanuman', color: '#101828', marginBottom: 6 },
   pageSubtitle: { fontSize: 13, color: '#667085', fontFamily: 'Hanuman', marginBottom: 20, lineHeight: 18 },
   actionRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },

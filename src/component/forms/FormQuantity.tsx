@@ -15,12 +15,15 @@ export const FormQuantity: React.FC<FormQuantityProps> = ({
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Quantity</Text>
-      <Text style={styles.inputLabel}>Finish Good</Text>
+
+      <Text style={styles.label}>Finish Good</Text>
       <TextInput
-        style={styles.textInput}
-        keyboardType="number-pad"
-        value={String(finishGood)}
-        onChangeText={(v) => setFinishGood(parseIntegerInput(v))}
+        style={styles.input}
+        keyboardType="numeric"
+        placeholder="0"
+        placeholderTextColor="#98A2B3"
+        value={finishGood ? String(finishGood) : ''}
+        onChangeText={(val) => setFinishGood(parseIntegerInput(val))}
       />
     </View>
   );
@@ -29,33 +32,38 @@ export const FormQuantity: React.FC<FormQuantityProps> = ({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#EAECF0',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: 'bold',
     fontFamily: 'Hanuman',
     color: '#101828',
-    marginBottom: 16,
+    marginBottom: 14,
   },
-  inputLabel: {
-    fontSize: 13,
+  label: {
+    fontSize: 12,
+    fontWeight: '600',
     fontFamily: 'Hanuman',
     color: '#344054',
     marginBottom: 6,
   },
-  textInput: {
-    backgroundColor: '#FFFFFF',
+  input: {
     borderWidth: 1,
-    borderColor: '#E4E7EC',
-    borderRadius: 10,
-    paddingHorizontal: 14,
+    borderColor: '#EAECF0',
+    borderRadius: 8,
+    paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 13,
     fontFamily: 'Hanuman',
     color: '#101828',
+    backgroundColor: '#FFFFFF',
   },
 });

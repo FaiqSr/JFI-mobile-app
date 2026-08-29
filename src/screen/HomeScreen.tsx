@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, BackHandler, StyleSheet, ScrollView } from 'react-native';
-import { MenuButton } from './ButtonMenu';
+import { MenuButton } from '../component/common/ButtonMenu';
 
 interface HomeScreenProps {
   onNavigate: (screenName: 'HOME' | 'RING_1' | 'RING_2' | 'RING_3' | 'SEALING_ELEMENT' | 'DOUBLE_JACKETED') => void;
@@ -11,7 +11,7 @@ export const HomeScreen = ({ onNavigate }: HomeScreenProps) => {
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.logoContainer}>
         <Image
-          source={require('../assets/logoapps.png')}
+          source={require('../../assets/logoapps.png')}
           style={styles.logo}
           resizeMode="contain"
         />

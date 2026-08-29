@@ -2,9 +2,9 @@
   "expo": {
     "name": "JFI Gasket",
     "slug": "jfi-Gasket",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logoapps.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -17,6 +17,8 @@
     },
     "android": {
       "package": "com.jfigasket.app",
+      "versionCode": 3,
+      "usesCleartextTraffic": true,
       "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",

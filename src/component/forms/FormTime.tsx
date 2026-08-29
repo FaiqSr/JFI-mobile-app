@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { CustomInput } from './CustomInput';
+import { CustomInput } from '../common/CustomInput';
 
 interface FormTimeProps {
   startTimestamp: number | null;
@@ -82,7 +82,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
             unit="menit"
             keyboardType="number-pad"
             value={String(gantiOrder)}
-            onChangeText={(v) => setGantiOrder(parseIntegerInput(v))}
+            onChangeText={(v: string) => setGantiOrder(parseIntegerInput(v))}
           />
         </View>
         <View style={styles.col}>
@@ -91,7 +91,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
             unit="menit"
             keyboardType="number-pad"
             value={String(repair)}
-            onChangeText={(v) => setRepair(parseIntegerInput(v))}
+            onChangeText={(v: string) => setRepair(parseIntegerInput(v))}
           />
         </View>
       </View>
@@ -103,7 +103,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
             unit="menit"
             keyboardType="number-pad"
             value={String(materialTunggu)}
-            onChangeText={(v) => setMaterialTunggu(parseIntegerInput(v))}
+            onChangeText={(v: string) => setMaterialTunggu(parseIntegerInput(v))}
           />
         </View>
         <View style={styles.col}>
@@ -112,7 +112,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
             unit="menit"
             keyboardType="number-pad"
             value={String(operatorTime)}
-            onChangeText={(v) => setOperatorTime(parseIntegerInput(v))}
+            onChangeText={(v: string) => setOperatorTime(parseIntegerInput(v))}
           />
         </View>
       </View>
@@ -124,7 +124,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
             unit="menit"
             keyboardType="number-pad"
             value={String(maintenance)}
-            onChangeText={(v) => setMaintenance(parseIntegerInput(v))}
+            onChangeText={(v: string) => setMaintenance(parseIntegerInput(v))}
           />
         </View>
         <View style={styles.col}>
@@ -133,7 +133,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
             unit="menit"
             keyboardType="number-pad"
             value={String(checking)}
-            onChangeText={(v) => setChecking(parseIntegerInput(v))}
+            onChangeText={(v: string) => setChecking(parseIntegerInput(v))}
           />
         </View>
       </View>
