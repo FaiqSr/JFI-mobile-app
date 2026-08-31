@@ -121,11 +121,9 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
 
   return (
     <View>
-      {/* SECTION SIZE */}
+      
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Size</Text>
-
-        {/* Row 1: ID & OD */}
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.label}>ID</Text>
@@ -149,7 +147,6 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           </View>
         </View>
 
-        {/* Row 2: Product Type & Thickness */}
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.label}>Product Type</Text>
@@ -180,7 +177,6 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           </View>
         </View>
 
-        {/* Noted Size */}
         <Text style={styles.label}>NOTED SIZE</Text>
         <TextInput
           style={styles.input}
@@ -191,7 +187,6 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
         />
       </View>
 
-      {/* SECTION MATERIAL */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Material</Text>
 
@@ -235,7 +230,6 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
         />
       </View>
 
-      {/* Modal Product Type */}
       <Modal visible={productTypeModal} transparent animationType="fade">
         <TouchableOpacity
           style={styles.modalOverlay}
@@ -265,7 +259,6 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
         </TouchableOpacity>
       </Modal>
 
-      {/* Modal Thickness */}
       <Modal visible={thicknessModal} transparent animationType="fade">
         <TouchableOpacity
           style={styles.modalOverlay}
@@ -295,7 +288,6 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
         </TouchableOpacity>
       </Modal>
 
-      {/* Modal Metal */}
       <Modal visible={metalModal} transparent animationType="fade">
         <TouchableOpacity
           style={styles.modalOverlay}
@@ -325,7 +317,6 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
         </TouchableOpacity>
       </Modal>
 
-      {/* Modal Filler */}
       <Modal visible={fillerModal} transparent animationType="fade">
         <TouchableOpacity
           style={styles.modalOverlay}
