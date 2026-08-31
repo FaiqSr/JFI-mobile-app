@@ -152,7 +152,7 @@ export const submitProductionData = async (
     } catch (e) {
       Alert.alert(
         'Gagal Simpan',
-        'Terjadi masalah koneksi pada server backend. Silakan coba lagi.'
+        'Terjadi kesalahan respon dari server backend (Format data tidak sesuai).'
       );
       return false;
     }
@@ -168,9 +168,18 @@ export const submitProductionData = async (
       Alert.alert('Isian Form', detailedError);
       return false;
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('--- NETWORK ERROR ---', error);
-    Alert.alert('Kendala Jaringan', `${error}`);
+
+    let userMessage = 'Tidak dapat terhubung ke server.';
+
+    if (error?.message === 'Network request failed' || error?.name === 'TypeError') {
+      userMessage = 'Gagal terhubung ke server. Pastikan HP tersambung ke jaringan internet/Wi-Fi yang benar.';
+    } else if (error?.message) {
+      userMessage = error.message;
+    }
+
+    Alert.alert('Koneksi Terputus', userMessage);
     return false;
   }
 };
