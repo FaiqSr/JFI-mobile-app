@@ -50,6 +50,8 @@ export interface SealingElementScreenProps {
   setMaintenance: (v: number) => void;
   checking: number;
   setChecking: (v: number) => void;
+  noteTimeActivities?: string;
+  setNoteTimeActivities?: (v: string) => void;
   finishGood: number;
   setFinishGood: (v: number) => void;
   parseIntegerInput: (text: string) => number;
@@ -122,6 +124,8 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props)
         checking={props.checking}
         setChecking={props.setChecking}
         parseIntegerInput={props.parseIntegerInput}
+        noteTimeActivities={props.noteTimeActivities}
+        setNoteTimeActivities={props.setNoteTimeActivities}
       />
 
       <FormQuantity
@@ -148,7 +152,7 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props)
 };
 
 const styles = StyleSheet.create({
-  scrollContent: { padding: 20, paddingTop: 45, paddingBottom: 40, backgroundColor: '#F8F9FA' },
+  scrollContent: { padding: 20, paddingTop: 15, paddingBottom: 40, backgroundColor: '#F8F9FA' },
   pageTitle: { fontSize: 26, fontFamily: 'Hanuman', color: '#101828', marginBottom: 6 },
   pageSubtitle: { fontSize: 13, color: '#667085', fontFamily: 'Hanuman', marginBottom: 20, lineHeight: 18 },
   actionRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },

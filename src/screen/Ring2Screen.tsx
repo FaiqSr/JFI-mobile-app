@@ -19,7 +19,7 @@ interface Ring2ScreenProps {
   setProduct: (v: string) => void;
   materialType: string;
   setMaterialType: (v: string) => void;
-  materialNoted: string;              
+  materialNoted: string;               
   setMaterialNoted: (v: string) => void; 
   thickness: string;                  
   setThickness: (v: string) => void;  
@@ -46,6 +46,8 @@ interface Ring2ScreenProps {
   setMaintenance: (v: number) => void;
   checking: number;
   setChecking: (v: number) => void;
+  noteTimeActivities?: string;
+  setNoteTimeActivities?: (v: string) => void;
   finishGood: number;
   setFinishGood: (v: number) => void;
   parseIntegerInput: (text: string) => number;
@@ -115,6 +117,8 @@ export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
         checking={props.checking}
         setChecking={props.setChecking}
         parseIntegerInput={props.parseIntegerInput}
+        noteTimeActivities={props.noteTimeActivities}
+        setNoteTimeActivities={props.setNoteTimeActivities}
       />
 
       <FormQuantity
@@ -141,7 +145,7 @@ export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  scrollContent: { padding: 20, paddingTop: 45, paddingBottom: 40, backgroundColor: '#F8F9FA' },
+  scrollContent: { padding: 20, paddingTop: 15, paddingBottom: 40, backgroundColor: '#F8F9FA' },
   pageTitle: { fontSize: 26, fontFamily: 'Hanuman', color: '#101828', marginBottom: 6 },
   pageSubtitle: { fontSize: 13, color: '#667085', fontFamily: 'Hanuman', marginBottom: 20, lineHeight: 18 },
   actionRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },

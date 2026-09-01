@@ -21,6 +21,8 @@ interface FormTimeProps {
   checking: number;
   setChecking: (v: number) => void;
   parseIntegerInput: (text: string) => number;
+  noteTimeActivities?: string;
+  setNoteTimeActivities?: (v: string) => void;
 }
 
 export const FormTime: React.FC<FormTimeProps> = ({
@@ -42,6 +44,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
   checking,
   setChecking,
   parseIntegerInput,
+  noteTimeActivities = '',
+  setNoteTimeActivities,
 }) => {
   return (
     <View style={styles.card}>
@@ -137,6 +141,17 @@ export const FormTime: React.FC<FormTimeProps> = ({
           />
         </View>
       </View>
+
+      {Boolean(setNoteTimeActivities) && (
+        <View style={styles.noteContainer}>
+          <CustomInput
+            label="NOTE TIME & ACTIVITIES"
+            placeholder="Enter note"
+            value={noteTimeActivities}
+            onChangeText={(v: string) => setNoteTimeActivities?.(v)}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -150,4 +165,7 @@ const styles = StyleSheet.create({
   startButtonStyle: { backgroundColor: '#000000' },
   stopButtonStyle: { backgroundColor: '#D92D20' },
   startStopButtonText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontSize: 15, letterSpacing: 1 },
+  noteContainer: {
+    marginTop: 8,
+  },
 });
