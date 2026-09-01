@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 interface FormQuantityDJGProps {
   finishGood: number;
@@ -64,14 +65,14 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   cardTitle: {
-    fontSize: 16,
+    fontSize: RFValue(16),
     fontWeight: 'bold',
     fontFamily: 'Hanuman',
     color: '#101828',
     marginBottom: 14,
   },
   label: {
-    fontSize: 12,
+    fontSize: RFValue(12),
     fontWeight: '600',
     fontFamily: 'Hanuman',
     color: '#344054',
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    fontSize: 13,
+    fontSize: RFValue(13),
     fontFamily: 'Hanuman',
     color: '#101828',
     backgroundColor: '#FFFFFF',

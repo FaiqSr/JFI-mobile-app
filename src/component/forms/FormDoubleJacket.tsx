@@ -9,6 +9,8 @@ import {
   FlatList,
 } from 'react-native';
 
+import { RFValue } from 'react-native-responsive-fontsize';
+
 interface FormDoubleJacketProps {
   idVal: string;
   setIdVal: (v: string) => void;
@@ -109,7 +111,8 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
     'COOPER',
   ];
 
-  const fillerOptions = ['*Tidak ada pilihan', 
+  const fillerOptions = [
+    '*Tidak ada pilihan', 
     'GRAPHITE', 
     'PTFE',
     'NON ASBETOS', 
@@ -364,7 +367,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   cardTitle: {
-    fontSize: 16,
+    fontSize: RFValue(16), 
     fontWeight: 'bold',
     fontFamily: 'Hanuman',
     color: '#101828',
@@ -378,7 +381,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   label: {
-    fontSize: 12,
+    fontSize: RFValue(12), 
     fontWeight: '600',
     fontFamily: 'Hanuman',
     color: '#344054',
@@ -390,7 +393,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    fontSize: 13,
+    fontSize: RFValue(13), 
     fontFamily: 'Hanuman',
     color: '#101828',
     backgroundColor: '#FFFFFF',
@@ -409,7 +412,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   dropdownText: {
-    fontSize: 13,
+    fontSize: RFValue(13), 
     fontFamily: 'Hanuman',
     color: '#101828',
   },
@@ -417,7 +420,7 @@ const styles = StyleSheet.create({
     color: '#98A2B3',
   },
   arrowIcon: {
-    fontSize: 10,
+    fontSize: RFValue(10), 
     color: '#667085',
   },
   modalOverlay: {
@@ -435,7 +438,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalTitle: {
-    fontSize: 16,
+    fontSize: RFValue(16), 
     fontWeight: 'bold',
     fontFamily: 'Hanuman',
     color: '#101828',
@@ -447,7 +450,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#F2F4F7',
   },
   modalItemText: {
-    fontSize: 14,
+    fontSize: RFValue(14), 
     fontFamily: 'Hanuman',
     color: '#344054',
   },

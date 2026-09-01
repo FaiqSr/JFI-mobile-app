@@ -8,6 +8,7 @@ import {
   Modal,
   FlatList,
 } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 export interface FormSealingElementProps {
   size: string;
@@ -50,7 +51,6 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
   materialNoted,
   setMaterialNoted,
 }) => {
-
   const [activeModal, setActiveModal] = useState<
     'thickness' | 'hoop' | 'filler' | 'ir' | 'or' | null
   >(null);
@@ -59,7 +59,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
     '*Tidak ada pilihan', 
     '3.5 mm', 
     '4.5 mm', 
-    '6.4 mm'
+    '6.4 mm',
   ];
   
   const hoopOptions = [
@@ -313,9 +313,9 @@ export default FormSealingElement;
 
 const styles = StyleSheet.create({
   card: { backgroundColor: '#FFFFFF', borderRadius: 12, padding: 16, marginBottom: 16, elevation: 2 },
-  cardTitle: { fontSize: 16, fontWeight: 'bold', fontFamily: 'Hanuman', color: '#101828', marginBottom: 14 },
-  label: { fontSize: 12, fontWeight: '600', fontFamily: 'Hanuman', color: '#344054', marginBottom: 6 },
-  input: { borderWidth: 1, borderColor: '#EAECF0', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, fontSize: 13, color: '#101828', marginBottom: 12 },
+  cardTitle: { fontSize: RFValue(16), fontWeight: 'bold', fontFamily: 'Hanuman', color: '#101828', marginBottom: 14 },
+  label: { fontSize: RFValue(12), fontWeight: '600', fontFamily: 'Hanuman', color: '#344054', marginBottom: 6 },
+  input: { borderWidth: 1, borderColor: '#EAECF0', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, fontSize: RFValue(13), color: '#101828', marginBottom: 12 },
   dropdownInput: {
     borderWidth: 1,
     borderColor: '#EAECF0',
@@ -328,15 +328,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     marginBottom: 12,
   },
-  dropdownText: { fontSize: 13, fontFamily: 'Hanuman', color: '#101828' },
+  dropdownText: { fontSize: RFValue(13), fontFamily: 'Hanuman', color: '#101828' },
   placeholderText: { color: '#98A2B3' },
-  arrowIcon: { fontSize: 10, color: '#667085' },
+  arrowIcon: { fontSize: RFValue(10), color: '#667085' },
   row: { flexDirection: 'row', justifyContent: 'space-between' },
   halfInputContainer: { width: '48%' },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center', padding: 20 },
   modalContent: { width: '100%', maxHeight: '60%', backgroundColor: '#FFFFFF', borderRadius: 12, padding: 20 },
-  modalTitle: { fontSize: 16, fontWeight: 'bold', fontFamily: 'Hanuman', color: '#101828', marginBottom: 12 },
+  modalTitle: { fontSize: RFValue(16), fontWeight: 'bold', fontFamily: 'Hanuman', color: '#101828', marginBottom: 12 },
   modalItem: { paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#F2F4F7' },
-  modalItemText: { fontSize: 14, fontFamily: 'Hanuman', color: '#344054' },
+  modalItemText: { fontSize: RFValue(14), fontFamily: 'Hanuman', color: '#344054' },
   selectedItemText: { fontWeight: 'bold', color: '#000000' },
 });

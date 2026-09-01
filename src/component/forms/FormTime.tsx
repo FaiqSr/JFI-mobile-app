@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import { CustomInput } from '../common/CustomInput';
 
 interface FormTimeProps {
@@ -158,13 +159,13 @@ export const FormTime: React.FC<FormTimeProps> = ({
 
 const styles = StyleSheet.create({
   card: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 16, marginBottom: 16, borderWidth: 1, borderColor: '#EAECF0' },
-  cardTitle: { fontSize: 18, fontFamily: 'Hanuman', color: '#101828', marginBottom: 16 },
+  cardTitle: { fontSize: RFValue(18), fontFamily: 'Hanuman', color: '#101828', marginBottom: 16 },
   row: { flexDirection: 'row', justifyContent: 'space-between' },
   col: { width: '48%' },
   startStopButton: { paddingVertical: 12, borderRadius: 10, alignItems: 'center', marginBottom: 16 },
   startButtonStyle: { backgroundColor: '#000000' },
   stopButtonStyle: { backgroundColor: '#D92D20' },
-  startStopButtonText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontSize: 15, letterSpacing: 1 },
+  startStopButtonText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontSize: RFValue(15), letterSpacing: 1 },
   noteContainer: {
     marginTop: 8,
   },

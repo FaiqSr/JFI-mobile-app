@@ -1,6 +1,8 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
+import { RFValue } from 'react-native-responsive-fontsize';
+
 interface MenuButtonProps {
   title: string;
   onPress: () => void;
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   text: {
-    fontSize: 14,
+    fontSize: RFValue(14), 
     fontWeight: 'bold',
   },
   whiteText: {

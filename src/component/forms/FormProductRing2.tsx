@@ -9,6 +9,8 @@ import {
   FlatList,
 } from 'react-native';
 
+import { RFValue } from 'react-native-responsive-fontsize';
+
 export interface FormProductRing2Props {
   product: string;
   setProduct: (v: string) => void;
@@ -42,37 +44,43 @@ export const FormProductRing2: React.FC<FormProductRing2Props> = ({
   notedSize: externalNotedSize,
   setNotedSize: externalSetNotedSize,
 }) => {
-
-  const [activeModal, setActiveModal] = useState<'product' | 'material' | 'thickness' | null>(null);
+  const [activeModal, setActiveModal] = useState<
+    'product' | 'material' | 'thickness' | null
+  >(null);
 
   const [internalMaterialNoted, setInternalMaterialNoted] = useState('');
   const [internalNotedSize, setInternalNotedSize] = useState('');
   const [internalThickness, setInternalThickness] = useState('');
 
-  const materialNotedVal = externalMaterialNoted !== undefined ? externalMaterialNoted : internalMaterialNoted;
+  const materialNotedVal =
+    externalMaterialNoted !== undefined
+      ? externalMaterialNoted
+      : internalMaterialNoted;
   const handleMaterialNotedChange = (text: string) => {
     if (externalSetMaterialNoted) externalSetMaterialNoted(text);
     setInternalMaterialNoted(text);
   };
 
-  const notedSizeVal = externalNotedSize !== undefined ? externalNotedSize : internalNotedSize;
+  const notedSizeVal =
+    externalNotedSize !== undefined ? externalNotedSize : internalNotedSize;
   const handleNotedSizeChange = (text: string) => {
     if (externalSetNotedSize) externalSetNotedSize(text);
     setInternalNotedSize(text);
   };
 
-  const thicknessVal = externalThickness !== undefined ? externalThickness : internalThickness;
+  const thicknessVal =
+    externalThickness !== undefined ? externalThickness : internalThickness;
   const handleThicknessSelect = (val: string) => {
     if (externalSetThickness) externalSetThickness(val);
     setInternalThickness(val);
   };
 
   const productOptions = [
-    '*Tidak ada pilihan', 
-    'IR', 
-    'OR', 
-    'SOLID', 
-    'NON STANDARD'
+    '*Tidak ada pilihan',
+    'IR',
+    'OR',
+    'SOLID',
+    'NON STANDARD',
   ];
 
   const materialTypeOptions = [
@@ -96,25 +104,45 @@ export const FormProductRing2: React.FC<FormProductRing2Props> = ({
 
   const thicknessOptions = [
     '*Tidak ada pilihan',
-    '0', 
-    '1 mm', 
-    '1.5 mm', 
-    '2 mm', 
+    '0',
+    '1 mm',
+    '1.5 mm',
+    '2 mm',
     '3 mm',
-    '4 mm', 
-    '5 mm'
+    '4 mm',
+    '5 mm',
   ];
 
   const getModalConfig = () => {
     switch (activeModal) {
       case 'product':
-        return { title: 'Pilih Product', data: productOptions, onSelect: setProduct, selected: product };
+        return {
+          title: 'Pilih Product',
+          data: productOptions,
+          onSelect: setProduct,
+          selected: product,
+        };
       case 'material':
-        return { title: 'Pilih Material Type', data: materialTypeOptions, onSelect: setMaterialType, selected: materialType };
+        return {
+          title: 'Pilih Material Type',
+          data: materialTypeOptions,
+          onSelect: setMaterialType,
+          selected: materialType,
+        };
       case 'thickness':
-        return { title: 'Pilih Thickness', data: thicknessOptions, onSelect: handleThicknessSelect, selected: thicknessVal };
+        return {
+          title: 'Pilih Thickness',
+          data: thicknessOptions,
+          onSelect: handleThicknessSelect,
+          selected: thicknessVal,
+        };
       default:
-        return { title: '', data: [], onSelect: (_v: string) => {}, selected: '' };
+        return {
+          title: '',
+          data: [],
+          onSelect: (_v: string) => {},
+          selected: '',
+        };
     }
   };
 
@@ -174,7 +202,12 @@ export const FormProductRing2: React.FC<FormProductRing2Props> = ({
         activeOpacity={0.7}
         onPress={() => setActiveModal('thickness')}
       >
-        <Text style={[styles.dropdownText, !thicknessVal && styles.placeholderText]}>
+        <Text
+          style={[
+            styles.dropdownText,
+            !thicknessVal && styles.placeholderText,
+          ]}
+        >
           {thicknessVal || 'Select thickness'}
         </Text>
         <Text style={styles.arrowIcon}>▼</Text>
@@ -265,14 +298,14 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   cardTitle: {
-    fontSize: 16,
+    fontSize: RFValue(16),
     fontWeight: 'bold',
     fontFamily: 'Hanuman',
     color: '#101828',
     marginBottom: 14,
   },
   label: {
-    fontSize: 12,
+    fontSize: RFValue(12),
     fontWeight: '600',
     fontFamily: 'Hanuman',
     color: '#344054',
@@ -284,7 +317,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    fontSize: 13,
+    fontSize: RFValue(13),
     fontFamily: 'Hanuman',
     color: '#101828',
     backgroundColor: '#FFFFFF',
@@ -303,7 +336,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   dropdownText: {
-    fontSize: 13,
+    fontSize: RFValue(13),
     fontFamily: 'Hanuman',
     color: '#101828',
   },
@@ -311,7 +344,7 @@ const styles = StyleSheet.create({
     color: '#98A2B3',
   },
   arrowIcon: {
-    fontSize: 10,
+    fontSize: RFValue(10),
     color: '#667085',
   },
   row: {
@@ -337,7 +370,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalTitle: {
-    fontSize: 16,
+    fontSize: RFValue(16),
     fontWeight: 'bold',
     fontFamily: 'Hanuman',
     color: '#101828',
@@ -349,7 +382,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#F2F4F7',
   },
   modalItemText: {
-    fontSize: 14,
+    fontSize: RFValue(14),
     fontFamily: 'Hanuman',
     color: '#344054',
   },

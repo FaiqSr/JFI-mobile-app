@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 import { FormInformationDJG } from '../component/forms/FormInformationDJG';
 import { FormDoubleJacket } from '../component/forms/FormDoubleJacket';
@@ -153,10 +154,10 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
 
 const styles = StyleSheet.create({
   scrollContent: { padding: 20, paddingTop: 15, paddingBottom: 40, backgroundColor: '#F8F9FA' },
-  pageTitle: { fontSize: 26, fontFamily: 'Hanuman', color: '#101828', marginBottom: 6 },
-  pageSubtitle: { fontSize: 13, color: '#667085', fontFamily: 'Hanuman', marginBottom: 20, lineHeight: 18 },
+  pageTitle: { fontSize: RFValue(26), fontFamily: 'Hanuman', color: '#101828', marginBottom: 6 },
+  pageSubtitle: { fontSize: RFValue(13), color: '#667085', fontFamily: 'Hanuman', marginBottom: 20, lineHeight: 18 },
   actionRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
   actionButtonHalf: { backgroundColor: '#000000', paddingVertical: 12, borderRadius: 10, alignItems: 'center', width: '48%' },
   clearButtonFull: { backgroundColor: '#CC0000', paddingVertical: 12, borderRadius: 10, alignItems: 'center', width: '100%' },
-  actionButtonText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontSize: 15 },
+  actionButtonText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontSize: RFValue(15) },
 });

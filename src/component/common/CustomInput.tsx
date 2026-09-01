@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 interface CustomInputProps extends TextInputProps {
   label?: string;
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputLabel: {
-    fontSize: 13,
+    fontSize: RFValue(13), 
     fontFamily: 'Hanuman',
     color: '#344054',
     marginBottom: 6,
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    fontSize: 13,
+    fontSize: RFValue(13),
     fontFamily: 'Hanuman',
     color: '#101828',
   },
@@ -70,12 +71,12 @@ const styles = StyleSheet.create({
   minuteTextInput: {
     flex: 1,
     paddingVertical: 8,
-    fontSize: 13,
+    fontSize: RFValue(13), 
     fontFamily: 'Hanuman',
     color: '#101828',
   },
   minuteUnitText: {
-    fontSize: 12,
+    fontSize: RFValue(12),
     color: '#667085',
     fontFamily: 'Hanuman',
   },

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, BackHandler, StyleSheet, ScrollView } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import { MenuButton } from '../component/common/ButtonMenu';
 
 interface HomeScreenProps {
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: '#101828',
-    fontSize: 14,
+    fontSize: RFValue(14),
     fontWeight: 'bold',
     letterSpacing: 0.5,
   },

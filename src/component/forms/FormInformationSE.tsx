@@ -9,6 +9,8 @@ import {
   FlatList,
 } from 'react-native';
 
+import { RFValue } from 'react-native-responsive-fontsize';
+
 interface FormInformationProps {
   namaOperator: string;
   setNamaOperator: (v: string) => void;
@@ -150,28 +152,100 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   headerTitle: {
-    fontSize: 22,
+    fontSize: RFValue(22), 
     fontWeight: '700',
     color: '#101828',
     marginBottom: 4,
   },
   headerSubtitle: {
-    fontSize: 13,
+    fontSize: RFValue(13), 
     color: '#667085',
     lineHeight: 18,
   },
-  card: { backgroundColor: '#FFFFFF', borderRadius: 12, padding: 16, marginBottom: 16, elevation: 2 },
-  cardTitle: { fontSize: 16, fontWeight: 'bold', fontFamily: 'Hanuman', color: '#101828', marginBottom: 14 },
-  label: { fontSize: 12, fontWeight: '600', fontFamily: 'Hanuman', color: '#344054', marginBottom: 6 },
-  input: { borderWidth: 1, borderColor: '#EAECF0', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, fontSize: 13, color: '#101828', marginBottom: 12 },
-  dropdownInput: { borderWidth: 1, borderColor: '#EAECF0', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  dropdownText: { fontSize: 13, color: '#101828' },
-  placeholderText: { color: '#98A2B3' },
-  arrowIcon: { fontSize: 10, color: '#667085' },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center', padding: 20 },
-  modalContent: { width: '100%', maxHeight: '60%', backgroundColor: '#FFFFFF', borderRadius: 12, padding: 20 },
-  modalTitle: { fontSize: 16, fontWeight: 'bold', color: '#101828', marginBottom: 12 },
-  modalItem: { paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#F2F4F7' },
-  modalItemText: { fontSize: 14, color: '#344054' },
-  selectedItemText: { fontWeight: 'bold', color: '#000000' },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    elevation: 2,
+  },
+  cardTitle: {
+    fontSize: RFValue(16),
+    fontWeight: 'bold',
+    fontFamily: 'Hanuman',
+    color: '#101828',
+    marginBottom: 14,
+  },
+  label: {
+    fontSize: RFValue(12), 
+    fontWeight: '600',
+    fontFamily: 'Hanuman',
+    color: '#344054',
+    marginBottom: 6,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#EAECF0',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: RFValue(13), 
+    color: '#101828',
+    marginBottom: 12,
+  },
+  dropdownInput: {
+    borderWidth: 1,
+    borderColor: '#EAECF0',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  dropdownText: {
+    fontSize: RFValue(13), 
+    color: '#101828',
+  },
+  placeholderText: {
+    color: '#98A2B3',
+  },
+  arrowIcon: {
+    fontSize: RFValue(10), 
+    color: '#667085',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    width: '100%',
+    maxHeight: '60%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: RFValue(16), 
+    fontWeight: 'bold',
+    color: '#101828',
+    marginBottom: 12,
+  },
+  modalItem: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F2F4F7',
+  },
+  modalItemText: {
+    fontSize: RFValue(14), 
+    color: '#344054',
+  },
+  selectedItemText: {
+    fontWeight: 'bold',
+    color: '#000000',
+  },
 });
