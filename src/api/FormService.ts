@@ -111,14 +111,14 @@ export const submitProductionData = async (
   strEnd: string
 ) => {
   if (!BASE_URL) {
-    Alert.alert('Gagal', 'URL Server belum dikonfigurasi pada environment.');
+    Alert.alert('Gagal', 'Terjadi kesalahan sistem. Konfigurasi server belum siap.');
     return false;
   }
 
   const config = buildPayload(currentScreen, activeData, strStart, strEnd);
 
   if (!config) {
-    Alert.alert('Gagal', 'Layar tidak dikenali.');
+    Alert.alert('Gagal', 'Tampilan atau data form tidak valid. Silakan muat ulang halaman.');
     return false;
   }
 
@@ -151,14 +151,14 @@ export const submitProductionData = async (
       result = JSON.parse(rawText);
     } catch (e) {
       Alert.alert(
-        'Gagal Simpan',
-        'Terjadi kesalahan respon dari server backend (Format data tidak sesuai).'
+        'Gagal Menyimpan Data',
+        'Terjadi Gangguan pada sistem, silahkan coba beberapa saat lagi.'
       );
       return false;
     }
 
     if (response.status === 201 || response.ok) {
-      Alert.alert('Sukses', result.message || 'Data produksi berhasil disimpan.');
+      Alert.alert('Sukses', result.message || 'Data berhasil disimpan.');
       return true;
     } else {
       const detailedError = result.errors

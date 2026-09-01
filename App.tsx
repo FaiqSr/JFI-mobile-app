@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   BackHandler,
   Alert,
   ActivityIndicator,
   View,
 } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -231,15 +231,17 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {isLoading && (
-        <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      )}
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        {isLoading && (
+          <View style={styles.loadingOverlay}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        )}
 
-      {renderScreen()}
-    </SafeAreaView>
+        {renderScreen()}
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

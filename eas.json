@@ -9,21 +9,21 @@
       "distribution": "internal",
       "channel": "development",
       "env": {
-        "EXPO_PUBLIC_BASE_URL": "http://jfi.faiqsr.my.id/api"
+        "EXPO_PUBLIC_BASE_URL": "https://jfi.faiqsr.my.id/api/produksi"
       }
     },
     "preview": {
       "distribution": "internal",
       "channel": "preview",
       "env": {
-        "EXPO_PUBLIC_BASE_URL": "http://jfi.faiqsr.my.id/api"
+        "EXPO_PUBLIC_BASE_URL": "https://jfi.faiqsr.my.id/api/produksi"
       }
     },
     "production": {
       "autoIncrement": true,
       "channel": "production",
       "env": {
-        "EXPO_PUBLIC_BASE_URL": "http://jfi.faiqsr.my.id/api"
+        "EXPO_PUBLIC_BASE_URL": "https://jfi.faiqsr.my.id/api/produksi"
       }
     }
   },
