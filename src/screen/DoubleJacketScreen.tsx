@@ -69,7 +69,7 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets={true}
     >
-      <Text style={styles.pageTitle}>Production Double Jacketed</Text>
+      <Text style={styles.pageTitle}>Production Double Jacketed Gasket</Text>
       <Text style={styles.pageSubtitle}>
         Fill in the required information, product details, and production quantities.
       </Text>
