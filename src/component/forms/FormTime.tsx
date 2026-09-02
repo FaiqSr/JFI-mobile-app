@@ -166,7 +166,5 @@ const styles = StyleSheet.create({
   startButtonStyle: { backgroundColor: '#000000' },
   stopButtonStyle: { backgroundColor: '#D92D20' },
   startStopButtonText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontSize: RFValue(15), letterSpacing: 1 },
-  noteContainer: {
-    marginTop: 8,
-  },
+  noteContainer: { marginTop: 8 },
 });

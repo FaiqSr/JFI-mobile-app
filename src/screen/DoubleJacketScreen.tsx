@@ -69,7 +69,9 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets={true}
     >
-      <Text style={styles.pageTitle}>Production Double Jacketed Gasket</Text>
+      <Text style={styles.pageTitle}>
+        Production Double Jacketed Gasket
+      </Text>
       <Text style={styles.pageSubtitle}>
         Fill in the required information, product details, and production quantities.
       </Text>
@@ -154,10 +156,17 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
 
 const styles = StyleSheet.create({
   scrollContent: { padding: 20, paddingTop: 15, paddingBottom: 40, backgroundColor: '#F8F9FA' },
-  pageTitle: { fontSize: RFValue(26), fontFamily: 'Hanuman', color: '#101828', marginBottom: 6 },
-  pageSubtitle: { fontSize: RFValue(13), color: '#667085', fontFamily: 'Hanuman', marginBottom: 20, lineHeight: 18 },
+  pageTitle: { 
+    fontSize: RFValue(22), 
+    fontFamily: 'Hanuman', 
+    fontWeight: 'normal',
+    color: '#101828', 
+    marginBottom: 6,
+    lineHeight: RFValue(28),
+  },
+  pageSubtitle: { fontSize: RFValue(13), color: '#667085', fontFamily: 'Hanuman', fontWeight: 'normal', marginBottom: 20, lineHeight: 18 },
   actionRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
   actionButtonHalf: { backgroundColor: '#000000', paddingVertical: 12, borderRadius: 10, alignItems: 'center', width: '48%' },
   clearButtonFull: { backgroundColor: '#CC0000', paddingVertical: 12, borderRadius: 10, alignItems: 'center', width: '100%' },
-  actionButtonText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontSize: RFValue(15) },
+  actionButtonText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontWeight: 'normal', fontSize: RFValue(15) },
 });

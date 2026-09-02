@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: RFValue(16),
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontFamily: 'Hanuman',
     color: '#101828',
     marginBottom: 14,
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: RFValue(16),
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontFamily: 'Hanuman',
     color: '#101828',
     marginBottom: 12,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     color: '#344054',
   },
   selectedItemText: {
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#000000',
   },
 });

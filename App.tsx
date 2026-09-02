@@ -5,6 +5,8 @@ import {
   Alert,
   ActivityIndicator,
   View,
+  Text,
+  TextInput,
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
@@ -24,6 +26,18 @@ import {
   getSealingProps,
   getDoubleJacketProps,
 } from './src/api/FormService';
+
+if ((Text as any).defaultProps) {
+  (Text as any).defaultProps.allowFontScaling = false;
+} else {
+  (Text as any).defaultProps = { allowFontScaling: false };
+}
+
+if ((TextInput as any).defaultProps) {
+  (TextInput as any).defaultProps.allowFontScaling = false;
+} else {
+  (TextInput as any).defaultProps = { allowFontScaling: false };
+}
 
 const DRAFT_KEY = '@app_form_draft_v3';
 

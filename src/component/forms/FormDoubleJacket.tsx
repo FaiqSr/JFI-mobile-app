@@ -158,7 +158,12 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
               activeOpacity={0.7}
               onPress={() => setProductTypeModal(true)}
             >
-              <Text style={[styles.dropdownText, !productType && styles.placeholderText]}>
+              <Text 
+                style={[styles.dropdownText, !productType && styles.placeholderText]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+              >
                 {productType || 'Select product type'}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
@@ -172,7 +177,12 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
               activeOpacity={0.7}
               onPress={() => setThicknessModal(true)}
             >
-              <Text style={[styles.dropdownText, !thickness && styles.placeholderText]}>
+              <Text 
+                style={[styles.dropdownText, !thickness && styles.placeholderText]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+              >
                 {thickness || 'Select thickness'}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
@@ -201,7 +211,12 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
               activeOpacity={0.7}
               onPress={() => setMetalModal(true)}
             >
-              <Text style={[styles.dropdownText, !metal && styles.placeholderText]}>
+              <Text 
+                style={[styles.dropdownText, !metal && styles.placeholderText]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+              >
                 {metal || 'Select metal'}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
@@ -215,7 +230,12 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
               activeOpacity={0.7}
               onPress={() => setFillerModal(true)}
             >
-              <Text style={[styles.dropdownText, !filler && styles.placeholderText]}>
+              <Text 
+                style={[styles.dropdownText, !filler && styles.placeholderText]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+              >
                 {filler || 'Select filler'}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
@@ -403,7 +423,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#EAECF0',
     borderRadius: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     paddingVertical: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -412,9 +432,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   dropdownText: {
-    fontSize: RFValue(13), 
+    flex: 1,
+    fontSize: RFValue(12.5), 
     fontFamily: 'Hanuman',
     color: '#101828',
+    marginRight: 4,
   },
   placeholderText: {
     color: '#98A2B3',

@@ -101,6 +101,9 @@ export const FormInformationDJG: React.FC<FormInformationProps> = ({
             styles.dropdownText,
             !jobDescription && styles.placeholderText,
           ]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.75}
         >
           {jobDescription || 'Select job description'}
         </Text>
@@ -189,6 +192,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: RFValue(13), 
     fontFamily: 'Hanuman',
+    fontWeight: 'normal',
     color: '#101828',
     backgroundColor: '#FFFFFF',
     marginBottom: 12,
@@ -206,9 +210,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   dropdownText: {
+    flex: 1,
     fontSize: RFValue(13), 
     fontFamily: 'Hanuman',
     color: '#101828',
+    marginRight: 4,
   },
   placeholderText: {
     color: '#98A2B3',

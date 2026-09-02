@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: RFValue(16),
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontFamily: 'Hanuman',
     color: '#101828',
     marginBottom: 14,
