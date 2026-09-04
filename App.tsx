@@ -79,7 +79,6 @@ export default function App() {
         const jsonDraft = await AsyncStorage.getItem(DRAFT_KEY);
         if (jsonDraft !== null) {
           const draft = JSON.parse(jsonDraft);
-          if (draft.currentScreen) setCurrentScreen(draft.currentScreen);
           if (draft.formsData) setFormsData(draft.formsData);
         }
       } catch (e) {

@@ -202,6 +202,18 @@ interface HelperOptions {
   handleClear: () => void;
 }
 
+const confirmClearAlert = (onConfirm: () => void) => {
+  Alert.alert(
+    'Konfirmasi Hapus',
+    'Apakah Anda yakin ingin menghapus semua isian form ini?',
+    [
+      { text: 'Batal', style: 'cancel' },
+      { text: 'Hapus', style: 'destructive', onPress: onConfirm },
+    ],
+    { cancelable: true }
+  );
+};
+
 export const getRingProps = (
   screen: 'RING_1' | 'RING_2' | 'RING_3',
   options: HelperOptions
@@ -256,7 +268,7 @@ export const getRingProps = (
     parseIntegerInput,
     onBack: () => handleNavigate('HOME'),
     onSave: handleSimpan,
-    onClear: handleClear,
+    onClear: () => confirmClearAlert(handleClear),
   };
 };
 
@@ -315,7 +327,7 @@ export const getSealingProps = (options: HelperOptions) => {
     parseIntegerInput,
     onBack: () => handleNavigate('HOME'),
     onSave: handleSimpan,
-    onClear: handleClear,
+    onClear: () => confirmClearAlert(handleClear),
   };
 };
 
@@ -376,6 +388,6 @@ export const getDoubleJacketProps = (options: HelperOptions) => {
     parseIntegerInput,
     onBack: () => handleNavigate('HOME'),
     onSave: handleSimpan,
-    onClear: handleClear,
+    onClear: () => confirmClearAlert(handleClear),
   };
 };
