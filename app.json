@@ -37,7 +37,8 @@
             "usesCleartextTraffic": true
           }
         }
-      ]
+      ],
+      "expo-status-bar"
     ],
     "extra": {
       "eas": {
@@ -52,5 +53,3 @@
     }
   }
 }
-
-
