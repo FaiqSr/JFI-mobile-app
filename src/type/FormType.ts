@@ -7,6 +7,7 @@ export type ScreenType =
   | 'DOUBLE_JACKETED';
 
 export interface ScreenFormData {
+  taskId?: string | number;
   namaOperator: string;
   nomorSO: string;
   jobDescription: string;
@@ -16,6 +17,7 @@ export interface ScreenFormData {
   materialType: string;
   materialNoted: string;
   notedSize: string;
+  notedSizeOdId: string; 
   size: string;
   classVal: string;
   workType: string;
@@ -42,6 +44,7 @@ export interface ScreenFormData {
 }
 
 export const initialFormState: ScreenFormData = {
+  taskId: undefined,
   namaOperator: '',
   nomorSO: '',
   jobDescription: '',
@@ -51,6 +54,7 @@ export const initialFormState: ScreenFormData = {
   materialType: '',
   materialNoted: '',
   notedSize: '',
+  notedSizeOdId: '', 
   size: '',
   classVal: '',
   workType: '',

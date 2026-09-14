@@ -32,20 +32,47 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
   setProduct,
   materialType,
   setMaterialType,
-  materialNoted = '',
-  setMaterialNoted,
-  thickness = '',
-  setThickness,
+  materialNoted: externalMaterialNoted,
+  setMaterialNoted: externalSetMaterialNoted,
+  thickness: externalThickness,
+  setThickness: externalSetThickness,
   size,
   setSize,
   classVal,
   setClassVal,
-  notedSize = '',
-  setNotedSize,
+  notedSize: externalNotedSize,
+  setNotedSize: externalSetNotedSize,
 }) => {
   const [activeModal, setActiveModal] = useState<
     'product' | 'material' | 'thickness' | null
   >(null);
+
+  const [internalMaterialNoted, setInternalMaterialNoted] = useState('');
+  const [internalNotedSize, setInternalNotedSize] = useState('');
+  const [internalThickness, setInternalThickness] = useState('');
+
+  const materialNotedVal =
+    externalMaterialNoted !== undefined
+      ? externalMaterialNoted
+      : internalMaterialNoted;
+  const handleMaterialNotedChange = (text: string) => {
+    if (externalSetMaterialNoted) externalSetMaterialNoted(text);
+    setInternalMaterialNoted(text);
+  };
+
+  const notedSizeVal =
+    externalNotedSize !== undefined ? externalNotedSize : internalNotedSize;
+  const handleNotedSizeChange = (text: string) => {
+    if (externalSetNotedSize) externalSetNotedSize(text);
+    setInternalNotedSize(text);
+  };
+
+  const thicknessVal =
+    externalThickness !== undefined ? externalThickness : internalThickness;
+  const handleThicknessSelect = (val: string) => {
+    if (externalSetThickness) externalSetThickness(val);
+    setInternalThickness(val);
+  };
 
   const productOptions = [
     '*Tidak ada pilihan',
@@ -85,11 +112,13 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
     '5 mm',
   ];
 
-  const handleThicknessSelect = (val: string) => {
-    if (setThickness) {
-      setThickness(val);
-    }
-  };
+  const isNoProduct =
+    product === 'Tidak Ada Pilihan' || product === '*Tidak ada pilihan';
+  const isNoMaterialType =
+    materialType === 'Tidak Ada Pilihan' || materialType === '*Tidak ada pilihan';
+  const isNoChoiceMaterialNoted = isNoProduct || isNoMaterialType;
+  const isNoThickness =
+    thicknessVal === 'Tidak Ada Pilihan' || thicknessVal === '*Tidak ada pilihan';
 
   const getModalConfig = () => {
     switch (activeModal) {
@@ -112,7 +141,7 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
           title: 'Pilih Thickness',
           data: thicknessOptions,
           onSelect: handleThicknessSelect,
-          selected: thickness,
+          selected: thicknessVal,
         };
       default:
         return {
@@ -129,7 +158,10 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Product</Text>
-      <Text style={styles.label}>Product</Text>
+
+      <Text style={styles.label}>
+        Product <Text style={styles.asterisk}>*</Text>
+      </Text>
       <TouchableOpacity
         style={styles.dropdownInput}
         activeOpacity={0.7}
@@ -140,10 +172,15 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
         </Text>
         <Text style={styles.arrowIcon}>▼</Text>
       </TouchableOpacity>
+      {isNoProduct && (
+        <Text style={styles.warningText}>Material Noted wajib diisi</Text>
+      )}
 
       <View style={styles.row}>
         <View style={styles.column}>
-          <Text style={styles.label}>Material Type</Text>
+          <Text style={styles.label}>
+            Material Type <Text style={styles.asterisk}>*</Text>
+          </Text>
           <TouchableOpacity
             style={styles.dropdownInput}
             activeOpacity={0.7}
@@ -160,20 +197,31 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
             </Text>
             <Text style={styles.arrowIcon}>▼</Text>
           </TouchableOpacity>
+          {isNoMaterialType && (
+            <Text style={styles.warningText}>Material Noted wajib diisi</Text>
+          )}
         </View>
 
         <View style={styles.column}>
-          <Text style={styles.label}>Material Noted</Text>
+          <Text style={styles.label}>
+            Material Noted <Text style={styles.asterisk}>*</Text>
+          </Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter noted"
+            placeholder="Cert No. Material: -"
             placeholderTextColor="#98A2B3"
-            value={materialNoted}
-            onChangeText={(text) => setMaterialNoted && setMaterialNoted(text)}
+            value={materialNotedVal}
+            onChangeText={handleMaterialNotedChange}
           />
+          {isNoChoiceMaterialNoted && (
+            <Text style={styles.warningText}>
+              Wajib diisi karena Product/Material Type 'Tidak Ada Pilihan'
+            </Text>
+          )}
         </View>
       </View>
 
+      
       <Text style={styles.label}>Thickness</Text>
       <TouchableOpacity
         style={styles.dropdownInput}
@@ -181,46 +229,66 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
         onPress={() => setActiveModal('thickness')}
       >
         <Text
-          style={[styles.dropdownText, !thickness && styles.placeholderText]}
+          style={[
+            styles.dropdownText,
+            !thicknessVal && styles.placeholderText,
+          ]}
         >
-          {thickness || 'Select thickness'}
+          {thicknessVal || 'Select thickness'}
         </Text>
         <Text style={styles.arrowIcon}>▼</Text>
       </TouchableOpacity>
+      {isNoThickness && (
+        <Text style={styles.warningText}>Noted Size wajib diisi</Text>
+      )}
 
+      
       <View style={styles.row}>
         <View style={styles.column}>
-          <Text style={styles.label}>Class</Text>
+          <Text style={styles.label}>
+            Size <Text style={styles.asterisk}>*</Text>
+          </Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter class"
-            placeholderTextColor="#98A2B3"
-            value={classVal}
-            onChangeText={setClassVal}
-          />
-        </View>
-
-        <View style={styles.column}>
-          <Text style={styles.label}>Size</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter size"
+            placeholder='1"'
             placeholderTextColor="#98A2B3"
             value={size}
             onChangeText={setSize}
           />
         </View>
+
+        <View style={styles.column}>
+          <Text style={styles.label}>
+            Class <Text style={styles.asterisk}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="#150"
+            placeholderTextColor="#98A2B3"
+            value={classVal}
+            onChangeText={setClassVal}
+          />
+        </View>
       </View>
 
-      <Text style={styles.label}>NOTED SIZE (OD/ID)</Text>
+      
+      <Text style={styles.label}>
+        Noted Size (OD/ID) <Text style={styles.asterisk}>*</Text>
+      </Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter node size"
+        placeholder="Enter size note"
         placeholderTextColor="#98A2B3"
-        value={notedSize}
-        onChangeText={(text) => setNotedSize && setNotedSize(text)}
+        value={notedSizeVal}
+        onChangeText={handleNotedSizeChange}
       />
+      {isNoThickness && (
+        <Text style={styles.warningText}>
+          Wajib diisi karena Thickness 'Tidak Ada Pilihan'
+        </Text>
+      )}
 
+      
       <Modal visible={activeModal !== null} transparent animationType="fade">
         <TouchableOpacity
           style={styles.modalOverlay}
@@ -274,10 +342,10 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: RFValue(16),
-    fontWeight: 'normal',
+    fontWeight: '700',
     fontFamily: 'Hanuman',
     color: '#101828',
-    marginBottom: 14,
+    marginBottom: 16,
   },
   label: {
     fontSize: RFValue(12),
@@ -285,6 +353,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Hanuman',
     color: '#344054',
     marginBottom: 6,
+  },
+  asterisk: {
+    color: '#D92D20',
   },
   input: {
     borderWidth: 1,
@@ -296,7 +367,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Hanuman',
     color: '#101828',
     backgroundColor: '#FFFFFF',
-    marginBottom: 12,
+    marginBottom: 4,
   },
   dropdownInput: {
     borderWidth: 1,
@@ -308,7 +379,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    marginBottom: 12,
+    marginBottom: 4,
   },
   dropdownText: {
     fontSize: RFValue(13),
@@ -322,10 +393,18 @@ const styles = StyleSheet.create({
     fontSize: RFValue(10),
     color: '#667085',
   },
+  warningText: {
+    fontSize: RFValue(11),
+    color: '#D97706',
+    fontFamily: 'Hanuman',
+    marginTop: 2,
+    marginBottom: 8,
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 12,
+    marginBottom: 4,
   },
   column: {
     flex: 1,
@@ -346,7 +425,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: RFValue(16),
-    fontWeight: 'normal',
+    fontWeight: '600',
     fontFamily: 'Hanuman',
     color: '#101828',
     marginBottom: 12,
@@ -362,7 +441,7 @@ const styles = StyleSheet.create({
     color: '#344054',
   },
   selectedItemText: {
-    fontWeight: 'normal',
-    color: '#000000',
+    fontWeight: '700',
+    color: '#101828',
   },
 });

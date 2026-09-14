@@ -3,10 +3,10 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, FlatList } 
 import { RFValue } from 'react-native-responsive-fontsize';
 
 interface FormInformationProps {
-  namaOperator: string;
-  setNamaOperator: (v: string) => void;
-  nomorSO: string;
-  setNomorSO: (v: string) => void;
+  namaOperator?: string;
+  setNamaOperator?: (v: string) => void;
+  nomorSO?: string;
+  setNomorSO?: (v: string) => void;
   jobDescription: string;
   setJobDescription: (v: string) => void;
   jobNoted?: string;
@@ -14,9 +14,9 @@ interface FormInformationProps {
 }
 
 export const FormInformation: React.FC<FormInformationProps> = ({
-  namaOperator,
+  namaOperator = '',
   setNamaOperator,
-  nomorSO,
+  nomorSO = '',
   setNomorSO,
   jobDescription,
   setJobDescription,
@@ -26,37 +26,55 @@ export const FormInformation: React.FC<FormInformationProps> = ({
   const [modalVisible, setModalVisible] = useState(false);
 
   const jobOptions = [
-    '*Tidak ada pilihan',
+    'Tidak Ada Pilihan',
     'CUT PLATE', 
     'P. PRESS 1', 
     'P. PRESS 2',
     'P. PRESS 3', 
-    'DEBURING'
+    'DEBURING',
   ];
+
+  const isNoChoice = jobDescription === 'Tidak Ada Pilihan' || jobDescription === '*Tidak ada pilihan';
 
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Information</Text>
 
-      <Text style={styles.label}>Operator Name</Text>
+      <View style={styles.labelRow}>
+        <Text style={styles.label}>
+          Operator Name <Text style={styles.asterisk}>*</Text>
+        </Text>
+        <Text style={styles.lockedBadge}>TERKUNCI</Text>
+      </View>
       <TextInput
-        style={styles.input}
+        style={[styles.input, styles.disabledInput]}
         placeholder="Enter operator name"
         placeholderTextColor="#98A2B3"
         value={namaOperator}
         onChangeText={setNamaOperator}
+        editable={false}
       />
+      <Text style={styles.helperText}>Otomatis dari akun yang masuk.</Text>
 
-      <Text style={styles.label}>SO Number</Text>
+      <View style={styles.labelRow}>
+        <Text style={styles.label}>
+          SO Number <Text style={styles.asterisk}>*</Text>
+        </Text>
+        <Text style={styles.lockedBadge}>TERKUNCI</Text>
+      </View>
       <TextInput
-        style={styles.input}
+        style={[styles.input, styles.disabledInput]}
         placeholder="Enter SO number"
         placeholderTextColor="#98A2B3"
         value={nomorSO}
         onChangeText={setNomorSO}
+        editable={false}
       />
+      <Text style={styles.helperText}>Otomatis dari pekerjaan CS yang sedang dikerjakan.</Text>
 
-      <Text style={styles.label}>Job Description</Text>
+      <Text style={styles.label}>
+        Job Description <Text style={styles.asterisk}>*</Text>
+      </Text>
       <TouchableOpacity
         style={styles.dropdownInput}
         activeOpacity={0.7}
@@ -67,8 +85,13 @@ export const FormInformation: React.FC<FormInformationProps> = ({
         </Text>
         <Text style={styles.arrowIcon}>▼</Text>
       </TouchableOpacity>
+      {isNoChoice && (
+        <Text style={styles.warningText}>Noted Jobdesc wajib diisi</Text>
+      )}
 
-      <Text style={styles.label}>Job Noted</Text>
+      <Text style={styles.label}>
+        Job Noted <Text style={styles.asterisk}>*</Text>
+      </Text>
       <TextInput
         style={styles.input}
         placeholder="Notes"
@@ -76,6 +99,11 @@ export const FormInformation: React.FC<FormInformationProps> = ({
         value={jobNoted}
         onChangeText={setJobNoted}
       />
+      {isNoChoice && (
+        <Text style={styles.warningText}>
+          Wajib diisi karena Job Description 'Tidak Ada Pilihan'
+        </Text>
+      )}
 
       <Modal visible={modalVisible} transparent animationType="fade">
         <TouchableOpacity
@@ -124,17 +152,31 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   cardTitle: {
-    fontSize: RFValue(16), 
-    fontWeight: 'normal',
+    fontSize: RFValue(16),
+    fontWeight: '700',
     fontFamily: 'Hanuman',
     color: '#101828',
-    marginBottom: 14,
+    marginBottom: 16,
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   label: {
-    fontSize: RFValue(12), 
+    fontSize: RFValue(12),
     fontWeight: '600',
     fontFamily: 'Hanuman',
     color: '#344054',
+    marginBottom: 6,
+  },
+  asterisk: {
+    color: '#D92D20',
+  },
+  lockedBadge: {
+    fontSize: RFValue(10),
+    fontWeight: '600',
+    color: '#667085',
+    marginLeft: 6,
     marginBottom: 6,
   },
   input: {
@@ -143,10 +185,27 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    fontSize: RFValue(13), 
+    fontSize: RFValue(13),
     fontFamily: 'Hanuman',
     color: '#101828',
     backgroundColor: '#FFFFFF',
+    marginBottom: 4,
+  },
+  disabledInput: {
+    backgroundColor: '#F2F4F7',
+    color: '#475467',
+  },
+  helperText: {
+    fontSize: RFValue(11),
+    color: '#667085',
+    fontFamily: 'Hanuman',
+    marginBottom: 12,
+  },
+  warningText: {
+    fontSize: RFValue(11),
+    color: '#D97706',
+    fontFamily: 'Hanuman',
+    marginTop: 2,
     marginBottom: 12,
   },
   dropdownInput: {
@@ -159,10 +218,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    marginBottom: 12,
+    marginBottom: 4,
   },
   dropdownText: {
-    fontSize: RFValue(13), 
+    fontSize: RFValue(13),
     fontFamily: 'Hanuman',
     color: '#101828',
   },
@@ -170,7 +229,7 @@ const styles = StyleSheet.create({
     color: '#98A2B3',
   },
   arrowIcon: {
-    fontSize: RFValue(10), 
+    fontSize: RFValue(10),
     color: '#667085',
   },
   modalOverlay: {
@@ -188,8 +247,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalTitle: {
-    fontSize: RFValue(16), 
-    fontWeight: 'normal',
+    fontSize: RFValue(16),
+    fontWeight: '600',
     fontFamily: 'Hanuman',
     color: '#101828',
     marginBottom: 12,
@@ -200,12 +259,12 @@ const styles = StyleSheet.create({
     borderBottomColor: '#F2F4F7',
   },
   modalItemText: {
-    fontSize: RFValue(14), 
+    fontSize: RFValue(14),
     fontFamily: 'Hanuman',
     color: '#344054',
   },
   selectedItemText: {
-    fontWeight: 'normal',
-    color: '#000000',
+    fontWeight: '700',
+    color: '#101828',
   },
 });

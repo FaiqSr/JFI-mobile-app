@@ -8,7 +8,6 @@ import {
   Modal,
   FlatList,
 } from 'react-native';
-
 import { RFValue } from 'react-native-responsive-fontsize';
 
 interface FormDoubleJacketProps {
@@ -39,19 +38,39 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
   setProductType,
   thickness,
   setThickness,
-  notedSize = '',
-  setNotedSize,
+  notedSize: externalNotedSize,
+  setNotedSize: externalSetNotedSize,
   metal,
   setMetal,
   filler,
   setFiller,
-  materialNoted = '',
-  setMaterialNoted,
+  materialNoted: externalMaterialNoted,
+  setMaterialNoted: externalSetMaterialNoted,
 }) => {
+
   const [productTypeModal, setProductTypeModal] = useState(false);
   const [thicknessModal, setThicknessModal] = useState(false);
   const [metalModal, setMetalModal] = useState(false);
   const [fillerModal, setFillerModal] = useState(false);
+  const [internalNotedSize, setInternalNotedSize] = useState('');
+  const [internalMaterialNoted, setInternalMaterialNoted] = useState('');
+
+  const notedSizeVal =
+    externalNotedSize !== undefined ? externalNotedSize : internalNotedSize;
+  const materialNotedVal =
+    externalMaterialNoted !== undefined
+      ? externalMaterialNoted
+      : internalMaterialNoted;
+
+  const handleNotedSizeChange = (text: string) => {
+    if (externalSetNotedSize) externalSetNotedSize(text);
+    setInternalNotedSize(text);
+  };
+
+  const handleMaterialNotedChange = (text: string) => {
+    if (externalSetMaterialNoted) externalSetMaterialNoted(text);
+    setInternalMaterialNoted(text);
+  };
 
   const productTypeOptions = [
     '*Tidak Ada Pilihan',
@@ -83,17 +102,17 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
   ];
 
   const thicknessOptions = [
-    '*Tidak ada pilihan', 
-    '0 mm', 
-    '1 mm', 
+    '*Tidak Ada Pilihan',
+    '0 mm',
+    '1 mm',
     '2 mm',
     '3 mm',
     '4 mm',
-    '5 mm'
+    '5 mm',
   ];
 
   const metalOptions = [
-    '*Tidak ada pilihan',
+    '*Tidak Ada Pilihan',
     'CS',
     'SS 304/304L',
     'SS 316/316L',
@@ -108,28 +127,40 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
     'HASTELOY',
     'ALUMINIUM',
     'BRASS',
-    'COOPER',
+    'COPPER',
   ];
 
   const fillerOptions = [
-    '*Tidak ada pilihan', 
-    'GRAPHITE', 
+    '*Tidak Ada Pilihan',
+    'GRAPHITE',
     'PTFE',
-    'NON ASBETOS', 
+    'NON ASBESTOS',
     'Ceramic',
     'MICA',
     'VERMICULITE',
     'ASBESTOS',
   ];
 
+  const handleSelect = (
+    item: string,
+    setter: (v: string) => void,
+    modalSetter: (v: boolean) => void
+  ) => {
+    const valueToSet = item.startsWith('*') ? '' : item;
+    setter(valueToSet);
+    modalSetter(false);
+  };
+
   return (
     <View>
-      
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Size</Text>
+
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.label}>ID</Text>
+            <Text style={styles.label}>
+              ID <Text style={styles.asterisk}>*</Text>
+            </Text>
             <TextInput
               style={styles.input}
               placeholder="Enter ID"
@@ -139,7 +170,9 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
             />
           </View>
           <View style={styles.column}>
-            <Text style={styles.label}>OD</Text>
+            <Text style={styles.label}>
+              OD <Text style={styles.asterisk}>*</Text>
+            </Text>
             <TextInput
               style={styles.input}
               placeholder="Enter OD"
@@ -152,14 +185,19 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
 
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.label}>Product Type</Text>
+            <Text style={styles.label}>
+              Product Type <Text style={styles.asterisk}>*</Text>
+            </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
               activeOpacity={0.7}
               onPress={() => setProductTypeModal(true)}
             >
-              <Text 
-                style={[styles.dropdownText, !productType && styles.placeholderText]}
+              <Text
+                style={[
+                  styles.dropdownText,
+                  !productType && styles.placeholderText,
+                ]}
                 numberOfLines={1}
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
@@ -171,14 +209,19 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           </View>
 
           <View style={styles.column}>
-            <Text style={styles.label}>Thickness</Text>
+            <Text style={styles.label}>
+              Thickness <Text style={styles.asterisk}>*</Text>
+            </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
               activeOpacity={0.7}
               onPress={() => setThicknessModal(true)}
             >
-              <Text 
-                style={[styles.dropdownText, !thickness && styles.placeholderText]}
+              <Text
+                style={[
+                  styles.dropdownText,
+                  !thickness && styles.placeholderText,
+                ]}
                 numberOfLines={1}
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
@@ -193,10 +236,10 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
         <Text style={styles.label}>NOTED SIZE</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter node size"
+          placeholder="Enter noted size"
           placeholderTextColor="#98A2B3"
-          value={notedSize}
-          onChangeText={setNotedSize}
+          value={notedSizeVal}
+          onChangeText={handleNotedSizeChange}
         />
       </View>
 
@@ -205,14 +248,19 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
 
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.label}>Metal</Text>
+            <Text style={styles.label}>
+              Metal <Text style={styles.asterisk}>*</Text>
+            </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
               activeOpacity={0.7}
               onPress={() => setMetalModal(true)}
             >
-              <Text 
-                style={[styles.dropdownText, !metal && styles.placeholderText]}
+              <Text
+                style={[
+                  styles.dropdownText,
+                  !metal && styles.placeholderText,
+                ]}
                 numberOfLines={1}
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
@@ -224,14 +272,19 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           </View>
 
           <View style={styles.column}>
-            <Text style={styles.label}>Filler</Text>
+            <Text style={styles.label}>
+              Filler <Text style={styles.asterisk}>*</Text>
+            </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
               activeOpacity={0.7}
               onPress={() => setFillerModal(true)}
             >
-              <Text 
-                style={[styles.dropdownText, !filler && styles.placeholderText]}
+              <Text
+                style={[
+                  styles.dropdownText,
+                  !filler && styles.placeholderText,
+                ]}
                 numberOfLines={1}
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
@@ -248,8 +301,8 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           style={styles.input}
           placeholder="Enter material noted"
           placeholderTextColor="#98A2B3"
-          value={materialNoted}
-          onChangeText={setMaterialNoted}
+          value={materialNotedVal}
+          onChangeText={handleMaterialNotedChange}
         />
       </View>
 
@@ -267,12 +320,16 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.modalItem}
-                  onPress={() => {
-                    setProductType(item);
-                    setProductTypeModal(false);
-                  }}
+                  onPress={() =>
+                    handleSelect(item, setProductType, setProductTypeModal)
+                  }
                 >
-                  <Text style={[styles.modalItemText, item === productType && styles.selectedItemText]}>
+                  <Text
+                    style={[
+                      styles.modalItemText,
+                      item === productType && styles.selectedItemText,
+                    ]}
+                  >
                     {item}
                   </Text>
                 </TouchableOpacity>
@@ -296,12 +353,16 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.modalItem}
-                  onPress={() => {
-                    setThickness(item);
-                    setThicknessModal(false);
-                  }}
+                  onPress={() =>
+                    handleSelect(item, setThickness, setThicknessModal)
+                  }
                 >
-                  <Text style={[styles.modalItemText, item === thickness && styles.selectedItemText]}>
+                  <Text
+                    style={[
+                      styles.modalItemText,
+                      item === thickness && styles.selectedItemText,
+                    ]}
+                  >
                     {item}
                   </Text>
                 </TouchableOpacity>
@@ -325,12 +386,14 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.modalItem}
-                  onPress={() => {
-                    setMetal(item);
-                    setMetalModal(false);
-                  }}
+                  onPress={() => handleSelect(item, setMetal, setMetalModal)}
                 >
-                  <Text style={[styles.modalItemText, item === metal && styles.selectedItemText]}>
+                  <Text
+                    style={[
+                      styles.modalItemText,
+                      item === metal && styles.selectedItemText,
+                    ]}
+                  >
                     {item}
                   </Text>
                 </TouchableOpacity>
@@ -354,12 +417,16 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.modalItem}
-                  onPress={() => {
-                    setFiller(item);
-                    setFillerModal(false);
-                  }}
+                  onPress={() =>
+                    handleSelect(item, setFiller, setFillerModal)
+                  }
                 >
-                  <Text style={[styles.modalItemText, item === filler && styles.selectedItemText]}>
+                  <Text
+                    style={[
+                      styles.modalItemText,
+                      item === filler && styles.selectedItemText,
+                    ]}
+                  >
                     {item}
                   </Text>
                 </TouchableOpacity>
@@ -387,8 +454,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   cardTitle: {
-    fontSize: RFValue(16), 
-    fontWeight: 'normal',
+    fontSize: RFValue(16),
+    fontWeight: '700',
     fontFamily: 'Hanuman',
     color: '#101828',
     marginBottom: 14,
@@ -401,11 +468,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   label: {
-    fontSize: RFValue(12), 
+    fontSize: RFValue(12),
     fontWeight: '600',
     fontFamily: 'Hanuman',
     color: '#344054',
     marginBottom: 6,
+  },
+  asterisk: {
+    color: '#D92D20',
   },
   input: {
     borderWidth: 1,
@@ -413,7 +483,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    fontSize: RFValue(13), 
+    fontSize: RFValue(13),
     fontFamily: 'Hanuman',
     color: '#101828',
     backgroundColor: '#FFFFFF',
@@ -433,7 +503,7 @@ const styles = StyleSheet.create({
   },
   dropdownText: {
     flex: 1,
-    fontSize: RFValue(12.5), 
+    fontSize: RFValue(12.5),
     fontFamily: 'Hanuman',
     color: '#101828',
     marginRight: 4,
@@ -442,7 +512,7 @@ const styles = StyleSheet.create({
     color: '#98A2B3',
   },
   arrowIcon: {
-    fontSize: RFValue(10), 
+    fontSize: RFValue(10),
     color: '#667085',
   },
   modalOverlay: {
@@ -460,8 +530,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalTitle: {
-    fontSize: RFValue(16), 
-    fontWeight: 'normal',
+    fontSize: RFValue(16),
+    fontWeight: '600',
     fontFamily: 'Hanuman',
     color: '#101828',
     marginBottom: 12,
@@ -472,12 +542,12 @@ const styles = StyleSheet.create({
     borderBottomColor: '#F2F4F7',
   },
   modalItemText: {
-    fontSize: RFValue(14), 
+    fontSize: RFValue(14),
     fontFamily: 'Hanuman',
     color: '#344054',
   },
   selectedItemText: {
-    fontWeight: 'normal',
-    color: '#000000',
+    fontWeight: '700',
+    color: '#101828',
   },
 });

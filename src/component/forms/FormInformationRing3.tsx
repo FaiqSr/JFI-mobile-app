@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+} from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 interface FormInformationProps {
@@ -27,60 +35,98 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
 
   const jobOptions = [
     '*Tidak ada pilihan',
-    'LASER CUTTING', 
-    'CUT STRIP', 
-    'STRAIGHTENING', 
-    'BENDING (automatic)', 
-    'BENDING (manual)', 
-    'FLATTENING', 
-    'CUT RING', 
-    'WELDING', 
-    'GRINDING', 
-    'GRINDING (welding)', 
-    'GRINDING(solid)', 
-    'ANGLING IR', 
-    'GROVE OR', 
-    'POLESHING', 
-    'BUBUT', 
-    'PAINTING', 
-    'POWDER COATING'
+    'LASER CUTTING',
+    'CUT STRIP',
+    'STRAIGHTENING',
+    'BENDING (automatic)',
+    'BENDING (manual)',
+    'FLATTENING',
+    'CUT RING',
+    'WELDING',
+    'GRINDING',
+    'GRINDING (welding)',
+    'GRINDING(solid)',
+    'ANGLING IR',
+    'GROVE OR',
+    'POLESHING',
+    'BUBUT',
+    'PAINTING',
+    'POWDER COATING',
   ];
+
+  const isNoChoice =
+    jobDescription === 'Tidak Ada Pilihan' ||
+    jobDescription === '*Tidak Ada Pilihan' ||
+    jobDescription === '*Tidak ada pilihan';
 
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Information</Text>
 
-      <Text style={styles.label}>Operator Name</Text>
+      {/* Operator Name */}
+      <View style={styles.labelRow}>
+        <Text style={styles.label}>
+          Operator Name <Text style={styles.asterisk}>*</Text>
+        </Text>
+        <Text style={styles.lockedBadge}>TERKUNCI</Text>
+      </View>
       <TextInput
-        style={styles.input}
+        style={[styles.input, styles.disabledInput]}
         placeholder="Enter operator name"
         placeholderTextColor="#98A2B3"
         value={namaOperator}
         onChangeText={setNamaOperator}
+        editable={false}
       />
+      <Text style={styles.helperText}>Otomatis dari akun yang masuk.</Text>
 
-      <Text style={styles.label}>SO Number</Text>
+      {/* SO Number */}
+      <View style={styles.labelRow}>
+        <Text style={styles.label}>
+          SO Number <Text style={styles.asterisk}>*</Text>
+        </Text>
+        <Text style={styles.lockedBadge}>TERKUNCI</Text>
+      </View>
       <TextInput
-        style={styles.input}
+        style={[styles.input, styles.disabledInput]}
         placeholder="Enter SO number"
         placeholderTextColor="#98A2B3"
         value={nomorSO}
         onChangeText={setNomorSO}
+        editable={false}
       />
+      <Text style={styles.helperText}>
+        Otomatis dari pekerjaan CS yang sedang dikerjakan.
+      </Text>
 
-      <Text style={styles.label}>Job Description</Text>
+      {/* Job Description Dropdown */}
+      <Text style={styles.label}>
+        Job Description <Text style={styles.asterisk}>*</Text>
+      </Text>
       <TouchableOpacity
         style={styles.dropdownInput}
         activeOpacity={0.7}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={[styles.dropdownText, !jobDescription && styles.placeholderText]}>
+        <Text
+          style={[
+            styles.dropdownText,
+            !jobDescription && styles.placeholderText,
+          ]}
+          numberOfLines={1}
+        >
           {jobDescription || 'Select job description'}
         </Text>
         <Text style={styles.arrowIcon}>▼</Text>
       </TouchableOpacity>
+      {isNoChoice && (
+        <Text style={styles.warningText}>Noted Jobdesc wajib diisi</Text>
+      )}
 
-      <Text style={styles.label}>Job Noted</Text>
+      {/* Job Noted */}
+      <Text style={styles.label}>
+        Job Noted <Text style={styles.asterisk}>*</Text>
+      </Text>
       <TextInput
         style={styles.input}
         placeholder="Notes"
@@ -88,7 +134,13 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
         value={jobNoted}
         onChangeText={setJobNoted}
       />
+      {isNoChoice && (
+        <Text style={styles.warningText}>
+          Wajib diisi karena Job Description 'Tidak Ada Pilihan'
+        </Text>
+      )}
 
+      {/* Modal Pilihan Job Description */}
       <Modal visible={modalVisible} transparent animationType="fade">
         <TouchableOpacity
           style={styles.modalOverlay}
@@ -108,7 +160,12 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
                     setModalVisible(false);
                   }}
                 >
-                  <Text style={[styles.modalItemText, item === jobDescription && styles.selectedItemText]}>
+                  <Text
+                    style={[
+                      styles.modalItemText,
+                      item === jobDescription && styles.selectedItemText,
+                    ]}
+                  >
                     {item}
                   </Text>
                 </TouchableOpacity>
@@ -137,16 +194,30 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: RFValue(16),
-    fontWeight: 'normal',
+    fontWeight: '700',
     fontFamily: 'Hanuman',
     color: '#101828',
-    marginBottom: 14,
+    marginBottom: 16,
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   label: {
     fontSize: RFValue(12),
     fontWeight: '600',
     fontFamily: 'Hanuman',
     color: '#344054',
+    marginBottom: 6,
+  },
+  asterisk: {
+    color: '#D92D20',
+  },
+  lockedBadge: {
+    fontSize: RFValue(10),
+    fontWeight: '600',
+    color: '#667085',
+    marginLeft: 6,
     marginBottom: 6,
   },
   input: {
@@ -159,6 +230,23 @@ const styles = StyleSheet.create({
     fontFamily: 'Hanuman',
     color: '#101828',
     backgroundColor: '#FFFFFF',
+    marginBottom: 4,
+  },
+  disabledInput: {
+    backgroundColor: '#F2F4F7',
+    color: '#475467',
+  },
+  helperText: {
+    fontSize: RFValue(11),
+    color: '#667085',
+    fontFamily: 'Hanuman',
+    marginBottom: 12,
+  },
+  warningText: {
+    fontSize: RFValue(11),
+    color: '#D97706',
+    fontFamily: 'Hanuman',
+    marginTop: 2,
     marginBottom: 12,
   },
   dropdownInput: {
@@ -171,9 +259,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    marginBottom: 12,
+    marginBottom: 4,
   },
   dropdownText: {
+    flex: 1,
+    marginRight: 8,
     fontSize: RFValue(13),
     fontFamily: 'Hanuman',
     color: '#101828',
@@ -201,7 +291,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: RFValue(16),
-    fontWeight: 'normal',
+    fontWeight: '600',
     fontFamily: 'Hanuman',
     color: '#101828',
     marginBottom: 12,
@@ -217,7 +307,7 @@ const styles = StyleSheet.create({
     color: '#344054',
   },
   selectedItemText: {
-    fontWeight: 'normal',
-    color: '#000000',
+    fontWeight: '700',
+    color: '#101828',
   },
 });

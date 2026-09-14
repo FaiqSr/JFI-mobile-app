@@ -1,102 +1,281 @@
 import React from 'react';
-import { View, Text, Image, BackHandler, StyleSheet, ScrollView } from 'react-native';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { MenuButton } from '../component/common/ButtonMenu';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  Alert,
+} from 'react-native';
+import { ExtendedScreenType } from '../../App';
 
 interface HomeScreenProps {
-  onNavigate: (screenName: 'HOME' | 'RING_1' | 'RING_2' | 'RING_3' | 'SEALING_ELEMENT' | 'DOUBLE_JACKETED') => void;
+  userName?: string;
+  onNavigate: (screen: ExtendedScreenType) => void;
+  onLogout: () => void;
+  activeScreen?: ExtendedScreenType | null;
 }
 
-export const HomeScreen = ({ onNavigate }: HomeScreenProps) => {
+export const HomeScreen = ({
+  userName = '',
+  onNavigate,
+  onLogout,
+  activeScreen,
+}: HomeScreenProps) => {
+  const handleLogoutPress = () => {
+    Alert.alert('Konfirmasi', 'Apakah Anda yakin ingin keluar?', [
+      { text: 'Batal', style: 'cancel' },
+      { text: 'Keluar', style: 'destructive', onPress: onLogout },
+    ]);
+  };
+
+  const isTaskActive = Boolean(
+    activeScreen &&
+      activeScreen !== 'HOME' &&
+      activeScreen !== 'PEKERJAAN_CS' &&
+      activeScreen !== 'PROFIL'
+  );
+
+  const handleLanjutkanPekerjaan = () => {
+    if (isTaskActive && activeScreen) {
+      onNavigate(activeScreen);
+    } else {
+      onNavigate('PEKERJAAN_CS');
+    }
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.logoContainer}>
-        <Image
-          source={require('../../assets/logoapps.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+    <View style={styles.container}>
+      <View style={styles.headerBar}>
+        <View style={styles.userBadge}>
+          <Text style={styles.userBadgeText}>{userName}</Text>
+        </View>
+
+        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogoutPress}>
+          <Text style={styles.logoutBtnText}>Keluar</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.badgeContainer}>
-        <Text style={styles.badgeText}>WORK SHEET</Text>
-      </View>
-      
-      <View style={styles.dividerContainer}>
-        <View style={styles.line} />
-        <View style={styles.dot} />
-        <View style={styles.line} />
-      </View>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.centerSection}>
+          <Image
+            source={require('../../assets/logoapps.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
 
-      <View style={styles.menuContainer}>
-        <MenuButton title="RING 1" onPress={() => onNavigate('RING_1')} />
-        <MenuButton title="RING 2" onPress={() => onNavigate('RING_2')} />
-        <MenuButton title="RING 3" onPress={() => onNavigate('RING_3')} />
-        <MenuButton title="SEALING ELEMENT" onPress={() => onNavigate('SEALING_ELEMENT')} />
-        <MenuButton title="DOUBLE JACKETED GASKET" onPress={() => onNavigate('DOUBLE_JACKETED')} />
-        <MenuButton title="EXIT" onPress={() => BackHandler.exitApp()} isExit />
-      </View>
-    </ScrollView>
+          <View style={styles.worksheetBadge}>
+            <Text style={styles.worksheetText}>WORK SHEET</Text>
+          </View>
+
+          <View style={styles.dividerContainer}>
+            <View style={styles.dividerLine} />
+            <View style={styles.yellowDot} />
+            <View style={styles.dividerLine} />
+          </View>
+        </View>
+
+        <View style={styles.menuContainer}>
+          <TouchableOpacity
+            style={styles.cardBtn}
+            onPress={() => onNavigate('PEKERJAAN_CS')}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.cardLabel}>Pekerjaan CS/SO</Text>
+            <View style={[styles.badgeTag, styles.csBadge]}>
+              <Text style={styles.csBadgeText}>CS</Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Tombol Lanjutkan Pekerjaan Aktif */}
+          <TouchableOpacity
+            style={styles.cardBtn}
+            onPress={handleLanjutkanPekerjaan}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.cardLabel}>Lanjutkan Pekerjaan Aktif</Text>
+
+            <View
+              style={[
+                styles.badgeTag,
+                isTaskActive ? styles.aktifBadge : styles.inaktifBadge,
+              ]}
+            >
+              <Text
+                style={
+                  isTaskActive ? styles.aktifBadgeText : styles.inaktifBadgeText
+                }
+              >
+                {isTaskActive ? 'AKTIF' : 'KOSONG'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.cardBtn}
+            onPress={() => onNavigate('PROFIL')}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.cardLabel}>Profil Saya</Text>
+            <View style={[styles.badgeTag, styles.akunBadge]}>
+              <Text style={styles.akunBadgeText}>AKUN</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 40,
-    backgroundColor: '#F9FAFB',
+    flex: 1,
+    backgroundColor: '#F9F9F9',
   },
-  logoContainer: {
+  headerBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
+  userBadge: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 18,
+    paddingVertical: 8,
+    borderRadius: 20,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+  },
+  userBadgeText: {
+    fontSize: 14,
+    color: '#333333',
+    fontWeight: '500',
+  },
+  logoutBtn: {
+    backgroundColor: '#0F172A',
+    paddingHorizontal: 22,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  logoutBtnText: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  scrollContent: {
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    paddingBottom: 40,
+  },
+  centerSection: {
+    alignItems: 'center',
+    marginTop: 20,
+    width: '100%',
+  },
+  logo: {
     width: 140,
     height: 140,
     marginBottom: 20,
   },
-  logo: {
-    width: '100%',
-    height: '100%',
-  },
-  badgeContainer: {
+  worksheetBadge: {
     backgroundColor: '#FFFFFF',
-    paddingVertical: 10,
-    paddingHorizontal: 28,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#E4E7EC',
+    elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-    marginBottom: 20,
+    shadowRadius: 3,
   },
-  badgeText: {
-    color: '#101828',
-    fontSize: RFValue(14),
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
+  worksheetText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#334155',
+    letterSpacing: 1.5,
   },
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
-    marginBottom: 24,
+    width: '65%',
+    marginVertical: 28,
   },
-  line: {
+  dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#98A2B3',
+    backgroundColor: '#CBD5E1',
   },
-  dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#D97706',
-    marginHorizontal: 12,
+  yellowDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#EAB308',
+    marginHorizontal: 8,
   },
   menuContainer: {
     width: '100%',
+    gap: 16,
+  },
+  cardBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 18,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+  },
+  cardLabel: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#0F172A',
+  },
+  badgeTag: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 14,
+  },
+  csBadge: {
+    backgroundColor: '#0F172A',
+  },
+  csBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  aktifBadge: {
+    backgroundColor: '#FEF3C7',
+  },
+  aktifBadgeText: {
+    color: '#D97706',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  inaktifBadge: {
+    backgroundColor: '#F1F5F9',
+  },
+  inaktifBadgeText: {
+    color: '#94A3B8',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  akunBadge: {
+    backgroundColor: '#E2E8F0',
+  },
+  akunBadgeText: {
+    color: '#475569',
+    fontSize: 11,
+    fontWeight: '700',
   },
 });

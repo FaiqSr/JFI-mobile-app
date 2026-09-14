@@ -48,6 +48,19 @@ export const FormTime: React.FC<FormTimeProps> = ({
   noteTimeActivities = '',
   setNoteTimeActivities,
 }) => {
+  const isEnded = startTimestamp !== null && stopTimestamp !== null;
+
+  let buttonLabel = 'START';
+  let buttonStyle = styles.startButtonStyle;
+
+  if (isEnded) {
+    buttonLabel = 'END';
+    buttonStyle = styles.endButtonStyle;
+  } else if (isStarted) {
+    buttonLabel = 'STOP';
+    buttonStyle = styles.stopButtonStyle;
+  }
+
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Time & Activities</Text>
@@ -74,10 +87,12 @@ export const FormTime: React.FC<FormTimeProps> = ({
       </View>
 
       <TouchableOpacity
-        style={[styles.startStopButton, isStarted ? styles.stopButtonStyle : styles.startButtonStyle]}
+        style={[styles.startStopButton, buttonStyle]}
         onPress={handleToggleStartStop}
+        disabled={isEnded}
+        activeOpacity={0.8}
       >
-        <Text style={styles.startStopButtonText}>{isStarted ? 'STOP' : 'START'}</Text>
+        <Text style={styles.startStopButtonText}>{buttonLabel}</Text>
       </TouchableOpacity>
 
       <View style={styles.row}>
@@ -86,7 +101,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
             label="Ganti Order - A"
             unit="menit"
             keyboardType="number-pad"
-            value={String(gantiOrder)}
+            value={gantiOrder === 0 ? '' : String(gantiOrder)}
+            placeholder="0"
             onChangeText={(v: string) => setGantiOrder(parseIntegerInput(v))}
           />
         </View>
@@ -95,7 +111,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
             label="Repair - B"
             unit="menit"
             keyboardType="number-pad"
-            value={String(repair)}
+            value={repair === 0 ? '' : String(repair)}
+            placeholder="0"
             onChangeText={(v: string) => setRepair(parseIntegerInput(v))}
           />
         </View>
@@ -107,7 +124,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
             label="Material Tunggu - C"
             unit="menit"
             keyboardType="number-pad"
-            value={String(materialTunggu)}
+            value={materialTunggu === 0 ? '' : String(materialTunggu)}
+            placeholder="0"
             onChangeText={(v: string) => setMaterialTunggu(parseIntegerInput(v))}
           />
         </View>
@@ -116,7 +134,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
             label="Operator - D"
             unit="menit"
             keyboardType="number-pad"
-            value={String(operatorTime)}
+            value={operatorTime === 0 ? '' : String(operatorTime)}
+            placeholder="0"
             onChangeText={(v: string) => setOperatorTime(parseIntegerInput(v))}
           />
         </View>
@@ -128,7 +147,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
             label="Maintenance - E"
             unit="menit"
             keyboardType="number-pad"
-            value={String(maintenance)}
+            value={maintenance === 0 ? '' : String(maintenance)}
+            placeholder="0"
             onChangeText={(v: string) => setMaintenance(parseIntegerInput(v))}
           />
         </View>
@@ -137,7 +157,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
             label="Checking - F"
             unit="menit"
             keyboardType="number-pad"
-            value={String(checking)}
+            value={checking === 0 ? '' : String(checking)}
+            placeholder="0"
             onChangeText={(v: string) => setChecking(parseIntegerInput(v))}
           />
         </View>
@@ -165,6 +186,7 @@ const styles = StyleSheet.create({
   startStopButton: { paddingVertical: 12, borderRadius: 10, alignItems: 'center', marginBottom: 16 },
   startButtonStyle: { backgroundColor: '#000000' },
   stopButtonStyle: { backgroundColor: '#D92D20' },
+  endButtonStyle: { backgroundColor: '#667085' },
   startStopButtonText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontSize: RFValue(15), letterSpacing: 1 },
   noteContainer: { marginTop: 8 },
 });
