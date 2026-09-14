@@ -79,10 +79,8 @@ const handleUnauthorized = async (retryCallback: (newToken: string) => Promise<a
       return await retryCallback(newToken);
     }
     
-    // Panggil logout internal
     await authService.logout();
     
-    // Pancarkan sinyal FORCE_LOGOUT agar App.tsx langsung mengalihkan ke Screen Login
     DeviceEventEmitter.emit('FORCE_LOGOUT');
   } catch (e) {
     console.error('Gagal auto logout:', e);

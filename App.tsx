@@ -96,7 +96,6 @@ export default function App() {
   }, []);
 
   const activeScreen = useMemo(() => {
-
     const runningTimerKey = Object.keys(formsData).find((key) => {
       const form = formsData[key];
       return form && (form.isStarted || form.startTimestamp !== null);
@@ -202,25 +201,77 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [isRestored, currentScreen, formsData, activeScreen]);
 
+  // FIX: Mengunci nomorSO dan header data agar tidak hilang saat clear/simpan
   const handleClear = useCallback(async () => {
-    setLastActiveScreen(null);
+    if (
+      currentScreen !== 'HOME' &&
+      currentScreen !== 'PEKERJAAN_CS' &&
+      currentScreen !== 'PROFIL'
+    ) {
+      const activeData = formsData[currentScreen];
 
-    const emptyForms: Record<string, ScreenFormData> = {
-      RING_1: { ...initialFormState, namaOperator: userName },
-      RING_2: { ...initialFormState, namaOperator: userName },
-      RING_3: { ...initialFormState, namaOperator: userName },
-      SEALING_ELEMENT: { ...initialFormState, namaOperator: userName },
-      DOUBLE_JACKETED: { ...initialFormState, namaOperator: userName },
-    };
-    setFormsData(emptyForms);
+      // Ambil nilai fallback dari selectedCsTask jika di state form bernilai kosong
+      const fallbackSo = selectedCsTask ? getItemSoNo(selectedCsTask) : '';
+      const fallbackTaskObj = selectedCsTask
+        ? ((selectedCsTask as any)?.item || (selectedCsTask as any)?.task || selectedCsTask)
+        : null;
 
-    try {
-      await AsyncStorage.removeItem(LAST_SCREEN_KEY);
-      await AsyncStorage.removeItem(DRAFT_KEY);
-    } catch (e) {
-      console.error('Gagal membersihkan draf dari penyimpanan:', e);
+      const preservedTaskId =
+        activeData?.taskId ||
+        (fallbackTaskObj?.taskId || fallbackTaskObj?.task_id || fallbackTaskObj?.id || '');
+
+      const preservedOperator = activeData?.namaOperator || userName;
+
+      const preservedSO =
+        activeData?.nomorSO ||
+        (activeData as any)?.noSO ||
+        (fallbackSo !== '-' ? fallbackSo : '') ||
+        '';
+
+      const preservedClass =
+        activeData?.classVal ||
+        (fallbackTaskObj?.class ? String(fallbackTaskObj.class) : '');
+
+      const preservedSize =
+        activeData?.size ||
+        (fallbackTaskObj?.size ? String(fallbackTaskObj.size) : '');
+
+      const preservedMaterial = activeData?.materialNoted || '';
+
+      setFormsData((prev) => ({
+        ...prev,
+        [currentScreen]: {
+          ...initialFormState,
+          taskId: String(preservedTaskId),
+          namaOperator: String(preservedOperator),
+          nomorSO: String(preservedSO),
+          classVal: String(preservedClass),
+          size: String(preservedSize),
+          materialNoted: String(preservedMaterial),
+        },
+      }));
+
+      saveLastActiveScreen(currentScreen as ScreenType);
+    } else {
+      setLastActiveScreen(null);
+      setSelectedCsTask(null);
+      const emptyForms: Record<string, ScreenFormData> = {
+        RING_1: { ...initialFormState, namaOperator: userName },
+        RING_2: { ...initialFormState, namaOperator: userName },
+        RING_3: { ...initialFormState, namaOperator: userName },
+        SEALING_ELEMENT: { ...initialFormState, namaOperator: userName },
+        DOUBLE_JACKETED: { ...initialFormState, namaOperator: userName },
+      };
+      setFormsData(emptyForms);
+
+      try {
+        await AsyncStorage.removeItem(LAST_SCREEN_KEY);
+        await AsyncStorage.removeItem(DRAFT_KEY);
+      } catch (e) {
+        console.error('Gagal membersihkan draf dari penyimpanan:', e);
+      }
     }
-  }, [userName]);
+  }, [currentScreen, formsData, userName, selectedCsTask, saveLastActiveScreen]);
 
   const handleNavigate = useCallback((screen: ExtendedScreenType) => {
     if (
