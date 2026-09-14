@@ -7,6 +7,7 @@ import {
   View,
   Text,
   TextInput,
+  DeviceEventEmitter,
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
@@ -81,7 +82,6 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isRestored, setIsRestored] = useState(false);
 
-  // Simpan/hapus lastActiveScreen ke AsyncStorage
   const saveLastActiveScreen = useCallback(async (screen: ScreenType | null) => {
     setLastActiveScreen(screen);
     try {
@@ -95,16 +95,14 @@ export default function App() {
     }
   }, []);
 
-  // LOGIKA ACTIVESCREEN UTAMA
   const activeScreen = useMemo(() => {
-    // 1. Cek jika ada timer berjalan
+
     const runningTimerKey = Object.keys(formsData).find((key) => {
       const form = formsData[key];
       return form && (form.isStarted || form.startTimestamp !== null);
     });
     if (runningTimerKey) return runningTimerKey as ScreenType;
 
-    // 2. Cek jika ada data form terisi (mempunyai taskId atau nomorSO)
     const activeTaskKey = Object.keys(formsData).find((key) => {
       const form = formsData[key];
       if (!form) return false;
@@ -112,7 +110,6 @@ export default function App() {
     });
     if (activeTaskKey) return activeTaskKey as ScreenType;
 
-    // 3. Fallback ke lastActiveScreen jika ada
     return lastActiveScreen;
   }, [formsData, lastActiveScreen]);
 
@@ -150,7 +147,6 @@ export default function App() {
     }));
   };
 
-  // 1. MEMUAT DRAF SAAT APLIKASI PERTAMA DI BUKA
   useEffect(() => {
     const loadSavedDraft = async () => {
       try {
@@ -160,7 +156,6 @@ export default function App() {
         if (jsonDraft !== null) {
           const draft = JSON.parse(jsonDraft);
           if (draft.formsData) {
-            // Pastikan beneran ada isi data di salah satu form
             const hasAnyData = Object.values(draft.formsData).some(
               (form: any) => hasValue(form.taskId) || hasValue(form.nomorSO)
             );
@@ -171,7 +166,6 @@ export default function App() {
                 setLastActiveScreen(savedLastScreen as ScreenType);
               }
             } else {
-              // Jika isinya kosong semua, hapus draf bekas
               await AsyncStorage.removeItem(DRAFT_KEY);
               await AsyncStorage.removeItem(LAST_SCREEN_KEY);
             }
@@ -187,13 +181,11 @@ export default function App() {
     loadSavedDraft();
   }, []);
 
-  // 2. AUTO-SAVE DRAF KE ASYNCSTORAGE (HANYA JIKA ADA FORM AKTIF)
   useEffect(() => {
     if (!isRestored) return;
 
     const timer = setTimeout(async () => {
       try {
-        // Jika activeScreen null (kosong), bersihkan AsyncStorage agar tidak overwrite
         if (!activeScreen) {
           await AsyncStorage.removeItem(DRAFT_KEY);
           await AsyncStorage.removeItem(LAST_SCREEN_KEY);
@@ -210,12 +202,9 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [isRestored, currentScreen, formsData, activeScreen]);
 
-  // 3. FUNGSI CLEAR FORM DAN RESET TOTAL DRAF & MODUL AKTIF
   const handleClear = useCallback(async () => {
-    // Reset state lastActiveScreen ke null
     setLastActiveScreen(null);
 
-    // Reset SEMUA modul ke initialFormState
     const emptyForms: Record<string, ScreenFormData> = {
       RING_1: { ...initialFormState, namaOperator: userName },
       RING_2: { ...initialFormState, namaOperator: userName },
@@ -225,7 +214,6 @@ export default function App() {
     };
     setFormsData(emptyForms);
 
-    // Hapus total penyimpanan di AsyncStorage
     try {
       await AsyncStorage.removeItem(LAST_SCREEN_KEY);
       await AsyncStorage.removeItem(DRAFT_KEY);
@@ -416,7 +404,7 @@ export default function App() {
     setIsLoggedIn(true);
   };
 
-  const handleLogoutSuccess = async () => {
+  const handleLogoutSuccess = useCallback(async () => {
     try {
       await authService.logout();
     } catch (e) {
@@ -427,7 +415,14 @@ export default function App() {
       setIsLoggedIn(false);
       setCurrentScreen('HOME');
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('FORCE_LOGOUT', () => {
+      handleLogoutSuccess();
+    });
+    return () => subscription.remove();
+  }, [handleLogoutSuccess]);
 
   if (!fontsLoaded || !isRestored || isLoggedIn === null) {
     return (

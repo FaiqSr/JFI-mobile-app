@@ -1,4 +1,4 @@
-import { Alert } from 'react-native';
+import { Alert, DeviceEventEmitter } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const BASE_URL = (
@@ -12,7 +12,7 @@ let isLoggingOut = false;
 export const authService = {
   login: async (username: string, password: string) => {
     const url = `${BASE_URL}/user/login`;
-    console.log(` [Auth Request] POST -> ${url}`);
+    console.log(`[Auth Request] POST -> ${url}`);
 
     try {
       const res = await fetch(url, {
@@ -24,7 +24,7 @@ export const authService = {
         body: JSON.stringify({ username: username.trim(), password }),
       });
 
-      console.log(` [Auth Status] POST -> ${url} [${res.status}]`);
+      console.log(`[Auth Status] POST -> ${url} [${res.status}]`);
       const json = await res.json().catch(() => ({}));
 
       if (!res.ok) {
@@ -58,7 +58,7 @@ export const authService = {
 
       return { success: true, data: json.data };
     } catch (error: any) {
-      console.error('❌ [Auth Error] Login:', error?.message || error);
+      console.error('[Auth Error] Login:', error?.message || error);
       Alert.alert('Koneksi Gagal', 'Tidak dapat terhubung ke server auth.');
       return { success: false };
     }
@@ -67,7 +67,7 @@ export const authService = {
   refreshAccessToken: async (): Promise<string | null> => {
     if (!isLoggingOut) {
       isLoggingOut = true;
-      console.warn('⚠️ [Auth Warning] Token kadaluarsa (401). Mengarahkan user kembali ke Login...');
+      console.warn('[Auth Warning] Token kadaluarsa (401). Mengarahkan user kembali ke Login...');
       await authService.logout();
 
       setTimeout(() => {
@@ -103,7 +103,7 @@ export const authService = {
 
       return { success: false };
     } catch (error: any) {
-      console.error('❌ [Auth Error] Get Profile:', error?.message || error);
+      console.error('[Auth Error] Get Profile:', error?.message || error);
       return { success: false };
     }
   },
@@ -141,7 +141,7 @@ export const authService = {
         return { success: false };
       }
     } catch (error: any) {
-      console.error('❌ [Auth Error] Update Profile:', error?.message || error);
+      console.error('[Auth Error] Update Profile:', error?.message || error);
       Alert.alert('Koneksi Gagal', 'Tidak dapat terhubung ke server.');
       return { success: false };
     }
@@ -158,7 +158,9 @@ export const authService = {
         'userPermissions',
       ]);
     } catch (e) {
-      console.error('❌ [Auth Error] Logout:', e);
+      console.error('[Auth Error] Logout:', e);
+    } finally {
+      DeviceEventEmitter.emit('FORCE_LOGOUT');
     }
   }
 };
