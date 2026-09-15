@@ -1,3 +1,90 @@
-# Expo HAS CHANGED
+# JFI Gasket — Mobile App (Expo / React Native)
 
-Read the exact versioned docs at https://docs.expo.dev/versions/v54.0.0/ before writing any code.
+Field app for JFI Gasket's shop floor: operators log in, pull CS work queues, and submit
+production reports for five modules (Ring 1/2/3, Sealing Element, Double Jacketed) to the JFI
+backend, plus PDF viewing and profile editing. Expo SDK 57 + React Native 0.86 + TypeScript
+(strict), single repo, entry `index.js` → `App.tsx`.
+
+## Dev environment
+
+- Do everything inside WSL: `wsl -d Ubuntu-24.04 --cd /home/celi/Documents/JFI-mobile-app -- bash -lc '<cmd>'`.
+  Node v22.23.2 / npm 10.9.8 live there; the Windows shell cannot `cd` into the UNC path.
+- Install with `npm install` (npm + `package-lock.json`, no yarn/pnpm).
+- Repo has **no `.env`** (it is gitignored) — see "API URLs" below before running anything.
+
+## Commands (verified)
+
+- `npm start` — Expo dev server (Metro). Also `npm run android`, `npm run ios`, `npm run web`.
+- `npx tsc --noEmit` — the only static check; ~3 s, currently clean. Run it before committing.
+- **No lint and no test runner exist** — no ESLint/Prettier/Jest config, dependency or script.
+  Do not invent `npm run lint` / `npm test`; verify changes with `tsc` plus a real device/emulator run.
+- `eas` CLI is at `/home/celi/.local/bin/eas` but is **22.0.0**, while `eas.json` demands
+  `cli.version >= 22.2.0` — any EAS command fails with "does not satisfy the CLI version
+  constraint". Upgrade first: `npm install -g eas-cli`. Build profiles: `development`,
+  `preview` (APK), `production` (`autoIncrement`).
+
+## API URLs (env vars)
+
+`eas.json` injects `EXPO_PUBLIC_*` per build profile; only four are read in code:
+
+| Var | Read by | Base for |
+| --- | --- | --- |
+| `EXPO_PUBLIC_API_URL` (fallback `EXPO_PUBLIC_AUTH_BASE_URL`) | `src/api/authService.ts` | `/user/login`, `/user/now` |
+| `EXPO_PUBLIC_CS_BASE_URL` | `csService.ts`, `FormService.ts`, `pdfHandler.ts` | `/tasks/*`, `/download/:id` |
+| `EXPO_PUBLIC_PRODUCTION_BASE_URL` | `csService.ts`, `FormService.ts` | `/ring-satu`, `/djg`, `/se`, … |
+
+Locally all of them are `undefined`, so the services fall back to `''` and every request hits a
+relative URL — login then reports "Koneksi Gagal". Create a gitignored `.env` with the four vars
+(or use an EAS development build, where `eas.json` bakes them in).
+`EXPO_PUBLIC_API_BASE_URL`, `_AUTH_LOGIN`, `_AUTH_REFRESH`, `_USER_PROFILE` are set in all three
+profiles but read nowhere — dead config; adding a base URL means editing `eas.json` *and* the constant.
+
+## Architecture & conventions
+
+- **Navigation is hand-rolled**: `renderScreen()`'s `switch` in `App.tsx`, no expo-router /
+  react-navigation (the lockfile mention is only an optional peer). A new screen = a `case` there
+  + a member of `ScreenType` in `src/type/FormType.ts`.
+- **`App.tsx` owns all form state**: `formsData: Record<ScreenType, ScreenFormData>`, mutated only
+  through `updateFormField`. Screens receive `(value, setter)` prop pairs built by
+  `getRingProps` / `getSealingProps` / `getDoubleJacketProps` in `src/api/FormService.ts`
+  (prop builders live in the API file, not next to the screens). New field ⇒ add to
+  `ScreenFormData` + `initialFormState` in `src/type/FormType.ts` and to each prop builder.
+- Layout: `src/screen/` (one file per screen), `src/component/{common,cs,forms}/`, `src/api/`,
+  `src/hooks/`, `src/type/`, `src/utils/`.
+- **API services**: one `async` function per endpoint using plain `fetch`, always returning
+  `{ success, data? }` (never throwing), each owning its own Indonesian `Alert.alert(...)`, logging
+  with the `[API Request] GET -> ${url}` prefix, and handling 401 with a retry-once
+  (`retryWithNewToken = false`) guarded by a module-level single-flight flag.
+- **401 means hard logout, not refresh**: `authService.refreshAccessToken()` never refreshes (the
+  stored `refreshToken` is unused) — it wipes AsyncStorage and emits the `FORCE_LOGOUT`
+  `DeviceEventEmitter` event that `App.tsx` listens for. Don't build features assuming silent renewal.
+- Request payloads: production POSTs use camelCase server fields (`soNo`, `notedSizeOdId`,
+  `finishGoodFG`), CS payloads use snake_case (`product_name`, `job_description`). Endpoint/screen
+  mapping and payload assembly live in `buildPayload()` in `src/api/FormService.ts`.
+- Copy, alerts and code comments are Indonesian; formatting helpers live in
+  `src/utils/date.ts` and `src/utils/csHelpers.ts`.
+- Styles: `StyleSheet.create` at the bottom of each file, sizes via `RFValue(...)` from
+  `react-native-responsive-fontsize`; font scaling is disabled globally in `App.tsx`.
+- Backend field names drift: extract them through `getFirstValidString(...)` /
+  `getItem*()` helpers in `src/utils/csHelpers.ts` (tens of camel/snake aliases) rather than reading
+  one key, and follow that pattern for new fields.
+
+## Pitfalls
+
+- `android/` and `ios/` are gitignored (continuous native generation) — never hand-edit them and
+  don't expect to find them. Native config goes through `app.json` plugins;
+  `expo-build-properties` sets `android.usesCleartextTraffic` (plain-HTTP backend), which
+  **Expo Go ignores**. Behaviour that depends on config plugins needs a development build.
+- The old AGENTS.md note pointed at Expo **v54** docs; this project is on **SDK 57**
+  (`expo` 57.0.24 installed, `~57.0.22` pinned). Read
+  https://docs.expo.dev/versions/v57.0.0/ for the actual API surface.
+- `App.js` is an unreferenced Expo template stub ("Open up App.js…"). Metro resolves `./App` to
+  `.tsx` before `.js` here, so `App.tsx` is the live root component — never edit `App.js` expecting
+  a change. `CLAUDE.md` merely contains `@AGENTS.md`.
+- Form drafts persist to AsyncStorage under `@app_form_draft_v3` + `@app_last_active_screen` with a
+  500 ms debounce; bump the key version when the draft shape changes or stale drafts get restored.
+  Auth keys: `userToken`, `refreshToken`, `userId`, `userName`, `userRole`, `userPermissions`.
+- `app.json` version (1.0.1) + `runtimeVersion.policy: appVersion` + `expo-updates`: an OTA update
+  only reaches builds with the matching runtime version, so bump versions via the EAS profiles.
+- Commit messages follow Conventional Commits (`feat:`, `fix:`, `chore:`, `style:`); single branch
+  `main` → https://github.com/FaiqSr/JFI-mobile-app. No CI workflows exist in this repo.
