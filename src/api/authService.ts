@@ -186,6 +186,10 @@ export const authService = {
 
   logout: async () => {
     try {
+      // Idempoten: kalau sesi sudah bersih, jangan wipe/emit lagi (hindari loop FORCE_LOGOUT).
+      const existingToken = await AsyncStorage.getItem('userToken');
+      if (!existingToken) return;
+
       await AsyncStorage.multiRemove([
         'userToken',
         'refreshToken',
@@ -194,10 +198,9 @@ export const authService = {
         'userRole',
         'userPermissions',
       ]);
+      DeviceEventEmitter.emit('FORCE_LOGOUT');
     } catch (e) {
       console.error('[Auth Error] Logout:', e);
-    } finally {
-      DeviceEventEmitter.emit('FORCE_LOGOUT');
     }
   }
 };

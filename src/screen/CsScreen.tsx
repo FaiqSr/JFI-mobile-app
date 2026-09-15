@@ -9,14 +9,13 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Alert } from '../utils/appAlert';
-import { authService } from '../api/authService';
+import { downloadAndOpenCsPdf, generateCsWorkOrderPDF } from '../utils/pdfHandler';
 import { TaskSession } from '../type/csType';
 import { TaskCard } from '../component/cs/TaskCard';
 import { CsFilterBox, DatePresetType } from '../component/cs/CsFilterBox';
 import { CsDetailModal } from '../component/cs/DetailModal';
 import { SessionTable } from '../component/cs/SessionTable';
 import { HistoryTable } from '../component/cs/HistoryTable';
-import { downloadAndOpenCsPdf, generateCsWorkOrderPDF } from '../utils/pdfHandler';
 import { useCsData } from '../hooks/useCsData';
 
 import {
@@ -90,14 +89,9 @@ export const CsScreen: React.FC<{
     setExpandedItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleLogout = useCallback(async () => {
-    try {
-      await authService.logout();
-    } catch (error) {
-      console.error('Error saat logout:', error);
-    } finally {
-      if (onLogout) onLogout();
-    }
+  const handleLogout = useCallback(() => {
+    // App.tsx yang menangani logout (authService.logout + reset state) via onLogout.
+    onLogout?.();
   }, [onLogout]);
 
   const handleResetFilter = () => {

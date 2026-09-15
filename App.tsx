@@ -455,22 +455,25 @@ export default function App() {
     setIsLoggedIn(true);
   };
 
+  const resetAuthState = useCallback(() => {
+    setUserToken('');
+    setUserName('');
+    setIsLoggedIn(false);
+    setCurrentScreen('HOME');
+  }, []);
+
   const handleLogoutSuccess = useCallback(async () => {
     try {
+      // logout() wipe storage + emit FORCE_LOGOUT -> resetAuthState via listener.
       await authService.logout();
     } catch (e) {
       console.error('Error saat logout:', e);
-    } finally {
-      setUserToken('');
-      setUserName('');
-      setIsLoggedIn(false);
-      setCurrentScreen('HOME');
     }
   }, []);
 
   useEffect(() => {
     const logoutSub = DeviceEventEmitter.addListener('FORCE_LOGOUT', () => {
-      handleLogoutSuccess();
+      resetAuthState();
     });
     const refreshSub = DeviceEventEmitter.addListener('TOKEN_REFRESHED', (newToken: string) => {
       setUserToken(newToken);
@@ -479,7 +482,7 @@ export default function App() {
       logoutSub.remove();
       refreshSub.remove();
     };
-  }, [handleLogoutSuccess]);
+  }, [resetAuthState]);
 
   if (!fontsLoaded || !isRestored || isLoggedIn === null) {
     return (
