@@ -32,6 +32,7 @@ import {
   getDoubleJacketProps,
 } from './src/api/FormService';
 import { authService } from './src/api/authService';
+import { csService } from './src/api/csService';
 import { getItemModule, getItemSoNo } from './src/utils/csHelpers';
 
 if ((Text as any).defaultProps) {
@@ -313,15 +314,34 @@ export default function App() {
     return `${hours}:${minutes}`;
   };
 
-  const handleToggleStartStop = () => {
+  const handleToggleStartStop = async () => {
     if (currentScreen === 'HOME' || currentScreen === 'PEKERJAAN_CS' || currentScreen === 'PROFIL') return;
     const currentData = formsData[currentScreen];
 
     if (!currentData.isStarted) {
-      updateFormField(currentScreen, 'startTimestamp', Date.now());
-      updateFormField(currentScreen, 'stopTimestamp', null);
-      updateFormField(currentScreen, 'isStarted', true);
+      // Mulai sesi kerja di server CS sebelum menyalakan timer lokal.
+      // Server idempoten untuk sesi ACTIVE yang sudah ada.
+      const taskId = currentData.taskId;
+      if (!hasValue(taskId)) {
+        Alert.alert('Gagal', 'Task CS tidak valid. Buka form dari daftar pekerjaan CS.');
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const res = await csService.startTask(taskId as string | number);
+        if (!res?.success) {
+          Alert.alert('Gagal Memulai', res?.message || 'Tidak dapat memulai sesi kerja.');
+          return;
+        }
+        updateFormField(currentScreen, 'startTimestamp', Date.now());
+        updateFormField(currentScreen, 'stopTimestamp', null);
+        updateFormField(currentScreen, 'isStarted', true);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
+      // STOP hanya menghentikan timer lokal; sesi server ditutup foreman saat task di-close.
       updateFormField(currentScreen, 'stopTimestamp', Date.now());
       updateFormField(currentScreen, 'isStarted', false);
     }
@@ -356,6 +376,25 @@ export default function App() {
       );
 
       if (isSuccess) {
+        // Laporkan progress sesi ke server CS sebelum form dibersihkan.
+        const productId = (activeData.productName || activeData.product || '').trim();
+        const jobDesc = (activeData.jobDescription || '').trim();
+        const progressRes = await csService.progressTask(
+          activeData.taskId as string | number,
+          {
+            qty: Number(activeData.finishGood) || 0,
+            product_name: productId || null,
+            job_description: jobDesc || null,
+          }
+        );
+        if (!progressRes?.success) {
+          // Form TIDAK dibersihkan — draft tetap tersimpan, operator bisa retry Simpan.
+          Alert.alert(
+            'Progress Gagal Terkirim',
+            progressRes?.message || 'Data produksi tersimpan, tapi progress ke task CS gagal. Silakan tekan Simpan lagi.'
+          );
+          return;
+        }
         await handleClear();
       }
     } catch (error) {

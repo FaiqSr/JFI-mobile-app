@@ -1,4 +1,5 @@
 import { Alert } from '../utils/appAlert';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from './authService';
 
 const BASE_URL_CS = (
@@ -62,6 +63,60 @@ const handleUnauthorized = async (retryCallback: (newToken: string) => Promise<a
 
   // Refresh gagal: authService.logout() sudah wipe storage + emit FORCE_LOGOUT.
   return { success: false, data: [], isUnauthorized: true };
+};
+
+// Helper bersama untuk POST /tasks/:id/start dan /tasks/:id/progress.
+// Sengaja TIDAK memakai handleError: alert pesan server dimiliki App.tsx,
+// supaya operator tidak mendapat dua dialog bertumpuk saat progress gagal.
+const postTaskSession = async (
+  taskId: string | number,
+  action: 'start' | 'progress',
+  body?: object,
+  retryWithNewToken = true
+): Promise<any> => {
+  const url = `${BASE_URL_CS}/tasks/${taskId}/${action}`;
+  console.log(`[API Request] POST -> ${url}`);
+
+  try {
+    const token = await AsyncStorage.getItem('userToken');
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+
+    if (res.status === 401 && retryWithNewToken) {
+      const newToken = await authService.refreshAccessToken();
+      if (!newToken) {
+        return { success: false, message: 'Sesi login berakhir. Silakan masuk kembali.' };
+      }
+      return await postTaskSession(taskId, action, body, false);
+    }
+
+    const json = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      console.error(`[API Error] POST ${url} -> ${getStatusLabel(res.status)}`, json);
+      return {
+        success: false,
+        message: json?.message || 'Gagal mengirim data ke server CS.',
+      };
+    }
+
+    return { success: true, data: json?.data };
+  } catch (error: any) {
+    console.error(`[Network/Service Error] POST -> ${url}`, error);
+    return {
+      success: false,
+      message: 'Tidak dapat terhubung ke server CS. Periksa koneksi internet.',
+    };
+  }
 };
 
 export const csService = {
@@ -181,6 +236,21 @@ export const csService = {
       handleError(`GET -> ${url}`, error);
       return { success: false, data: [] };
     }
+  },
+
+  // Operator memulai sesi kerja pada task (POST /tasks/:id/start).
+  // Idempoten di server: sesi ACTIVE yang sudah ada dikembalikan apa adanya.
+  startTask: async (taskId: string | number): Promise<any> => {
+    return await postTaskSession(taskId, 'start', undefined, true);
+  },
+
+  // Operator melaporkan qty sesi (POST /tasks/:id/progress).
+  // Server mewajibkan sesi ACTIVE (403) dan task IN_PROGRESS (409).
+  progressTask: async (
+    taskId: string | number,
+    body: { qty: number; product_name?: string | null; job_description?: string | null }
+  ): Promise<any> => {
+    return await postTaskSession(taskId, 'progress', body, true);
   },
 
 
