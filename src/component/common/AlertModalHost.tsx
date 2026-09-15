@@ -49,13 +49,12 @@ export const AlertModalHost: React.FC = () => {
               <TouchableOpacity
                 key={`${request.id}-${index}`}
                 style={[styles.button, styles[button.style ?? 'default']]}
+                activeOpacity={0.8}
                 onPress={() => resolveAlert(button)}
               >
                 <Text
                   style={[
                     styles.buttonText,
-                    button.style === 'default' && styles.buttonTextDefault,
-                    button.style === 'destructive' && styles.buttonTextDestructive,
                   ]}
                 >
                   {button.text || 'OK'}
@@ -79,12 +78,12 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 28,
+    borderRadius: 14,
     width: '100%',
     maxWidth: 400,
     padding: 24,
   },
-  title: { fontSize: RFValue(16), fontWeight: '800', color: '#0F172A' },
+  title: { fontSize: RFValue(18), fontWeight: '800', color: '#0F172A' },
   message: {
     fontSize: RFValue(13),
     color: '#475569',
@@ -93,15 +92,13 @@ const styles = StyleSheet.create({
   },
   buttonColumn: { marginTop: 20 },
   button: {
-    borderRadius: 24,
     paddingVertical: 14,
+    borderRadius: 14,
     alignItems: 'center',
     marginTop: 10,
   },
   default: { backgroundColor: '#111827' },
-  cancel: { backgroundColor: '#F1F5F9' },
-  destructive: { backgroundColor: '#FEE2E2' },
-  buttonText: { fontSize: RFValue(14), fontWeight: 'bold' },
-  buttonTextDefault: { color: '#FFFFFF' },
-  buttonTextDestructive: { color: '#B91C1C' },
+  cancel: { backgroundColor: '#111827ce' },
+  destructive: { backgroundColor: '#111827c7' },
+  buttonText: { fontSize: RFValue(14), fontWeight: 'bold', color: '#FFFFFF' },
 });
