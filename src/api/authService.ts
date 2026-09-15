@@ -8,7 +8,7 @@ export const BASE_URL = (
   ''
 ).replace(/\/+$/, '');
 
-let isLoggingOut = false;
+let refreshPromise: Promise<string | null> | null = null;
 
 export const authService = {
   login: async (username: string, password: string) => {
@@ -66,19 +66,52 @@ export const authService = {
   },
 
   refreshAccessToken: async (): Promise<string | null> => {
-    if (!isLoggingOut) {
-      isLoggingOut = true;
-      console.warn('[Auth Warning] Token kadaluarsa (401). Mengarahkan user kembali ke Login...');
-      await authService.logout();
+    if (refreshPromise) return refreshPromise; // single-flight: pemanggil bersamaan await promise yang sama
 
-      setTimeout(() => {
-        isLoggingOut = false;
-      }, 3000);
-    }
-    return null;
+    refreshPromise = (async (): Promise<string | null> => {
+      try {
+        const refreshToken = await AsyncStorage.getItem('refreshToken');
+        if (!refreshToken) {
+          await authService.logout();
+          return null;
+        }
+
+        const url = `${BASE_URL}/user/now/refresh`;
+        console.log(`[Auth Request] POST -> ${url}`);
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ refreshToken }),
+        });
+        const json = await res.json().catch(() => ({}));
+        const newToken = res.ok ? json?.data?.accessToken : null;
+
+        if (!newToken) {
+          console.warn('[Auth Warning] Refresh ditolak server. Mengarahkan user kembali ke Login...');
+          await authService.logout();
+          return null;
+        }
+
+        await AsyncStorage.setItem('userToken', newToken);
+        DeviceEventEmitter.emit('TOKEN_REFRESHED', newToken);
+        console.log('[Auth Success] Access token diperbarui via refresh token.');
+        return newToken;
+      } catch (error: any) {
+        console.error('[Auth Error] Refresh:', error?.message || error);
+        await authService.logout();
+        return null;
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+
+    return refreshPromise;
   },
 
-  getProfile: async (token?: string) => {
+  getProfile: async (token?: string, retryWithNewToken = true): Promise<{ success: boolean; data?: any }> => {
     const url = `${BASE_URL}/user/now`;
     try {
       const activeToken = token || (await AsyncStorage.getItem('userToken'));
@@ -98,8 +131,9 @@ export const authService = {
         return { success: true, data: json.data };
       }
 
-      if (res.status === 401) {
-        await authService.refreshAccessToken();
+      if (res.status === 401 && retryWithNewToken) {
+        const newToken = await authService.refreshAccessToken();
+        if (newToken) return await authService.getProfile(newToken, false);
       }
 
       return { success: false };
@@ -109,7 +143,7 @@ export const authService = {
     }
   },
 
-  updateProfile: async (payload: { full_name?: string; password?: string }) => {
+  updateProfile: async (payload: { full_name?: string; password?: string }, retryWithNewToken = true): Promise<{ success: boolean; data?: any }> => {
     const url = `${BASE_URL}/user/now`;
     try {
       const token = await AsyncStorage.getItem('userToken');
@@ -134,9 +168,11 @@ export const authService = {
         Alert.alert('Sukses', json.message || 'Profil berhasil diperbarui.');
         return { success: true, data: json.data };
       } else {
-        if (res.status === 401) {
-          await authService.refreshAccessToken();
-        } else {
+        if (res.status === 401 && retryWithNewToken) {
+          const newToken = await authService.refreshAccessToken();
+          if (newToken) return await authService.updateProfile(payload, false);
+          return { success: false };
+        } else if (res.status !== 401) {
           Alert.alert('Gagal Update', json?.message || 'Gagal memperbarui profil.');
         }
         return { success: false };

@@ -469,10 +469,16 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const subscription = DeviceEventEmitter.addListener('FORCE_LOGOUT', () => {
+    const logoutSub = DeviceEventEmitter.addListener('FORCE_LOGOUT', () => {
       handleLogoutSuccess();
     });
-    return () => subscription.remove();
+    const refreshSub = DeviceEventEmitter.addListener('TOKEN_REFRESHED', (newToken: string) => {
+      setUserToken(newToken);
+    });
+    return () => {
+      logoutSub.remove();
+      refreshSub.remove();
+    };
   }, [handleLogoutSuccess]);
 
   if (!fontsLoaded || !isRestored || isLoggedIn === null) {

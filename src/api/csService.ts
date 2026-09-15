@@ -1,4 +1,3 @@
-import { DeviceEventEmitter } from 'react-native';
 import { Alert } from '../utils/appAlert';
 import { 
   ProgressTaskPayload, 
@@ -20,8 +19,6 @@ export const BASE_URL_PROD = (
   process.env.EXPO_PUBLIC_PRODUCTION_BASE_URL ||
   ''
 ).replace(/\/+$/, '');
-
-let isHandling401 = false;
 
 const getStatusLabel = (status: number): string => {
   switch (status) {
@@ -65,33 +62,14 @@ const handleError = (context: string, error: any, status?: number, responseData?
 };
 
 const handleUnauthorized = async (retryCallback: (newToken: string) => Promise<any>) => {
-  if (isHandling401) {
-    return { success: false, data: [], isUnauthorized: true };
+  const newToken = await authService.refreshAccessToken();
+
+  if (newToken) {
+    console.log('[API Retry] Mengulang permintaan API dengan Token baru...');
+    return await retryCallback(newToken);
   }
 
-  isHandling401 = true;
-
-  try {
-    const newToken = await authService.refreshAccessToken();
-
-    if (newToken) {
-      console.log('[API Retry] Mengulang permintaan API dengan Token baru...');
-      isHandling401 = false;
-      return await retryCallback(newToken);
-    }
-    
-    await authService.logout();
-    
-    DeviceEventEmitter.emit('FORCE_LOGOUT');
-  } catch (e) {
-    console.error('Gagal auto logout:', e);
-    DeviceEventEmitter.emit('FORCE_LOGOUT');
-  } finally {
-    setTimeout(() => {
-      isHandling401 = false;
-    }, 3000);
-  }
-
+  // Refresh gagal: authService.logout() sudah wipe storage + emit FORCE_LOGOUT.
   return { success: false, data: [], isUnauthorized: true };
 };
 

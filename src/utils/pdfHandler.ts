@@ -2,6 +2,7 @@ import { Alert } from './appAlert';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { TaskSession } from '../type/csType';
+import { authService } from '../api/authService';
 
 const API_BASE_URL = (process.env.EXPO_PUBLIC_CS_BASE_URL || '').replace(/\/+$/, '');
 
@@ -25,20 +26,30 @@ export const downloadAndOpenCsPdf = async (
   isDownloading = true;
 
   try {
-    const downloadUrl = `${API_BASE_URL}/tasks/${taskId}/cs`;
-    const fileName = `CS_WorkOrder_${taskId}.pdf`;
-    const localUri = `${FileSystem.cacheDirectory}${fileName}`;
+    const doDownload = async (authToken: string) => {
+      const downloadUrl = `${API_BASE_URL}/tasks/${taskId}/cs`;
+      const fileName = `CS_WorkOrder_${taskId}.pdf`;
+      const localUri = `${FileSystem.cacheDirectory}${fileName}`;
+      console.log(`🌐 [PDF Request] Download dari: ${downloadUrl}`);
+      return FileSystem.downloadAsync(downloadUrl, localUri, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          Accept: 'application/pdf',
+        },
+      });
+    };
 
-    console.log(`🌐 [PDF Request] Download dari: ${downloadUrl}`);
+    let downloadResult = await doDownload(token);
 
-    const downloadResult = await FileSystem.downloadAsync(downloadUrl, localUri, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/pdf',
-      },
-    });
-
-    console.log(`📡 [PDF Response] Status: ${downloadResult.status}`);
+    if (downloadResult.status === 401) {
+      const newToken = await authService.refreshAccessToken();
+      if (!newToken) {
+        Alert.alert('Sesi Berakhir', 'Sesi login Anda telah habis. Silakan masuk kembali.');
+        return;
+      }
+      console.log('[PDF Retry] Mengulang unduhan dengan Token baru...');
+      downloadResult = await doDownload(newToken);
+    }
 
     if (downloadResult.status === 200) {
       const isAvailable = await Sharing.isAvailableAsync();
