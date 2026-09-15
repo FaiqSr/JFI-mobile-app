@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
   },
   worksheetText: {
     fontSize: 13,
+    
     fontWeight: '700',
     color: '#334155',
     letterSpacing: 1.5,
@@ -188,6 +189,7 @@ const styles = StyleSheet.create({
   },
   cardLabel: {
     fontSize: 16,
+    
     fontWeight: '700',
     color: '#0F172A',
   },
@@ -202,6 +204,7 @@ const styles = StyleSheet.create({
   csBadgeText: {
     color: '#FFFFFF',
     fontSize: 11,
+    
     fontWeight: '700',
   },
   aktifBadge: {
@@ -210,6 +213,7 @@ const styles = StyleSheet.create({
   aktifBadgeText: {
     color: '#D97706',
     fontSize: 11,
+    
     fontWeight: '700',
   },
   inaktifBadge: {
@@ -218,6 +222,7 @@ const styles = StyleSheet.create({
   inaktifBadgeText: {
     color: '#94A3B8',
     fontSize: 11,
+    
     fontWeight: '700',
   },
   akunBadge: {
@@ -226,6 +231,7 @@ const styles = StyleSheet.create({
   akunBadgeText: {
     color: '#475569',
     fontSize: 11,
+    
     fontWeight: '700',
   },
 });

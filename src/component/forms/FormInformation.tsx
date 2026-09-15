@@ -44,7 +44,6 @@ export const FormInformation: React.FC<FormInformationProps> = ({
         <Text style={styles.label}>
           Operator Name <Text style={styles.asterisk}>*</Text>
         </Text>
-        <Text style={styles.lockedBadge}>TERKUNCI</Text>
       </View>
       <TextInput
         style={[styles.input, styles.disabledInput]}
@@ -54,13 +53,11 @@ export const FormInformation: React.FC<FormInformationProps> = ({
         onChangeText={setNamaOperator}
         editable={false}
       />
-      <Text style={styles.helperText}>Otomatis dari akun yang masuk.</Text>
 
       <View style={styles.labelRow}>
         <Text style={styles.label}>
           SO Number <Text style={styles.asterisk}>*</Text>
         </Text>
-        <Text style={styles.lockedBadge}>TERKUNCI</Text>
       </View>
       <TextInput
         style={[styles.input, styles.disabledInput]}
@@ -70,7 +67,6 @@ export const FormInformation: React.FC<FormInformationProps> = ({
         onChangeText={setNomorSO}
         editable={false}
       />
-      <Text style={styles.helperText}>Otomatis dari pekerjaan CS yang sedang dikerjakan.</Text>
 
       <Text style={styles.label}>
         Job Description <Text style={styles.asterisk}>*</Text>
@@ -154,7 +150,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: RFValue(16),
     fontWeight: '700',
-    fontFamily: 'Hanuman',
+    
     color: '#101828',
     marginBottom: 16,
   },
@@ -165,7 +161,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: RFValue(12),
     fontWeight: '600',
-    fontFamily: 'Hanuman',
+    
     color: '#344054',
     marginBottom: 6,
   },
@@ -186,7 +182,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: RFValue(13),
-    fontFamily: 'Hanuman',
+    
     color: '#101828',
     backgroundColor: '#FFFFFF',
     marginBottom: 4,
@@ -198,13 +194,13 @@ const styles = StyleSheet.create({
   helperText: {
     fontSize: RFValue(11),
     color: '#667085',
-    fontFamily: 'Hanuman',
+    
     marginBottom: 12,
   },
   warningText: {
     fontSize: RFValue(11),
     color: '#D97706',
-    fontFamily: 'Hanuman',
+    
     marginTop: 2,
     marginBottom: 12,
   },
@@ -222,7 +218,7 @@ const styles = StyleSheet.create({
   },
   dropdownText: {
     fontSize: RFValue(13),
-    fontFamily: 'Hanuman',
+    
     color: '#101828',
   },
   placeholderText: {
@@ -249,7 +245,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: RFValue(16),
     fontWeight: '600',
-    fontFamily: 'Hanuman',
+    
     color: '#101828',
     marginBottom: 12,
   },
@@ -260,7 +256,7 @@ const styles = StyleSheet.create({
   },
   modalItemText: {
     fontSize: RFValue(14),
-    fontFamily: 'Hanuman',
+    
     color: '#344054',
   },
   selectedItemText: {

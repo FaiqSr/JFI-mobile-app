@@ -281,16 +281,19 @@ const styles = StyleSheet.create({
   backText: {
     color: '#64748B',
     fontSize: 15,
+    
     fontWeight: '500',
   },
   title: {
     fontSize: 26,
+    
     fontWeight: 'bold',
     color: '#0F172A',
     marginTop: 2,
   },
   subtitle: {
     fontSize: 14,
+    
     color: '#64748B',
     marginTop: 4,
     marginBottom: 20,
@@ -305,12 +308,14 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
+    
     fontWeight: 'bold',
     color: '#0F172A',
     marginBottom: 4,
   },
   cardDescription: {
     fontSize: 13,
+    
     color: '#64748B',
     marginBottom: 16,
     lineHeight: 18,
@@ -323,10 +328,12 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 14,
+    
     color: '#64748B',
   },
   infoValueBold: {
     fontSize: 14,
+    
     fontWeight: 'bold',
     color: '#0F172A',
   },
@@ -335,6 +342,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
+    
     fontWeight: '600',
     color: '#0F172A',
     marginBottom: 8,
@@ -347,6 +355,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 14,
+    
     color: '#0F172A',
     marginBottom: 16,
   },
@@ -360,5 +369,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 14,
+    
   },
 });

@@ -61,8 +61,8 @@ export const HistoryTable: React.FC<HistoryTableProps> = ({
 const styles = StyleSheet.create({
   tableCard: { backgroundColor: '#FFFFFF', borderRadius: 12, borderWidth: 1, borderColor: '#F3F4F6', overflow: 'hidden' },
   tableHeaderRow: { flexDirection: 'row', backgroundColor: '#FAFAFA', borderBottomWidth: 1, borderBottomColor: '#F3F4F6', paddingVertical: 14, paddingHorizontal: 16 },
-  th: { fontSize: 12, fontWeight: '700', color: '#9CA3AF', letterSpacing: 0.3 },
+  th: { fontSize: 12,  fontWeight: '700', color: '#9CA3AF', letterSpacing: 0.3 },
   tableDataRow: { flexDirection: 'row', paddingVertical: 14, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#F3F4F6', alignItems: 'center', backgroundColor: '#FFFFFF' },
-  td: { fontSize: 13, color: '#374151' },
+  td: { fontSize: 13,  color: '#374151' },
   tdBold: { fontWeight: '700', color: '#111827' },
 });

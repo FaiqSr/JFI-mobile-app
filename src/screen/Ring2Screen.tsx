@@ -240,14 +240,14 @@ const styles = StyleSheet.create({
   },
   pageTitle: {
     fontSize: RFValue(26),
-    fontFamily: 'Hanuman',
+    
     color: '#101828',
     marginBottom: 6,
   },
   pageSubtitle: {
     fontSize: RFValue(13),
     color: '#667085',
-    fontFamily: 'Hanuman',
+    
     marginBottom: 20,
     lineHeight: 18,
   },
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     color: '#FFFFFF',
-    fontFamily: 'Hanuman',
+    
     fontSize: RFValue(15),
   },
   floatingCsButton: {
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
   },
   floatingCsText: {
     color: '#FFFFFF',
-    fontFamily: 'Hanuman',
+    
     fontWeight: '700',
     fontSize: RFValue(12),
   },

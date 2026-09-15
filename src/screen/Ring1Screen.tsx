@@ -229,12 +229,12 @@ export const Ring1Screen: React.FC<RingScreenProps> = (props) => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F8F9FA' },
   scrollContent: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 80, backgroundColor: '#F8F9FA' },
-  pageTitle: { fontSize: RFValue(26), fontFamily: 'Hanuman', color: '#101828', marginBottom: 6 },
-  pageSubtitle: { fontSize: RFValue(13), color: '#667085', fontFamily: 'Hanuman', marginBottom: 20, lineHeight: 18 },
+  pageTitle: { fontSize: RFValue(26),  color: '#101828', marginBottom: 6 },
+  pageSubtitle: { fontSize: RFValue(13), color: '#667085',  marginBottom: 20, lineHeight: 18 },
   actionRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
   actionButtonHalf: { backgroundColor: '#000000', paddingVertical: 12, borderRadius: 12, alignItems: 'center', width: '48%' },
   clearButtonFull: { backgroundColor: '#CC0000', paddingVertical: 12, borderRadius: 12, alignItems: 'center', width: '100%' },
-  actionButtonText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontSize: RFValue(15) },
+  actionButtonText: { color: '#FFFFFF',  fontSize: RFValue(15) },
   floatingCsButton: {
     position: 'absolute',
     bottom: 20,
@@ -249,5 +249,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
-  floatingCsText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontWeight: '700', fontSize: RFValue(12) },
+  floatingCsText: { color: '#FFFFFF',  fontWeight: '700', fontSize: RFValue(12) },
 });

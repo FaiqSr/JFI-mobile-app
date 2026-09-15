@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   },
   pageTitle: {
     fontSize: RFValue(22),
-    fontFamily: 'Hanuman',
+    
     fontWeight: 'normal',
     color: '#101828',
     marginBottom: 6,
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   pageSubtitle: {
     fontSize: RFValue(13),
     color: '#667085',
-    fontFamily: 'Hanuman',
+    
     fontWeight: 'normal',
     marginBottom: 20,
     lineHeight: 18,
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     color: '#FFFFFF',
-    fontFamily: 'Hanuman',
+    
     fontWeight: 'normal',
     fontSize: RFValue(15),
   },
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   },
   floatingCsText: {
     color: '#FFFFFF',
-    fontFamily: 'Hanuman',
+    
     fontWeight: '700',
     fontSize: RFValue(12),
   },

@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 8,
     fontSize: 13,
+    
     color: '#0F172A',
   },
   presetsRow: {
@@ -193,6 +194,7 @@ const styles = StyleSheet.create({
   },
   presetText: {
     fontSize: 12,
+    
     fontWeight: '600',
     color: '#64748B',
   },
@@ -211,6 +213,7 @@ const styles = StyleSheet.create({
   },
   dateLabel: {
     fontSize: 11,
+    
     color: '#64748B',
     marginBottom: 4,
   },
@@ -227,6 +230,7 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 12,
+    
     color: '#94A3B8',
   },
   dateTextSelected: {
@@ -236,6 +240,7 @@ const styles = StyleSheet.create({
   rangeSeparator: {
     marginHorizontal: 8,
     fontSize: 12,
+    
     color: '#94A3B8',
     marginTop: 16,
   },
@@ -250,6 +255,7 @@ const styles = StyleSheet.create({
   resetText: {
     color: '#EF4444',
     fontSize: 12,
+    
     fontWeight: '600',
   },
 });

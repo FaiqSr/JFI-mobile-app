@@ -167,7 +167,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
       {Boolean(setNoteTimeActivities) && (
         <View style={styles.noteContainer}>
           <CustomInput
-            label="NOTE TIME & ACTIVITIES"
+            label="Note time"
             placeholder="Enter note"
             value={noteTimeActivities}
             onChangeText={(v: string) => setNoteTimeActivities?.(v)}
@@ -180,13 +180,13 @@ export const FormTime: React.FC<FormTimeProps> = ({
 
 const styles = StyleSheet.create({
   card: { backgroundColor: '#FFFFFF', borderRadius: 12, padding: 16, marginBottom: 16, borderWidth: 1, borderColor: '#EAECF0' },
-  cardTitle: { fontSize: RFValue(18), fontFamily: 'Hanuman', color: '#101828', marginBottom: 16 },
+  cardTitle: { fontSize: RFValue(18),  color: '#101828', marginBottom: 16 },
   row: { flexDirection: 'row', justifyContent: 'space-between' },
   col: { width: '48%' },
   startStopButton: { paddingVertical: 12, borderRadius: 12, alignItems: 'center', marginBottom: 16 },
   startButtonStyle: { backgroundColor: '#000000' },
   stopButtonStyle: { backgroundColor: '#D92D20' },
   endButtonStyle: { backgroundColor: '#667085' },
-  startStopButtonText: { color: '#FFFFFF', fontFamily: 'Hanuman', fontSize: RFValue(15), letterSpacing: 1 },
+  startStopButtonText: { color: '#FFFFFF',  fontSize: RFValue(15), letterSpacing: 1 },
   noteContainer: { marginTop: 8 },
 });

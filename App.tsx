@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { Alert } from './src/utils/appAlert';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { LoginScreen } from './src/screen/LoginScreen';
@@ -59,11 +58,6 @@ const hasValue = (val: string | number | undefined | null): boolean => {
 };
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
-    IrishGrover: require('./assets/IrishGrover-Regular.ttf'),
-    Hanuman: require('./assets/Hanuman-Regular.ttf'),
-  });
-
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [currentScreen, setCurrentScreen] = useState<ExtendedScreenType>('HOME');
   const [userToken, setUserToken] = useState<string>(''); 
@@ -523,7 +517,7 @@ export default function App() {
     };
   }, [resetAuthState]);
 
-  if (!fontsLoaded || !isRestored || isLoggedIn === null) {
+  if (!isRestored || isLoggedIn === null) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#000000" />

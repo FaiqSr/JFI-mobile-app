@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 12,
+    
     fontWeight: '700',
     color: '#2D3748',
     letterSpacing: 1.5,
@@ -183,6 +184,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 20,
+    
     fontWeight: '700',
     color: '#1A202C',
     marginBottom: 20,
@@ -192,6 +194,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
+    
     fontWeight: '600',
     color: '#2D3748',
     marginBottom: 8,
@@ -205,6 +208,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 14,
     fontSize: 14,
+    
     color: '#2D3748',
   },
   button: {
@@ -222,6 +226,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontSize: 15,
+    
     fontWeight: '600',
   },
 });

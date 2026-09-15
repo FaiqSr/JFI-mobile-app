@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
   },
   userBadgeText: {
     fontSize: 14,
+    
     color: '#333333',
     fontWeight: '500',
   },
@@ -65,6 +66,7 @@ const styles = StyleSheet.create({
   },
   logoutBtnText: {
     color: '#FFFFFF',
+    
     fontWeight: '600',
     fontSize: 14,
   },

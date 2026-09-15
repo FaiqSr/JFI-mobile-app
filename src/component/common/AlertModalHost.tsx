@@ -83,9 +83,10 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     padding: 24,
   },
-  title: { fontSize: RFValue(18), fontWeight: '800', color: '#0F172A' },
+  title: { fontSize: RFValue(18),  fontWeight: '800', color: '#0F172A' },
   message: {
     fontSize: RFValue(13),
+    
     color: '#475569',
     lineHeight: RFValue(19),
     marginTop: 8,
@@ -100,5 +101,5 @@ const styles = StyleSheet.create({
   default: { backgroundColor: '#111827' },
   cancel: { backgroundColor: '#111827ce' },
   destructive: { backgroundColor: '#111827c7' },
-  buttonText: { fontSize: RFValue(14), fontWeight: 'bold', color: '#FFFFFF' },
+  buttonText: { fontSize: RFValue(14),  fontWeight: 'bold', color: '#FFFFFF' },
 });
