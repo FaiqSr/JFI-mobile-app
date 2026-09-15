@@ -67,14 +67,14 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: RFValue(16),
     fontWeight: 'normal',
-    fontFamily: 'Hanuman',
+    
     color: '#101828',
     marginBottom: 14,
   },
   label: {
     fontSize: RFValue(12),
     fontWeight: '600',
-    fontFamily: 'Hanuman',
+    
     color: '#344054',
     marginBottom: 6,
   },
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: RFValue(13),
-    fontFamily: 'Hanuman',
+    
     color: '#101828',
     backgroundColor: '#FFFFFF',
   },

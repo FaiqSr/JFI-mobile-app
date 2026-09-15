@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 400,
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
   },
   logoContainer: {
     width: 120,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 20,
     paddingVertical: 6,
-    borderRadius: 20,
+    borderRadius: 14,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 12,
+    
     fontWeight: '700',
     color: '#2D3748',
     letterSpacing: 1.5,
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 24,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -183,6 +184,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 20,
+    
     fontWeight: '700',
     color: '#1A202C',
     marginBottom: 20,
@@ -192,6 +194,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
+    
     fontWeight: '600',
     color: '#2D3748',
     marginBottom: 8,
@@ -205,6 +208,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 14,
     fontSize: 14,
+    
     color: '#2D3748',
   },
   button: {
@@ -222,6 +226,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontSize: 15,
+    
     fontWeight: '600',
   },
 });

@@ -59,9 +59,11 @@ profiles but read nowhere — dead config; adding a base URL means editing `eas.
   anywhere; it rendered a native OS dialog instead of the app's styled modal), logging
   with the `[API Request] GET -> ${url}` prefix, and handling 401 with a retry-once
   (`retryWithNewToken = false`) guarded by a module-level single-flight flag.
-- **401 means hard logout, not refresh**: `authService.refreshAccessToken()` never refreshes (the
-  stored `refreshToken` is unused) — it wipes AsyncStorage and emits the `FORCE_LOGOUT`
-  `DeviceEventEmitter` event that `App.tsx` listens for. Don't build features assuming silent renewal.
+- **401 triggers refresh-then-logout, not instant logout**: `authService.refreshAccessToken()` POSTs the
+  stored `refreshToken` to `/user/now/refresh` (single-flight via a shared `refreshPromise`), saves the new
+  `accessToken` under `userToken` and emits a `TOKEN_REFRESHED` event (`App.tsx` re-syncs its state). Only
+  when refresh fails does it hard-logout via the `FORCE_LOGOUT` event that `App.tsx` listens for.
+  The server does **not rotate** the refresh token, so it stays in AsyncStorage until logout.
 - Request payloads: production POSTs use camelCase server fields (`soNo`, `notedSizeOdId`,
   `finishGoodFG`), CS payloads use snake_case (`product_name`, `job_description`). Endpoint/screen
   mapping and payload assembly live in `buildPayload()` in `src/api/FormService.ts`.

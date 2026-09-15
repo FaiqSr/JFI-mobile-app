@@ -1,22 +1,22 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  ActivityIndicator,
   RefreshControl,
 } from 'react-native';
 import { Alert } from '../utils/appAlert';
-import { authService } from '../api/authService';
+import { downloadAndOpenCsPdf, generateCsWorkOrderPDF } from '../utils/pdfHandler';
 import { TaskSession } from '../type/csType';
 import { TaskCard } from '../component/cs/TaskCard';
 import { CsFilterBox, DatePresetType } from '../component/cs/CsFilterBox';
 import { CsDetailModal } from '../component/cs/DetailModal';
 import { SessionTable } from '../component/cs/SessionTable';
 import { HistoryTable } from '../component/cs/HistoryTable';
-import { downloadAndOpenCsPdf, generateCsWorkOrderPDF } from '../utils/pdfHandler';
+import { TaskCardSkeleton, SessionTableSkeleton, HistoryTableSkeleton } from '../component/cs/CsSkeleton';
+import { UserHeader } from '../component/common/UserHeader';
 import { useCsData } from '../hooks/useCsData';
 
 import {
@@ -89,16 +89,6 @@ export const CsScreen: React.FC<{
   const toggleExpand = (id: string | number) => {
     setExpandedItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
-
-  const handleLogout = useCallback(async () => {
-    try {
-      await authService.logout();
-    } catch (error) {
-      console.error('Error saat logout:', error);
-    } finally {
-      if (onLogout) onLogout();
-    }
-  }, [onLogout]);
 
   const handleResetFilter = () => {
     setSearchQuery('');
@@ -182,14 +172,7 @@ export const CsScreen: React.FC<{
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => fetchAllData(true)} colors={['#0F172A']} />}
       >
-        <View style={styles.topBar}>
-          <View style={styles.userBadge}>
-            <Text style={styles.userBadgeText}>{displayName}</Text>
-          </View>
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn}>
-            <Text style={styles.logoutBtnText}>Keluar</Text>
-          </TouchableOpacity>
-        </View>
+        <UserHeader userName={displayName} onLogout={onLogout} />
 
         <View style={styles.headerSection}>
           <TouchableOpacity onPress={onBack} style={styles.backBtn}>
@@ -230,7 +213,15 @@ export const CsScreen: React.FC<{
         )}
 
         {loading ? (
-          <ActivityIndicator size="large" color="#000000" style={styles.loader} />
+          <View style={styles.sectionContainer}>
+            {mainTab === 'Pekerjaan Terbuka' ? (
+              <TaskCardSkeleton />
+            ) : mainTab === 'Sesi Saya' ? (
+              <SessionTableSkeleton />
+            ) : (
+              <HistoryTableSkeleton />
+            )}
+          </View>
         ) : (
           <View style={styles.sectionContainer}>
             <View style={styles.sectionHeader}>
@@ -335,33 +326,27 @@ export const CsScreen: React.FC<{
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F8FAFC' },
-  scrollContainer: { paddingHorizontal: 16, paddingVertical: 16, maxWidth: 960, width: '100%', alignSelf: 'center' },
-  topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
-  userBadge: { backgroundColor: '#FFFFFF', paddingHorizontal: 18, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: '#E2E8F0' },
-  userBadgeText: { fontSize: 13, fontWeight: '600', color: '#334155' },
-  logoutBtn: { backgroundColor: '#111827', paddingHorizontal: 20, paddingVertical: 9, borderRadius: 20 },
-  logoutBtnText: { color: '#FFFFFF', fontWeight: 'bold', fontSize: 13 },
+  scrollContainer: { paddingHorizontal: 16, paddingBottom: 16, maxWidth: 960, width: '100%', alignSelf: 'center' },
   headerSection: { marginBottom: 20 },
   backBtn: { marginBottom: 8, alignSelf: 'flex-start' },
-  backText: { color: '#64748B', fontSize: 13, fontWeight: '600' },
-  pageTitle: { fontSize: 28, fontWeight: '800', color: '#0F172A', marginBottom: 8 },
-  pageSubtitle: { fontSize: 13, color: '#64748B', lineHeight: 20 },
-  mainTabWrapper: { backgroundColor: '#EEF2F6', borderRadius: 24, padding: 4, marginBottom: 16 },
-  mainTabPill: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20 },
+  backText: { color: '#64748B', fontSize: 13,  fontWeight: '600' },
+  pageTitle: { fontSize: 28,  fontWeight: '800', color: '#0F172A', marginBottom: 8 },
+  pageSubtitle: { fontSize: 13,  color: '#64748B', lineHeight: 20 },
+  mainTabWrapper: { backgroundColor: '#EEF2F6', borderRadius: 12, padding: 4, marginBottom: 16 },
+  mainTabPill: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8 },
   mainTabPillActive: { backgroundColor: '#FFFFFF', elevation: 1 },
-  mainTabText: { fontSize: 13, color: '#64748B', fontWeight: '600' },
+  mainTabText: { fontSize: 13,  color: '#64748B', fontWeight: '600' },
   mainTabTextActive: { color: '#0F172A', fontWeight: 'bold' },
-  filterContainer: { flexDirection: 'row', backgroundColor: '#F1F5F9', borderRadius: 24, padding: 4, marginBottom: 20 },
-  filterTab: { flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 20 },
+  filterContainer: { flexDirection: 'row', backgroundColor: '#F1F5F9', borderRadius: 12, padding: 4, marginBottom: 20 },
+  filterTab: { flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 8 },
   filterTabActive: { backgroundColor: '#FFFFFF', elevation: 1 },
-  filterTabText: { fontSize: 13, fontWeight: '600', color: '#64748B' },
+  filterTabText: { fontSize: 13,  fontWeight: '600', color: '#64748B' },
   filterTabTextActive: { color: '#0F172A', fontWeight: 'bold' },
   sectionContainer: { width: '100%' },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#0F172A', marginRight: 8 },
+  sectionTitle: { fontSize: 18,  fontWeight: 'bold', color: '#0F172A', marginRight: 8 },
   badgeCount: { backgroundColor: '#E2E8F0', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 12, marginRight: 6 },
-  badgeCountText: { fontSize: 12, fontWeight: 'bold', color: '#475569' },
-  emptyDashedBox: { borderWidth: 1, borderColor: '#CBD5E1', borderStyle: 'dashed', borderRadius: 16, paddingVertical: 32, alignItems: 'center', backgroundColor: '#FFFFFF' },
+  badgeCountText: { fontSize: 12,  fontWeight: 'bold', color: '#475569' },
+  emptyDashedBox: { borderWidth: 1, borderColor: '#CBD5E1', borderStyle: 'dashed', borderRadius: 12, paddingVertical: 32, alignItems: 'center', backgroundColor: '#FFFFFF' },
   emptyText: { color: '#94A3B8', fontSize: 13 },
-  loader: { marginTop: 40 },
 });

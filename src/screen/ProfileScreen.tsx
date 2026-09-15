@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { Alert } from '../utils/appAlert';
+import { UserHeader } from '../component/common/UserHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../api/authService';
 
@@ -143,19 +144,12 @@ export const ProfileScreen = ({
 
   return (
     <View style={styles.container}>
-      
-      <View style={styles.headerBar}>
-        <View style={styles.userBadge}>
-          
-          <Text style={styles.userBadgeText}>{fullName || username || userName || '...'}</Text>
-        </View>
-        <TouchableOpacity style={styles.logoutBtn} onPress={onLogout}>
-          <Text style={styles.logoutBtnText}>Keluar</Text>
-        </TouchableOpacity>
-      </View>
-
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
+        <UserHeader
+          userName={fullName || username || userName || '...'}
+          onLogout={onLogout}
+        />
+
         <TouchableOpacity onPress={onBack} style={styles.backBtn}>
           <Text style={styles.backText}>‹ Kembali</Text>
         </TouchableOpacity>
@@ -273,40 +267,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F8FAFC',
   },
-  headerBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 12,
-  },
-  userBadge: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-  },
-  userBadgeText: {
-    fontSize: 14,
-    color: '#0F172A',
-    fontWeight: '600',
-  },
-  logoutBtn: {
-    backgroundColor: '#0F172A',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-  },
-  logoutBtnText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
   scrollContent: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingBottom: 40,
     maxWidth: 500,
     width: '100%',
@@ -319,23 +281,26 @@ const styles = StyleSheet.create({
   backText: {
     color: '#64748B',
     fontSize: 15,
+    
     fontWeight: '500',
   },
   title: {
     fontSize: 26,
+    
     fontWeight: 'bold',
     color: '#0F172A',
     marginTop: 2,
   },
   subtitle: {
     fontSize: 14,
+    
     color: '#64748B',
     marginTop: 4,
     marginBottom: 20,
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    borderRadius: 14,
     padding: 20,
     marginBottom: 16,
     borderWidth: 1,
@@ -343,12 +308,14 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
+    
     fontWeight: 'bold',
     color: '#0F172A',
     marginBottom: 4,
   },
   cardDescription: {
     fontSize: 13,
+    
     color: '#64748B',
     marginBottom: 16,
     lineHeight: 18,
@@ -361,10 +328,12 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 14,
+    
     color: '#64748B',
   },
   infoValueBold: {
     fontSize: 14,
+    
     fontWeight: 'bold',
     color: '#0F172A',
   },
@@ -373,6 +342,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
+    
     fontWeight: '600',
     color: '#0F172A',
     marginBottom: 8,
@@ -385,6 +355,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 14,
+    
     color: '#0F172A',
     marginBottom: 16,
   },
@@ -398,5 +369,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 14,
+    
   },
 });

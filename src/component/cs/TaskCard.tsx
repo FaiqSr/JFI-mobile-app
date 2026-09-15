@@ -129,7 +129,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    borderRadius: 14,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
   },
   moduleName: {
     fontSize: 11,
+    
     fontWeight: 'bold',
     color: '#94A3B8',
     letterSpacing: 0.5,
@@ -162,22 +163,26 @@ const styles = StyleSheet.create({
   },
   woText: {
     fontSize: 15,
+    
     fontWeight: '800',
     color: '#0F172A',
     marginBottom: 4,
   },
   subText: {
     fontSize: 12,
+    
     color: '#94A3B8',
     lineHeight: 18,
   },
   customerText: {
     fontSize: 12,
+    
     color: '#94A3B8',
     lineHeight: 18,
   },
   specText: {
     fontSize: 13,
+    
     fontWeight: '700',
     color: '#0F172A',
     marginTop: 10,
@@ -193,6 +198,7 @@ const styles = StyleSheet.create({
   statusBadgeBlueText: {
     color: '#2563EB',
     fontSize: 10,
+    
     fontWeight: '800',
   },
 
@@ -200,7 +206,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#111827',
     paddingHorizontal: 16,
     paddingVertical: 7,
-    borderRadius: 20,
+    borderRadius: 14,
     marginBottom: 6,
     minWidth: 80,
     alignItems: 'center',
@@ -208,6 +214,7 @@ const styles = StyleSheet.create({
   btnKerjakanText: {
     color: '#FFFFFF',
     fontSize: 12,
+    
     fontWeight: '700',
   },
   btnDetail: {
@@ -216,13 +223,14 @@ const styles = StyleSheet.create({
     borderColor: '#E2E8F0',
     paddingHorizontal: 16,
     paddingVertical: 6,
-    borderRadius: 20,
+    borderRadius: 14,
     minWidth: 80,
     alignItems: 'center',
   },
   btnDetailText: {
     color: '#334155',
     fontSize: 12,
+    
     fontWeight: '700',
   },
 
@@ -239,12 +247,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F5F9',
     width: 28,
     height: 28,
-    borderRadius: 14,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
   arrowIcon: {
     fontSize: 14,
+    
     color: '#64748B',
     marginTop: -2,
     fontWeight: 'bold',
@@ -271,10 +280,12 @@ const styles = StyleSheet.create({
   statusBadgeGreenText: {
     color: '#10B981',
     fontSize: 10,
+    
     fontWeight: '700',
   },
   qtySesiText: {
     fontSize: 12,
+    
     color: '#475569',
     marginTop: 6,
     fontWeight: '500',
@@ -285,6 +296,7 @@ const styles = StyleSheet.create({
   },
   detailBtnText: {
     fontSize: 13,
+    
     fontWeight: 'bold',
     color: '#334155',
   },

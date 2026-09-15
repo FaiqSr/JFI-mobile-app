@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: RFValue(16),
     fontWeight: '700',
-    fontFamily: 'Hanuman',
+    
     color: '#101828',
     marginBottom: 14,
   },
@@ -470,7 +470,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: RFValue(12),
     fontWeight: '600',
-    fontFamily: 'Hanuman',
     color: '#344054',
     marginBottom: 6,
   },
@@ -484,7 +483,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: RFValue(13),
-    fontFamily: 'Hanuman',
+    
     color: '#101828',
     backgroundColor: '#FFFFFF',
     marginBottom: 12,
@@ -504,7 +503,7 @@ const styles = StyleSheet.create({
   dropdownText: {
     flex: 1,
     fontSize: RFValue(12.5),
-    fontFamily: 'Hanuman',
+    
     color: '#101828',
     marginRight: 4,
   },
@@ -532,7 +531,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: RFValue(16),
     fontWeight: '600',
-    fontFamily: 'Hanuman',
+    
     color: '#101828',
     marginBottom: 12,
   },
@@ -543,7 +542,7 @@ const styles = StyleSheet.create({
   },
   modalItemText: {
     fontSize: RFValue(14),
-    fontFamily: 'Hanuman',
+    
     color: '#344054',
   },
   selectedItemText: {

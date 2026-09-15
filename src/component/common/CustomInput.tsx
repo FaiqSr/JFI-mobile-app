@@ -16,7 +16,7 @@ export const CustomInput: React.FC<CustomInputProps> = ({
   return (
     <View style={styles.container}>
       {label && <Text style={styles.inputLabel}>{label}</Text>}
-      
+
       {unit ? (
         <View style={styles.minuteInputContainer}>
           <TextInput
@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputLabel: {
-    fontSize: RFValue(13), 
-    fontFamily: 'Hanuman',
+    fontSize: RFValue(12),
+    fontWeight: '600',
     color: '#344054',
     marginBottom: 6,
   },
@@ -52,11 +52,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#E4E7EC',
-    borderRadius: 10,
+    borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: RFValue(13),
-    fontFamily: 'Hanuman',
     color: '#101828',
   },
   minuteInputContainer: {
@@ -64,20 +63,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#E4E7EC',
-    borderRadius: 10,
+    borderRadius: 12,
     paddingHorizontal: 12,
     backgroundColor: '#FFFFFF',
   },
   minuteTextInput: {
     flex: 1,
     paddingVertical: 8,
-    fontSize: RFValue(13), 
-    fontFamily: 'Hanuman',
+    fontSize: RFValue(13),
     color: '#101828',
   },
   minuteUnitText: {
     fontSize: RFValue(12),
     color: '#667085',
-    fontFamily: 'Hanuman',
   },
 });

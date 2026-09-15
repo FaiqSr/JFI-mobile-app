@@ -1,21 +1,3 @@
-export const parseJwtUsername = (token: string): string => {
-  try {
-    const base64Url = token.split('.')[1];
-    if (!base64Url) return 'Operator';
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
-    );
-    const decoded = JSON.parse(jsonPayload);
-    return decoded?.username || 'Operator';
-  } catch {
-    return 'Operator';
-  }
-};
-
 export const getFirstValidString = (...candidates: unknown[]): string => {
   for (const cand of candidates) {
     if (cand === undefined || cand === null) continue;

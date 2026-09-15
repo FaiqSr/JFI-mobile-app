@@ -136,7 +136,7 @@ export const CsFilterBox: React.FC<CsFilterBoxProps> = ({
           value={(showPicker === 'start' ? startDate : endDate) || new Date()}
           mode="date"
           display={Platform.OS === 'ios' ? 'inline' : 'default'}
-          onValueChange={(event, selectedDate) => {
+          onValueChange={(_event, selectedDate) => {
             if (Platform.OS !== 'ios') setShowPicker(null);
             if (selectedDate) {
               onSelectCustomDate(showPicker, selectedDate);
@@ -152,7 +152,7 @@ export const CsFilterBox: React.FC<CsFilterBoxProps> = ({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
@@ -173,12 +173,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 8,
     fontSize: 13,
+    
     color: '#0F172A',
   },
   presetsRow: {
     flexDirection: 'row',
     backgroundColor: '#F1F5F9',
-    borderRadius: 20,
+    borderRadius: 12,
     padding: 3,
     marginBottom: 12,
   },
@@ -186,13 +187,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 7,
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: 8,
   },
   presetBtnActive: {
     backgroundColor: '#0F172A',
   },
   presetText: {
     fontSize: 12,
+    
     fontWeight: '600',
     color: '#64748B',
   },
@@ -211,6 +213,7 @@ const styles = StyleSheet.create({
   },
   dateLabel: {
     fontSize: 11,
+    
     color: '#64748B',
     marginBottom: 4,
   },
@@ -227,6 +230,7 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 12,
+    
     color: '#94A3B8',
   },
   dateTextSelected: {
@@ -236,6 +240,7 @@ const styles = StyleSheet.create({
   rangeSeparator: {
     marginHorizontal: 8,
     fontSize: 12,
+    
     color: '#94A3B8',
     marginTop: 16,
   },
@@ -250,6 +255,7 @@ const styles = StyleSheet.create({
   resetText: {
     color: '#EF4444',
     fontSize: 12,
+    
     fontWeight: '600',
   },
 });

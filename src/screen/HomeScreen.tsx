@@ -7,8 +7,8 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import { Alert } from '../utils/appAlert';
 import { ExtendedScreenType } from '../../App';
+import { UserHeader } from '../component/common/UserHeader';
 
 interface HomeScreenProps {
   userName?: string;
@@ -23,13 +23,6 @@ export const HomeScreen = ({
   onLogout,
   activeScreen,
 }: HomeScreenProps) => {
-  const handleLogoutPress = () => {
-    Alert.alert('Konfirmasi', 'Apakah Anda yakin ingin keluar?', [
-      { text: 'Batal', style: 'cancel' },
-      { text: 'Keluar', style: 'destructive', onPress: onLogout },
-    ]);
-  };
-
   const isTaskActive = Boolean(
     activeScreen &&
       activeScreen !== 'HOME' &&
@@ -47,17 +40,9 @@ export const HomeScreen = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerBar}>
-        <View style={styles.userBadge}>
-          <Text style={styles.userBadgeText}>{userName}</Text>
-        </View>
-
-        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogoutPress}>
-          <Text style={styles.logoutBtnText}>Keluar</Text>
-        </TouchableOpacity>
-      </View>
-
       <ScrollView contentContainerStyle={styles.scrollContent}>
+        <UserHeader userName={userName} onLogout={onLogout} />
+
         <View style={styles.centerSection}>
           <Image
             source={require('../../assets/logoapps.png')}
@@ -133,43 +118,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F9F9F9',
   },
-  headerBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 20,
-    paddingBottom: 10,
-  },
-  userBadge: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 18,
-    paddingVertical: 8,
-    borderRadius: 20,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-  },
-  userBadgeText: {
-    fontSize: 14,
-    color: '#333333',
-    fontWeight: '500',
-  },
-  logoutBtn: {
-    backgroundColor: '#0F172A',
-    paddingHorizontal: 22,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  logoutBtnText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
-    fontSize: 14,
-  },
   scrollContent: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
     alignItems: 'center',
     paddingBottom: 40,
   },
@@ -187,7 +137,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 24,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 14,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -196,6 +146,7 @@ const styles = StyleSheet.create({
   },
   worksheetText: {
     fontSize: 13,
+    
     fontWeight: '700',
     color: '#334155',
     letterSpacing: 1.5,
@@ -229,7 +180,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingVertical: 18,
     paddingHorizontal: 20,
-    borderRadius: 20,
+    borderRadius: 12,
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -238,13 +189,14 @@ const styles = StyleSheet.create({
   },
   cardLabel: {
     fontSize: 16,
+    
     fontWeight: '700',
     color: '#0F172A',
   },
   badgeTag: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 14,
+    borderRadius: 12,
   },
   csBadge: {
     backgroundColor: '#0F172A',
@@ -252,6 +204,7 @@ const styles = StyleSheet.create({
   csBadgeText: {
     color: '#FFFFFF',
     fontSize: 11,
+    
     fontWeight: '700',
   },
   aktifBadge: {
@@ -260,6 +213,7 @@ const styles = StyleSheet.create({
   aktifBadgeText: {
     color: '#D97706',
     fontSize: 11,
+    
     fontWeight: '700',
   },
   inaktifBadge: {
@@ -268,6 +222,7 @@ const styles = StyleSheet.create({
   inaktifBadgeText: {
     color: '#94A3B8',
     fontSize: 11,
+    
     fontWeight: '700',
   },
   akunBadge: {
@@ -276,6 +231,7 @@ const styles = StyleSheet.create({
   akunBadgeText: {
     color: '#475569',
     fontSize: 11,
+    
     fontWeight: '700',
   },
 });

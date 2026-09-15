@@ -1,27 +1,16 @@
-import { DeviceEventEmitter } from 'react-native';
 import { Alert } from '../utils/appAlert';
-import { 
-  ProgressTaskPayload, 
-  QcApprovePayload, 
-  RingRequest, 
-  RingDuaRequest, 
-  RingTigaRequest, 
-  DjgRequest, 
-  SeRequest 
-} from '../type/csType';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from './authService';
 
-export const BASE_URL_CS = (
+const BASE_URL_CS = (
   process.env.EXPO_PUBLIC_CS_BASE_URL ||
   ''
 ).replace(/\/+$/, '');
 
-export const BASE_URL_PROD = (
+const BASE_URL_PROD = (
   process.env.EXPO_PUBLIC_PRODUCTION_BASE_URL ||
   ''
 ).replace(/\/+$/, '');
-
-let isHandling401 = false;
 
 const getStatusLabel = (status: number): string => {
   switch (status) {
@@ -65,34 +54,69 @@ const handleError = (context: string, error: any, status?: number, responseData?
 };
 
 const handleUnauthorized = async (retryCallback: (newToken: string) => Promise<any>) => {
-  if (isHandling401) {
-    return { success: false, data: [], isUnauthorized: true };
+  const newToken = await authService.refreshAccessToken();
+
+  if (newToken) {
+    console.log('[API Retry] Mengulang permintaan API dengan Token baru...');
+    return await retryCallback(newToken);
   }
 
-  isHandling401 = true;
+  // Refresh gagal: authService.logout() sudah wipe storage + emit FORCE_LOGOUT.
+  return { success: false, data: [], isUnauthorized: true };
+};
+
+// Helper bersama untuk POST /tasks/:id/start dan /tasks/:id/progress.
+// Sengaja TIDAK memakai handleError: alert pesan server dimiliki App.tsx,
+// supaya operator tidak mendapat dua dialog bertumpuk saat progress gagal.
+const postTaskSession = async (
+  taskId: string | number,
+  action: 'start' | 'progress',
+  body?: object,
+  retryWithNewToken = true
+): Promise<any> => {
+  const url = `${BASE_URL_CS}/tasks/${taskId}/${action}`;
+  console.log(`[API Request] POST -> ${url}`);
 
   try {
-    const newToken = await authService.refreshAccessToken();
+    const token = await AsyncStorage.getItem('userToken');
 
-    if (newToken) {
-      console.log('[API Retry] Mengulang permintaan API dengan Token baru...');
-      isHandling401 = false;
-      return await retryCallback(newToken);
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+
+    if (res.status === 401 && retryWithNewToken) {
+      const newToken = await authService.refreshAccessToken();
+      if (!newToken) {
+        return { success: false, message: 'Sesi login berakhir. Silakan masuk kembali.' };
+      }
+      return await postTaskSession(taskId, action, body, false);
     }
-    
-    await authService.logout();
-    
-    DeviceEventEmitter.emit('FORCE_LOGOUT');
-  } catch (e) {
-    console.error('Gagal auto logout:', e);
-    DeviceEventEmitter.emit('FORCE_LOGOUT');
-  } finally {
-    setTimeout(() => {
-      isHandling401 = false;
-    }, 3000);
-  }
 
-  return { success: false, data: [], isUnauthorized: true };
+    const json = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      console.error(`[API Error] POST ${url} -> ${getStatusLabel(res.status)}`, json);
+      return {
+        success: false,
+        message: json?.message || 'Gagal mengirim data ke server CS.',
+      };
+    }
+
+    return { success: true, data: json?.data };
+  } catch (error: any) {
+    console.error(`[Network/Service Error] POST -> ${url}`, error);
+    return {
+      success: false,
+      message: 'Tidak dapat terhubung ke server CS. Periksa koneksi internet.',
+    };
+  }
 };
 
 export const csService = {
@@ -169,245 +193,6 @@ export const csService = {
     return await csService.getMyTasks(token);
   },
 
-  startTask: async (taskId: number, token: string): Promise<any> => {
-    const url = `${BASE_URL_CS}/tasks/${taskId}/start`;
-    console.log(`[API Request] POST -> ${url}`);
-
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          Authorization: `Bearer ${token}` 
-        },
-      });
-
-      if (res.status === 401) {
-        return await handleUnauthorized((newToken) => csService.startTask(taskId, newToken));
-      }
-
-      const json = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        handleError(`POST -> ${url}`, new Error(`HTTP Error ${res.status}`), res.status, json);
-        return { success: false };
-      }
-
-      return { success: true, ...json };
-    } catch (error: any) {
-      handleError(`POST -> ${url}`, error);
-      return { success: false };
-    }
-  },
-
-  submitProgress: async (taskId: number, payload: ProgressTaskPayload, token: string): Promise<any> => {
-    const url = `${BASE_URL_CS}/tasks/${taskId}/progress`;
-    console.log(`[API Request] POST -> ${url}`, { payload });
-
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          product_name: payload.product_name,
-          job_description: payload.job_description,
-          qty: Number(payload.qty),
-        }),
-      });
-
-      if (res.status === 401) {
-        return await handleUnauthorized((newToken) => csService.submitProgress(taskId, payload, newToken));
-      }
-
-      const json = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        handleError(`POST -> ${url}`, new Error(`HTTP Error ${res.status}`), res.status, json);
-        return { success: false };
-      }
-
-      return { success: true, ...json };
-    } catch (error: any) {
-      handleError(`POST -> ${url}`, error);
-      return { success: false };
-    }
-  },
-
-  stopTask: async (taskId: number, token: string): Promise<any> => {
-    const url = `${BASE_URL_CS}/tasks/${taskId}/stop`;
-    console.log(`[API Request] POST -> ${url}`);
-
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}` 
-        },
-      });
-
-      if (res.status === 401) {
-        return await handleUnauthorized((newToken) => csService.stopTask(taskId, newToken));
-      }
-
-      const json = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        handleError(`POST -> ${url}`, new Error(`HTTP Error ${res.status}`), res.status, json);
-        return { success: false };
-      }
-
-      return { success: true, ...json };
-    } catch (error: any) {
-      handleError(`POST -> ${url}`, error);
-      return { success: false };
-    }
-  },
-
-  getTaskCsPdf: async (taskId: number, token: string): Promise<any> => {
-    const url = `${BASE_URL_CS}/tasks/${taskId}/cs`;
-    console.log(`[API Request] GET -> ${url}`);
-
-    try {
-      const res = await fetch(url, {
-        method: 'GET',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (res.status === 401) {
-        return await handleUnauthorized((newToken) => csService.getTaskCsPdf(taskId, newToken));
-      }
-
-      if (!res.ok) {
-        handleError(`GET -> ${url}`, new Error(`HTTP Error ${res.status}`), res.status);
-        return { success: false };
-      }
-
-      const blob = await res.blob();
-      return { success: true, data: blob };
-    } catch (error: any) {
-      handleError(`GET -> ${url}`, error);
-      return { success: false };
-    }
-  },
-
-  submitWorkOrderToOperators: async (workOrderId: number, token: string): Promise<any> => {
-    const url = `${BASE_URL_CS}/work-orders/${workOrderId}/submit`;
-    console.log(`[API Request] POST -> ${url}`);
-
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      });
-      if (res.status === 401) return await handleUnauthorized((newToken) => csService.submitWorkOrderToOperators(workOrderId, newToken));
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        handleError(`POST -> ${url}`, new Error(`HTTP Error ${res.status}`), res.status, json);
-        return { success: false };
-      }
-      return { success: true, ...json };
-    } catch (error: any) {
-      handleError(`POST -> ${url}`, error);
-      return { success: false };
-    }
-  },
-
-  closeTask: async (taskId: number, token: string): Promise<any> => {
-    const url = `${BASE_URL_CS}/tasks/${taskId}/close`;
-    console.log(`[API Request] POST -> ${url}`);
-
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      });
-      if (res.status === 401) return await handleUnauthorized((newToken) => csService.closeTask(taskId, newToken));
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        handleError(`POST -> ${url}`, new Error(`HTTP Error ${res.status}`), res.status, json);
-        return { success: false };
-      }
-      return { success: true, ...json };
-    } catch (error: any) {
-      handleError(`POST -> ${url}`, error);
-      return { success: false };
-    }
-  },
-
-  qcApprove: async (workOrderId: number, payload: QcApprovePayload, token: string): Promise<any> => {
-    const url = `${BASE_URL_CS}/work-orders/${workOrderId}/qc-approve`;
-    console.log(`[API Request] POST -> ${url}`, { payload });
-
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify(payload),
-      });
-      if (res.status === 401) return await handleUnauthorized((newToken) => csService.qcApprove(workOrderId, payload, newToken));
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        handleError(`POST -> ${url}`, new Error(`HTTP Error ${res.status}`), res.status, json);
-        return { success: false };
-      }
-      return { success: true, ...json };
-    } catch (error: any) {
-      handleError(`POST -> ${url}`, error);
-      return { success: false };
-    }
-  },
-
-  submitProductionData: async (
-    endpoint: 'ring-satu' | 'ring-dua' | 'ring-tiga' | 'djg' | 'se',
-    payload: RingRequest | RingDuaRequest | RingTigaRequest | DjgRequest | SeRequest | any,
-    token: string
-  ): Promise<any> => {
-    const url = `${BASE_URL_PROD}/${endpoint}`;
-    
-    const sanitizedPayload = { ...payload };
-    if (endpoint === 'ring-dua' && 'workType' in sanitizedPayload) {
-      delete sanitizedPayload.workType;
-    }
-
-    console.log(`[API Request] POST -> ${url}`, { payload: sanitizedPayload });
-
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(sanitizedPayload),
-      });
-
-      if (res.status === 401) {
-        return await handleUnauthorized((newToken) =>
-          csService.submitProductionData(endpoint, sanitizedPayload, newToken)
-        );
-      }
-
-      const json = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        handleError(`POST -> ${url}`, new Error(`HTTP Error ${res.status}`), res.status, json);
-        return { success: false, errors: json?.errors };
-      }
-
-      return { success: true, message: json?.message || 'Data berhasil disimpan.' };
-    } catch (error: any) {
-      handleError(`POST -> ${url}`, error);
-      return { success: false };
-    }
-  },
-
   getRecentHistoryMe: async (
     token: string,
     params?: { page?: number; pageSize?: number; dateFrom?: string; dateTo?: string }
@@ -453,87 +238,20 @@ export const csService = {
     }
   },
 
-  getProductionHistory: async (
-    endpoint: 'ring-satu' | 'ring-dua' | 'ring-tiga' | 'djg' | 'se',
-    token: string,
-    params?: { search?: string; dateFrom?: string; dateTo?: string }
+  // Operator memulai sesi kerja pada task (POST /tasks/:id/start).
+  // Idempoten di server: sesi ACTIVE yang sudah ada dikembalikan apa adanya.
+  startTask: async (taskId: string | number): Promise<any> => {
+    return await postTaskSession(taskId, 'start', undefined, true);
+  },
+
+  // Operator melaporkan qty sesi (POST /tasks/:id/progress).
+  // Server mewajibkan sesi ACTIVE (403) dan task IN_PROGRESS (409).
+  progressTask: async (
+    taskId: string | number,
+    body: { qty: number; product_name?: string | null; job_description?: string | null }
   ): Promise<any> => {
-    const query = new URLSearchParams();
-    if (params?.search) query.append('search', params.search);
-    if (params?.dateFrom) query.append('dateFrom', params.dateFrom);
-    if (params?.dateTo) query.append('dateTo', params.dateTo);
-
-    const queryString = query.toString() ? `?${query.toString()}` : '';
-    const url = `${BASE_URL_PROD}/${endpoint}${queryString}`;
-    console.log(`[API Request] GET -> ${url}`);
-
-    try {
-      const res = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.status === 401) {
-        return await handleUnauthorized((newToken) =>
-          csService.getProductionHistory(endpoint, newToken, params)
-        );
-      }
-
-      const json = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        handleError(`GET -> ${url}`, new Error(`HTTP Error ${res.status}`), res.status, json);
-        return { success: false, data: [] };
-      }
-
-      const list = json?.data?.items || json?.data || (Array.isArray(json) ? json : []);
-      return { success: true, data: list };
-    } catch (error: any) {
-      handleError(`GET -> ${url}`, error);
-      return { success: false, data: [] };
-    }
+    return await postTaskSession(taskId, 'progress', body, true);
   },
 
-  getAllProductionHistory: async (
-    endpoint: 'ring-satu' | 'ring-dua' | 'ring-tiga' | 'djg' | 'se',
-    token: string,
-    params?: { search?: string; dateFrom?: string; dateTo?: string }
-  ): Promise<any> => {
-    return await csService.getProductionHistory(endpoint, token, params);
-  },
 
-  getAllProductionData: async (token: string): Promise<any> => {
-    const url = `${BASE_URL_PROD}/dashboard/all-data`;
-    console.log(`[API Request] GET -> ${url}`);
-
-    try {
-      const res = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.status === 401) {
-        return await handleUnauthorized((newToken) => csService.getAllProductionData(newToken));
-      }
-
-      const json = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        handleError(`GET -> ${url}`, new Error(`HTTP Error ${res.status}`), res.status, json);
-        return { success: false, data: [] };
-      }
-
-      return { success: true, data: json?.data || json };
-    } catch (error: any) {
-      handleError(`GET -> ${url}`, error);
-      return { success: false, data: [] };
-    }
-  },
 };
