@@ -136,7 +136,7 @@ export const CsFilterBox: React.FC<CsFilterBoxProps> = ({
           value={(showPicker === 'start' ? startDate : endDate) || new Date()}
           mode="date"
           display={Platform.OS === 'ios' ? 'inline' : 'default'}
-          onValueChange={(event, selectedDate) => {
+          onValueChange={(_event, selectedDate) => {
             if (Platform.OS !== 'ios') setShowPicker(null);
             if (selectedDate) {
               onSelectCustomDate(showPicker, selectedDate);

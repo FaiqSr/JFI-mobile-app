@@ -2,7 +2,7 @@ import { DeviceEventEmitter } from 'react-native';
 import { Alert } from '../utils/appAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const BASE_URL = (
+const BASE_URL = (
   process.env.EXPO_PUBLIC_API_URL || 
   process.env.EXPO_PUBLIC_AUTH_BASE_URL || 
   ''
