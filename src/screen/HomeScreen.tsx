@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  Alert,
 } from 'react-native';
+import { Alert } from '../utils/appAlert';
 import { ExtendedScreenType } from '../../App';
 
 interface HomeScreenProps {

@@ -5,8 +5,8 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
-  Alert,
 } from 'react-native';
+import { Alert } from '../utils/appAlert';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FormInformation } from '../component/forms/FormInformation';
