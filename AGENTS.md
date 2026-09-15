@@ -51,8 +51,12 @@ profiles but read nowhere — dead config; adding a base URL means editing `eas.
   `ScreenFormData` + `initialFormState` in `src/type/FormType.ts` and to each prop builder.
 - Layout: `src/screen/` (one file per screen), `src/component/{common,cs,forms}/`, `src/api/`,
   `src/hooks/`, `src/type/`, `src/utils/`.
+- Dialogs: all user-facing alerts go through `src/utils/appAlert.ts` (`Alert.alert(title, message?, buttons?, options?)`),
+  rendered by `src/component/common/AlertModalHost.tsx`, mounted once in `index.js`. Never import `Alert` from `react-native`.
 - **API services**: one `async` function per endpoint using plain `fetch`, always returning
-  `{ success, data? }` (never throwing), each owning its own Indonesian `Alert.alert(...)`, logging
+  `{ success, data? }` (never throwing), each owning its own Indonesian `AppAlert`/`Alert.alert(...)` call
+  from `src/utils/appAlert.ts` (imported as `Alert` — the RN `Alert` from `react-native` is no longer used
+  anywhere; it rendered a native OS dialog instead of the app's styled modal), logging
   with the `[API Request] GET -> ${url}` prefix, and handling 401 with a retry-once
   (`retryWithNewToken = false`) guarded by a module-level single-flight flag.
 - **401 means hard logout, not refresh**: `authService.refreshAccessToken()` never refreshes (the
