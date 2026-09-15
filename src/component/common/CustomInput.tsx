@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(12),
     fontWeight: '600',
     color: '#344054',
-    marginBottom: 6,s
+    marginBottom: 6,
   },
   textInput: {
     backgroundColor: '#FFFFFF',

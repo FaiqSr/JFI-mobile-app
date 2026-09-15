@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   StyleSheet,
   BackHandler,
@@ -195,6 +195,61 @@ export default function App() {
 
     return () => clearTimeout(timer);
   }, [isRestored, currentScreen, formsData, activeScreen]);
+
+  // Validasi draf terhadap server: pastikan task "Lanjutkan Pekerjaan Aktif"
+  // masih ada di board GET /tasks/open. Task yang sudah ditutup foreman tidak
+  // muncul lagi di sana, jadi drafnya dibersihkan supaya tombol kembali KOSONG.
+  // Hanya jalan sekali setelah restore+login; gagal jaringan = fail-open
+  // (draf TIDAK dihapus, operator tidak kehilangan isian produksi).
+  const draftValidatedRef = useRef(false);
+  useEffect(() => {
+    if (draftValidatedRef.current) return;
+    if (!isRestored || !isLoggedIn || !userToken) return;
+
+    const screen = activeScreen;
+    if (!screen) return; // activeScreen selalu screen form atau null
+
+    const form = formsData[screen as ScreenType];
+    const draftTaskId = form?.taskId ? String(form.taskId).trim() : '';
+    const draftSo =
+      form?.nomorSO && String(form.nomorSO).trim() !== '-'
+        ? String(form.nomorSO).trim()
+        : '';
+    if (!draftTaskId && !draftSo) return; // tidak ada kunci untuk diverifikasi
+
+    draftValidatedRef.current = true;
+    let cancelled = false;
+
+    (async () => {
+      const res = await csService.getOpenTasks(userToken);
+      if (cancelled || !res?.success) return;
+
+      const list: any[] = Array.isArray(res.data) ? res.data : [];
+      const stillOpen = list.some((t: any) => {
+        if (draftTaskId && String(t?.id ?? '') === draftTaskId) return true;
+        if (draftSo && String(t?.so_no ?? '').trim() === draftSo) return true;
+        return false;
+      });
+
+      if (!stillOpen) {
+        setFormsData((prev) => ({
+          ...prev,
+          [screen]: { ...initialFormState, namaOperator: prev[screen]?.namaOperator || userName },
+        }));
+        saveLastActiveScreen(null);
+        Alert.alert(
+          'Pekerjaan Telah Ditutup',
+          'Task aktif sudah ditutup di server, jadi draf pekerjaan dibersihkan. Silakan pilih task baru dari Pekerjaan CS.'
+        );
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // Sengaja tidak bergantung pada formsData/activeScreen: validasi ini
+    // hanyalah pemeriksaan cold-start terhadap draf yang baru dimuat.
+  }, [isRestored, isLoggedIn, userToken]);
 
   // FIX: Mengunci nomorSO dan header data agar tidak hilang saat clear/simpan
   const handleClear = useCallback(async () => {
