@@ -2,13 +2,13 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   StyleSheet,
   BackHandler,
-  Alert,
   ActivityIndicator,
   View,
   Text,
   TextInput,
   DeviceEventEmitter,
 } from 'react-native';
+import { Alert } from './src/utils/appAlert';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
