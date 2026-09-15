@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import { CsFilterBox, DatePresetType } from '../component/cs/CsFilterBox';
 import { CsDetailModal } from '../component/cs/DetailModal';
 import { SessionTable } from '../component/cs/SessionTable';
 import { HistoryTable } from '../component/cs/HistoryTable';
+import { UserHeader } from '../component/common/UserHeader';
 import { useCsData } from '../hooks/useCsData';
 
 import {
@@ -88,11 +89,6 @@ export const CsScreen: React.FC<{
   const toggleExpand = (id: string | number) => {
     setExpandedItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
-
-  const handleLogout = useCallback(() => {
-    // App.tsx yang menangani logout (authService.logout + reset state) via onLogout.
-    onLogout?.();
-  }, [onLogout]);
 
   const handleResetFilter = () => {
     setSearchQuery('');
@@ -176,14 +172,7 @@ export const CsScreen: React.FC<{
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => fetchAllData(true)} colors={['#0F172A']} />}
       >
-        <View style={styles.topBar}>
-          <View style={styles.userBadge}>
-            <Text style={styles.userBadgeText}>{displayName}</Text>
-          </View>
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn}>
-            <Text style={styles.logoutBtnText}>Keluar</Text>
-          </TouchableOpacity>
-        </View>
+        <UserHeader userName={displayName} onLogout={onLogout} />
 
         <View style={styles.headerSection}>
           <TouchableOpacity onPress={onBack} style={styles.backBtn}>
@@ -330,11 +319,6 @@ export const CsScreen: React.FC<{
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F8FAFC' },
   scrollContainer: { paddingHorizontal: 16, paddingVertical: 16, maxWidth: 960, width: '100%', alignSelf: 'center' },
-  topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
-  userBadge: { backgroundColor: '#FFFFFF', paddingHorizontal: 18, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: '#E2E8F0' },
-  userBadgeText: { fontSize: 13, fontWeight: '600', color: '#334155' },
-  logoutBtn: { backgroundColor: '#111827', paddingHorizontal: 20, paddingVertical: 9, borderRadius: 20 },
-  logoutBtnText: { color: '#FFFFFF', fontWeight: 'bold', fontSize: 13 },
   headerSection: { marginBottom: 20 },
   backBtn: { marginBottom: 8, alignSelf: 'flex-start' },
   backText: { color: '#64748B', fontSize: 13, fontWeight: '600' },

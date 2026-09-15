@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { Alert } from '../utils/appAlert';
+import { UserHeader } from '../component/common/UserHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../api/authService';
 
@@ -143,19 +144,12 @@ export const ProfileScreen = ({
 
   return (
     <View style={styles.container}>
-      
-      <View style={styles.headerBar}>
-        <View style={styles.userBadge}>
-          
-          <Text style={styles.userBadgeText}>{fullName || username || userName || '...'}</Text>
-        </View>
-        <TouchableOpacity style={styles.logoutBtn} onPress={onLogout}>
-          <Text style={styles.logoutBtnText}>Keluar</Text>
-        </TouchableOpacity>
-      </View>
-
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
+        <UserHeader
+          userName={fullName || username || userName || '...'}
+          onLogout={onLogout}
+        />
+
         <TouchableOpacity onPress={onBack} style={styles.backBtn}>
           <Text style={styles.backText}>‹ Kembali</Text>
         </TouchableOpacity>
@@ -272,38 +266,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F8FAFC',
-  },
-  headerBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 12,
-  },
-  userBadge: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-  },
-  userBadgeText: {
-    fontSize: 14,
-    color: '#0F172A',
-    fontWeight: '600',
-  },
-  logoutBtn: {
-    backgroundColor: '#0F172A',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-  },
-  logoutBtnText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 14,
   },
   scrollContent: {
     paddingHorizontal: 20,
