@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 28,
+    borderRadius: 14,
     width: '100%',
     maxWidth: 400,
     padding: 24,
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   modalModuleName: { fontSize: 12, fontWeight: '700', color: '#94A3B8', letterSpacing: 0.5 },
-  closeBtn: { backgroundColor: '#F1F5F9', paddingHorizontal: 16, paddingVertical: 6, borderRadius: 20 },
+  closeBtn: { backgroundColor: '#F1F5F9', paddingHorizontal: 16, paddingVertical: 6, borderRadius: 14 },
   closeBtnText: { fontSize: 12, fontWeight: 'bold', color: '#334155' },
   modalWoText: { fontSize: 18, fontWeight: '800', color: '#0F172A', marginBottom: 8 },
   statusBadgeYellowModal: {
@@ -181,12 +181,12 @@ const styles = StyleSheet.create({
   detailValueBold: { fontSize: 13, fontWeight: '700', color: '#0F172A', textAlign: 'right' },
   detailValueCustomer: { fontSize: 13, fontWeight: '800', color: '#0F172A', textAlign: 'right', maxWidth: 200, lineHeight: 18 },
   sectionSubHeader: { fontSize: 11, fontWeight: 'bold', color: '#94A3B8', marginTop: 16, marginBottom: 10 },
-  sesiCard: { backgroundColor: '#F8FAFC', borderRadius: 16, padding: 14, marginBottom: 12 },
+  sesiCard: { backgroundColor: '#F8FAFC', borderRadius: 12, padding: 14, marginBottom: 12 },
   sesiCardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
   sesiQtyText: { fontSize: 13, fontWeight: 'bold', color: '#0F172A' },
   statusBadgeGrey: { backgroundColor: '#E2E8F0', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 12 },
   statusBadgeGreyText: { fontSize: 10, fontWeight: 'bold', color: '#475569' },
   sesiTimeText: { fontSize: 12, color: '#64748B' },
-  pdfBtn: { backgroundColor: '#111827', borderRadius: 24, paddingVertical: 14, alignItems: 'center', marginTop: 16 },
+  pdfBtn: { backgroundColor: '#111827', borderRadius: 14, paddingVertical: 14, alignItems: 'center', marginTop: 16 },
   pdfBtnText: { color: '#FFFFFF', fontWeight: 'bold', fontSize: 14 },
 });

@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 14,
+    borderRadius: 12,
     width: '100%',
     maxWidth: 400,
     padding: 24,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   buttonColumn: { marginTop: 20 },
   button: {
     paddingVertical: 14,
-    borderRadius: 14,
+    borderRadius: 12,
     alignItems: 'center',
     marginTop: 10,
   },

@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9F9F9',
   },
   scrollContent: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
     alignItems: 'center',
     paddingBottom: 40,
   },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 24,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 14,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingVertical: 18,
     paddingHorizontal: 20,
-    borderRadius: 14,
+    borderRadius: 12,
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   badgeTag: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 14,
+    borderRadius: 12,
   },
   csBadge: {
     backgroundColor: '#0F172A',

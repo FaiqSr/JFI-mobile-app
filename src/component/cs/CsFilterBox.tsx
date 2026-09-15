@@ -152,7 +152,7 @@ export const CsFilterBox: React.FC<CsFilterBoxProps> = ({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   presetsRow: {
     flexDirection: 'row',
     backgroundColor: '#F1F5F9',
-    borderRadius: 20,
+    borderRadius: 12,
     padding: 3,
     marginBottom: 12,
   },
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 7,
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: 8,
   },
   presetBtnActive: {
     backgroundColor: '#0F172A',
