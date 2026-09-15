@@ -1,4 +1,4 @@
-import { Alert } from 'react-native';
+import { Alert } from '../utils/appAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScreenType, ScreenFormData, initialFormState } from '../type/FormType';
 import { authService } from './authService';

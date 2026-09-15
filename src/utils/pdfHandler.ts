@@ -1,4 +1,4 @@
-import { Alert } from 'react-native';
+import { Alert } from './appAlert';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { TaskSession } from '../type/csType';

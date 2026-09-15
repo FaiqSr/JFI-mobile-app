@@ -1,4 +1,5 @@
-import { Alert, DeviceEventEmitter } from 'react-native';
+import { DeviceEventEmitter } from 'react-native';
+import { Alert } from '../utils/appAlert';
 import { 
   ProgressTaskPayload, 
   QcApprovePayload, 

@@ -7,11 +7,11 @@ import {
   StyleSheet,
   Image,
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from 'react-native';
+import { Alert } from '../utils/appAlert';
 import { authService } from '../api/authService';
 
 interface LoginScreenProps {
