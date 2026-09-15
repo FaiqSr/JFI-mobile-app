@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  Alert,
   RefreshControl,
 } from 'react-native';
+import { Alert } from '../utils/appAlert';
 import { authService } from '../api/authService';
 import { TaskSession } from '../type/csType';
 import { TaskCard } from '../component/cs/TaskCard';
