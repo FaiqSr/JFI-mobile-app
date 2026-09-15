@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  ActivityIndicator,
   RefreshControl,
 } from 'react-native';
 import { Alert } from '../utils/appAlert';
@@ -16,6 +15,7 @@ import { CsFilterBox, DatePresetType } from '../component/cs/CsFilterBox';
 import { CsDetailModal } from '../component/cs/DetailModal';
 import { SessionTable } from '../component/cs/SessionTable';
 import { HistoryTable } from '../component/cs/HistoryTable';
+import { TaskCardSkeleton, SessionTableSkeleton, HistoryTableSkeleton } from '../component/cs/CsSkeleton';
 import { UserHeader } from '../component/common/UserHeader';
 import { useCsData } from '../hooks/useCsData';
 
@@ -213,7 +213,15 @@ export const CsScreen: React.FC<{
         )}
 
         {loading ? (
-          <ActivityIndicator size="large" color="#000000" style={styles.loader} />
+          <View style={styles.sectionContainer}>
+            {mainTab === 'Pekerjaan Terbuka' ? (
+              <TaskCardSkeleton />
+            ) : mainTab === 'Sesi Saya' ? (
+              <SessionTableSkeleton />
+            ) : (
+              <HistoryTableSkeleton />
+            )}
+          </View>
         ) : (
           <View style={styles.sectionContainer}>
             <View style={styles.sectionHeader}>
@@ -341,5 +349,4 @@ const styles = StyleSheet.create({
   badgeCountText: { fontSize: 12, fontWeight: 'bold', color: '#475569' },
   emptyDashedBox: { borderWidth: 1, borderColor: '#CBD5E1', borderStyle: 'dashed', borderRadius: 12, paddingVertical: 32, alignItems: 'center', backgroundColor: '#FFFFFF' },
   emptyText: { color: '#94A3B8', fontSize: 13 },
-  loader: { marginTop: 40 },
 });

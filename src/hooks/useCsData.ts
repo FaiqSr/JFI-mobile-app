@@ -21,6 +21,27 @@ const getRawList = (res: any, moduleName?: string): any[] => {
 
 const extractOpenTasksData = (res: any): TaskSession[] => getRawList(res);
 
+const DONE_STATUSES = ['DONE', 'COMPLETED', 'SELESAI'];
+const ACTIVE_STATUSES = ['ACTIVE', 'IN_PROGRESS', 'RUNNING', 'BERJALAN'];
+
+const hasSessionTime = (record: any): boolean =>
+  !!(
+    record?.timeStart ||
+    record?.started_at ||
+    record?.start_time ||
+    record?.time_start ||
+    record?.timeEnd ||
+    record?.ended_at ||
+    record?.completed_at ||
+    record?.end_time ||
+    record?.finish_time
+  );
+
+const isRealSession = (record: any, fallbackStatus?: unknown): boolean => {
+  const status = String(record?.status || fallbackStatus || '').toUpperCase();
+  return DONE_STATUSES.includes(status) || ACTIVE_STATUSES.includes(status) || hasSessionTime(record);
+};
+
 const extractSessionData = (res: any): TaskSession[] => {
   const rawList = getRawList(res);
   const sessionList: TaskSession[] = [];
@@ -29,43 +50,23 @@ const extractSessionData = (res: any): TaskSession[] => {
     const workerSessions = taskItem?.worker_sessions || taskItem?.work_logs;
 
     if (Array.isArray(workerSessions) && workerSessions.length > 0) {
+      // Semua sesi ikut tampil: yang masih berjalan (BERJALAN) maupun yang sudah selesai.
       workerSessions.forEach((session: any, sIdx: number) => {
-        const rawStatus = String(session?.status || taskItem?.status || '').toUpperCase();
-        const hasEndTime = !!(
-          session?.timeEnd ||
-          session?.ended_at ||
-          session?.completed_at ||
-          session?.end_time ||
-          session?.finish_time
-        );
-        const isDone = ['DONE', 'COMPLETED', 'SELESAI'].includes(rawStatus) || hasEndTime;
+        if (!isRealSession(session, taskItem?.status)) return;
 
-        if (isDone) {
-          sessionList.push({
-            ...taskItem,
-            ...session,
-            id: `session_${taskItem.id || idx}_${session.id || sIdx}`,
-            parent_item: taskItem,
-          });
-        }
-      });
-    } else {
-      const rawStatus = String(taskItem?.status || '').toUpperCase();
-      const hasEndTime = !!(
-        taskItem?.timeEnd ||
-        taskItem?.ended_at ||
-        taskItem?.completed_at ||
-        taskItem?.end_time ||
-        taskItem?.finish_time
-      );
-      const isDone = ['DONE', 'COMPLETED', 'SELESAI'].includes(rawStatus) || hasEndTime;
-
-      if (isDone) {
         sessionList.push({
           ...taskItem,
-          id: `session_${taskItem.id || idx}`,
+          ...session,
+          id: `session_${taskItem.id || idx}_${session.id || sIdx}`,
+          parent_item: taskItem,
         });
-      }
+      });
+    } else if (isRealSession(taskItem)) {
+      // Task tanpa child session: hanya dihitung bila task itu sendiri memang sedang/sudah dikerjakan.
+      sessionList.push({
+        ...taskItem,
+        id: `session_${taskItem.id || idx}`,
+      });
     }
   });
 
