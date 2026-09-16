@@ -61,6 +61,8 @@ interface Ring3ScreenProps {
   setMaintenance: (v: number) => void;
   checking: number;
   setChecking: (v: number) => void;
+  shift: number | null;
+  setShift: (v: number | null) => void;
   noteTimeActivities?: string;
   setNoteTimeActivities?: (v: string) => void;
   finishGood: number;
@@ -176,6 +178,8 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
           checking={props.checking}
           setChecking={props.setChecking}
           parseIntegerInput={props.parseIntegerInput}
+          shift={props.shift}
+          setShift={props.setShift}
           noteTimeActivities={props.noteTimeActivities}
           setNoteTimeActivities={props.setNoteTimeActivities}
         />

@@ -46,7 +46,7 @@ if ((TextInput as any).defaultProps) {
   (TextInput as any).defaultProps = { allowFontScaling: false };
 }
 
-const DRAFT_KEY = '@app_form_draft_v3';
+const DRAFT_KEY = '@app_form_draft_v4';
 const LAST_SCREEN_KEY = '@app_last_active_screen';
 
 export type ExtendedScreenType = ScreenType | 'PEKERJAAN_CS' | 'PROFIL';

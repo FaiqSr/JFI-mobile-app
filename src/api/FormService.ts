@@ -41,6 +41,7 @@ const buildPayload = (
     maintenanceE: Number(activeData.maintenance) || 0,
     checkingF: Number(activeData.checking) || 0,
     finishGoodFG: Number(activeData.finishGood) || 0,
+    shift: activeData.shift ?? null,
     timeNote: activeData.noteTimeActivities
       ? activeData.noteTimeActivities.trim()
       : null,
@@ -318,6 +319,8 @@ export const getRingProps = (
     isStarted: curData.isStarted,
     handleToggleStartStop,
     formatHHMM,
+    shift: curData.shift,
+    setShift: (val: number | null) => updateFormField(screen, 'shift', val),
     gantiOrder: curData.gantiOrder,
     setGantiOrder: (val: number) => updateFormField(screen, 'gantiOrder', Number(val)),
     repair: curData.repair,
@@ -399,6 +402,8 @@ export const getSealingProps = (options: HelperOptions) => {
     isStarted: curData.isStarted,
     handleToggleStartStop,
     formatHHMM,
+    shift: curData.shift,
+    setShift: (val: number | null) => updateFormField('SEALING_ELEMENT', 'shift', val),
     gantiOrder: curData.gantiOrder,
     setGantiOrder: (val: number) => updateFormField('SEALING_ELEMENT', 'gantiOrder', Number(val)),
     repair: curData.repair,

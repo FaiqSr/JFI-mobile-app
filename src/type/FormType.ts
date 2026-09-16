@@ -40,6 +40,7 @@ export interface ScreenFormData {
   thickness: string;
   metal: string;
   rework: number;
+  shift: number | null;
   noteTimeActivities: string;
 }
 
@@ -77,5 +78,6 @@ export const initialFormState: ScreenFormData = {
   thickness: '',
   metal: '',
   rework: 0,
+  shift: null,
   noteTimeActivities: '',
 };

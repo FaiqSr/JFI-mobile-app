@@ -65,6 +65,8 @@ export interface SealingElementScreenProps {
   setMaintenance: (v: number) => void;
   checking: number;
   setChecking: (v: number) => void;
+  shift: number | null;
+  setShift: (v: number | null) => void;
   noteTimeActivities?: string;
   setNoteTimeActivities?: (v: string) => void;
   finishGood: number;
@@ -185,6 +187,8 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props)
           checking={props.checking}
           setChecking={props.setChecking}
           parseIntegerInput={props.parseIntegerInput}
+          shift={props.shift}
+          setShift={props.setShift}
           noteTimeActivities={props.noteTimeActivities}
           setNoteTimeActivities={props.setNoteTimeActivities}
         />
