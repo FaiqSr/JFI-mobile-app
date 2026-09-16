@@ -1,18 +1,13 @@
 import { DeviceEventEmitter } from 'react-native';
 import { Alert } from '../utils/appAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const BASE_URL = (
-  process.env.EXPO_PUBLIC_API_URL || 
-  process.env.EXPO_PUBLIC_AUTH_BASE_URL || 
-  ''
-).replace(/\/+$/, '');
+import { AUTH_BASE_URL } from './apiConfig';
 
 let refreshPromise: Promise<string | null> | null = null;
 
 export const authService = {
   login: async (username: string, password: string) => {
-    const url = `${BASE_URL}/user/login`;
+    const url = `${AUTH_BASE_URL}/user/login`;
     console.log(`[Auth Request] POST -> ${url}`);
 
     try {
@@ -76,7 +71,7 @@ export const authService = {
           return null;
         }
 
-        const url = `${BASE_URL}/user/now/refresh`;
+        const url = `${AUTH_BASE_URL}/user/now/refresh`;
         console.log(`[Auth Request] POST -> ${url}`);
         const res = await fetch(url, {
           method: 'POST',
@@ -112,7 +107,7 @@ export const authService = {
   },
 
   getProfile: async (token?: string, retryWithNewToken = true): Promise<{ success: boolean; data?: any }> => {
-    const url = `${BASE_URL}/user/now`;
+    const url = `${AUTH_BASE_URL}/user/now`;
     try {
       const activeToken = token || (await AsyncStorage.getItem('userToken'));
       if (!activeToken) return { success: false };
@@ -144,7 +139,7 @@ export const authService = {
   },
 
   updateProfile: async (payload: { full_name?: string; password?: string }, retryWithNewToken = true): Promise<{ success: boolean; data?: any }> => {
-    const url = `${BASE_URL}/user/now`;
+    const url = `${AUTH_BASE_URL}/user/now`;
     try {
       const token = await AsyncStorage.getItem('userToken');
       if (!token) return { success: false };

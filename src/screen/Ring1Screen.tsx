@@ -8,12 +8,11 @@ import {
 } from 'react-native';
 import { Alert } from '../utils/appAlert';
 import { RFValue } from 'react-native-responsive-fontsize';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FormInformation } from '../component/forms/FormInformation';
 import { FormProductRing1 } from '../component/forms/FormProductRing1';
 import { FormTime } from '../component/forms/FormTime';
 import { FormQuantity } from '../component/forms/FormQuantity';
-import { downloadAndOpenCsPdf } from '../utils/pdfHandler';
+import { openCsPdfViewer } from '../utils/csPdf';
 
 interface RingScreenProps {
   taskId?: string | number;
@@ -109,25 +108,10 @@ export const Ring1Screen: React.FC<RingScreenProps> = (props) => {
     }
   };
 
-  const handleDownloadAndOpenPdf = async () => {
-    const activeToken = (await AsyncStorage.getItem('userToken')) || props.userToken;
-
-    console.log('\n================ [DEBUG DOWNLOAD CS PDF - RING 1] ================');
-    console.log('1. taskId    :', props.taskId ?? '❌ UNDEFINED');
-    console.log('2. userToken :', activeToken ? '✅ ADA' : '❌ UNDEFINED');
-    console.log('===============================================================\n');
-
-    if (!props.taskId) {
+  const handleDownloadAndOpenPdf = () => {
+    if (!openCsPdfViewer(props.taskId ?? '', null)) {
       Alert.alert('Informasi', 'ID Task CS tidak ditemukan.');
-      return;
     }
-
-    if (!activeToken) {
-      Alert.alert('Informasi', 'Sesi login (token) tidak ditemukan.');
-      return;
-    }
-
-    await downloadAndOpenCsPdf(props.taskId, activeToken);
   };
 
   return (

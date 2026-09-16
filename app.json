@@ -38,11 +38,12 @@
         }
       ],
       "expo-status-bar",
-      "expo-sharing"
+      "expo-sharing",
+      "@config-plugins/react-native-pdf"
     ],
     "extra": {
       "eas": {
-        "projectId": "604c718f-4244-4dc4-a143-cda0c604d054"
+        "projectId": "25232509-ce4e-4c1b-af1f-b5a98e93435a"
       }
     },
     "runtimeVersion": {
@@ -50,6 +51,7 @@
     },
     "updates": {
       "url": "https://u.expo.dev/604c718f-4244-4dc4-a143-cda0c604d054"
-    }
+    },
+    "owner": "celsr13"
   }
 }

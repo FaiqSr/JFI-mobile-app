@@ -9,9 +9,7 @@
       "distribution": "internal",
       "channel": "development",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://jfi.faiqsr.my.id/api/auth",
-        "EXPO_PUBLIC_CS_BASE_URL": "https://jfi.faiqsr.my.id/api/cs",
-        "EXPO_PUBLIC_PRODUCTION_BASE_URL": "https://jfi.faiqsr.my.id/api/produksi"
+        "EXPO_PUBLIC_API_URL": "https://jfi.faiqsr.my.id"
       }
     },
     "preview": {
@@ -21,18 +19,14 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://jfi.faiqsr.my.id/api/auth",
-        "EXPO_PUBLIC_CS_BASE_URL": "https://jfi.faiqsr.my.id/api/cs",
-        "EXPO_PUBLIC_PRODUCTION_BASE_URL": "https://jfi.faiqsr.my.id/api/produksi"
+        "EXPO_PUBLIC_API_URL": "https://jfi.faiqsr.my.id"
       }
     },
     "production": {
       "autoIncrement": true,
       "channel": "production",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://jfi.faiqsr.my.id/api/auth",
-        "EXPO_PUBLIC_CS_BASE_URL": "https://jfi.faiqsr.my.id/api/cs",
-        "EXPO_PUBLIC_PRODUCTION_BASE_URL": "https://jfi.faiqsr.my.id/api/produksi"
+        "EXPO_PUBLIC_API_URL": "https://jfi.faiqsr.my.id"
       }
     }
   },
