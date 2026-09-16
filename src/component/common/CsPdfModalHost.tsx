@@ -2,9 +2,29 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Pdf from 'react-native-pdf';
 import { CsPdfRequest, closeCsPdfViewer, subscribeToCsPdf } from '../../utils/csPdf';
 import { downloadCsPdfFile } from '../../utils/pdfHandler';
+
+/**
+ * `react-native-pdf` is a NATIVE module whose entry imports
+ * `react-native-blob-util`, and that package throws from MODULE SCOPE when the
+ * native side is absent (`utils/nativeModule.js` → "the native module is not
+ * available"). A static import here would therefore kill the whole JS runtime on
+ * any build that predates the module — or on an Expo Update pushed to such a
+ * build: the app would not even boot. It is loaded lazily below and the modal
+ * degrades to an Indonesian "update the app" message instead.
+ */
+interface CsPdfViewProps {
+  source: { uri: string };
+  style?: unknown;
+  trustAllCerts?: boolean;
+  onLoadComplete?: (numberOfPages: number) => void;
+  onPageChanged?: (page: number, numberOfPages: number) => void;
+  onError?: (error: unknown) => void;
+}
+
+const NATIVE_PDF_MISSING =
+  'Penampil PDF belum tersedia di versi aplikasi ini. Pasang build aplikasi terbaru, lalu buka lagi dokumen CS.';
 
 interface ViewerState {
   loading: boolean;
@@ -26,8 +46,31 @@ export const CsPdfModalHost: React.FC = () => {
   const [pageInfo, setPageInfo] = useState<{ page: number; total: number }>({ page: 1, total: 0 });
   /** Task id whose file is already in the modal — reopening must not re-download. */
   const loadedTaskRef = useRef<number | null>(null);
+  /** `null` until the native PDF component loaded (or failed to load). */
+  const [PdfView, setPdfView] = useState<React.ComponentType<CsPdfViewProps> | null>(null);
+  const [nativePdfMissing, setNativePdfMissing] = useState(false);
 
   useEffect(() => subscribeToCsPdf(setRequest), []);
+
+  // Dynamic import: on a build without the native module this must show a message
+  // instead of crashing the runtime at startup (see the note on CsPdfViewProps).
+  useEffect(() => {
+    let cancelled = false;
+    import('react-native-pdf')
+      .then((mod) => {
+        if (cancelled) return;
+        const Loaded = (mod as unknown as { default: React.ComponentType<CsPdfViewProps> }).default;
+        setPdfView(() => Loaded);
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        console.warn('[PDF] react-native-pdf tidak bisa dimuat:', (error as Error)?.message);
+        setNativePdfMissing(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (!request) {
@@ -93,7 +136,11 @@ export const CsPdfModalHost: React.FC = () => {
         </View>
 
         <View style={styles.body}>
-          {state.loading ? (
+          {nativePdfMissing ? (
+            <View style={styles.centered}>
+              <Text style={styles.errorText}>{NATIVE_PDF_MISSING}</Text>
+            </View>
+          ) : state.loading || (!!state.uri && !PdfView) ? (
             <View style={styles.centered}>
               <ActivityIndicator color="#0F172A" />
               <Text style={styles.hintText}>Membuka CS...</Text>
@@ -105,8 +152,8 @@ export const CsPdfModalHost: React.FC = () => {
                 <Text style={styles.retryText}>Coba Lagi</Text>
               </TouchableOpacity>
             </View>
-          ) : state.uri ? (
-            <Pdf
+          ) : state.uri && PdfView ? (
+            <PdfView
               source={{ uri: state.uri }}
               style={styles.pdf}
               trustAllCerts={false}
@@ -123,7 +170,7 @@ export const CsPdfModalHost: React.FC = () => {
           ) : null}
         </View>
 
-        {!!state.uri && (
+        {!!state.uri && !nativePdfMissing && (
           <View style={styles.footer}>
             <Text style={styles.footerText}>
               Halaman {pageInfo.page} dari {pageInfo.total || 1}
