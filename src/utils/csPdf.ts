@@ -29,14 +29,34 @@ export const buildCsPdfUrl = (taskId: string | number, base: string): string =>
 export const csPdfCacheFileName = (taskId: string | number): string =>
   `CS_WorkOrder_${String(taskId).trim()}.pdf`;
 
+/** Case-insensitive `content-type` lookup in a response header bag. */
+const headerContentType = (headers?: Record<string, string> | null): string => {
+  if (!headers) return '';
+  const key = Object.keys(headers).find((name) => name.toLowerCase() === 'content-type');
+  return key ? String(headers[key] ?? '') : '';
+};
+
 /**
- * True only on POSITIVE evidence that the body is not a PDF: a readable head
- * that does not start with `%PDF-`. An empty head (unreadable / zero bytes) is
- * inconclusive and must not block a valid download — the same "only positive
- * evidence may reject" rule the entry-web session guard uses.
+ * True only on POSITIVE evidence that the response is not a PDF: a declared
+ * content type (from `mimeType` or the `content-type` header) that is not
+ * `application/pdf`. An absent/unknown type is inconclusive and must not block a
+ * valid download — the same "only positive evidence may reject" rule the
+ * entry-web session guard uses.
+ *
+ * This replaced a magic-byte check that read the first bytes of the downloaded
+ * file: that extra `readAsStringAsync({ position, length })` call was the only
+ * step that could leave the modal spinning forever on device, and the declared
+ * type is enough to catch the case it existed for (an nginx SPA/HTML page saved
+ * as `….pdf`).
  */
-export const isNonPdfBody = (head: string | null | undefined): boolean =>
-  typeof head === 'string' && head.length > 0 && !head.startsWith('%PDF-');
+export const isNonPdfContentType = (
+  mimeType: string | null | undefined,
+  headers?: Record<string, string> | null
+): boolean => {
+  const declared = String(mimeType ?? '').trim() || headerContentType(headers);
+  if (!declared) return false;
+  return !declared.toLowerCase().startsWith('application/pdf');
+};
 
 // --- Viewer store ---------------------------------------------------------
 // Folded into this module (instead of living in its own file) for the same

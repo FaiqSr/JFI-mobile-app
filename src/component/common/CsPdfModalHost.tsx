@@ -26,6 +26,10 @@ interface CsPdfViewProps {
 const NATIVE_PDF_MISSING =
   'Penampil PDF belum tersedia di versi aplikasi ini. Pasang build aplikasi terbaru, lalu buka lagi dokumen CS.';
 
+/** PDFium must report a loaded document within this window; otherwise the modal
+ *  would sit on a spinner with no explanation of what stalled. */
+const RENDER_TIMEOUT_MS = 20_000;
+
 interface ViewerState {
   loading: boolean;
   error: string | null;
@@ -49,6 +53,8 @@ export const CsPdfModalHost: React.FC = () => {
   /** `null` until the native PDF component loaded (or failed to load). */
   const [PdfView, setPdfView] = useState<React.ComponentType<CsPdfViewProps> | null>(null);
   const [nativePdfMissing, setNativePdfMissing] = useState(false);
+  /** `true` once the native view reported a loaded document. */
+  const [rendered, setRendered] = useState(false);
 
   useEffect(() => subscribeToCsPdf(setRequest), []);
 
@@ -72,16 +78,34 @@ export const CsPdfModalHost: React.FC = () => {
     };
   }, []);
 
+  // Watchdog over the native render phase: a PDFium load that never reports (and
+  // never errors) must not be indistinguishable from an endless spinner.
+  useEffect(() => {
+    if (!state.uri || !PdfView || rendered || state.error) return;
+    console.warn(`[PDF] render mulai uri=${state.uri}`);
+    const timer = setTimeout(() => {
+      console.warn(`[PDF] render timeout setelah ${RENDER_TIMEOUT_MS} ms uri=${state.uri}`);
+      setState({
+        loading: false,
+        uri: null,
+        error: 'Dokumen CS tidak bisa ditampilkan di perangkat ini. Perbarui aplikasi lalu coba lagi.',
+      });
+    }, RENDER_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [state.uri, state.error, PdfView, rendered]);
+
   useEffect(() => {
     if (!request) {
       loadedTaskRef.current = null;
       setState(EMPTY);
+      setRendered(false);
       setPageInfo({ page: 1, total: 0 });
       return;
     }
     if (loadedTaskRef.current === request.taskId) return;
     loadedTaskRef.current = request.taskId;
     setState({ loading: true, error: null, uri: null });
+    setRendered(false);
 
     let cancelled = false;
     (async () => {
@@ -106,6 +130,7 @@ export const CsPdfModalHost: React.FC = () => {
     const current = request;
     loadedTaskRef.current = null;
     setState({ loading: true, error: null, uri: null });
+    setRendered(false);
     setRequest({ ...current, id: current.id + 1 });
   };
 
@@ -157,15 +182,20 @@ export const CsPdfModalHost: React.FC = () => {
               source={{ uri: state.uri }}
               style={styles.pdf}
               trustAllCerts={false}
-              onLoadComplete={(total) => setPageInfo({ page: 1, total })}
+              onLoadComplete={(total) => {
+                console.warn(`[PDF] loadComplete halaman=${total} uri=${state.uri}`);
+                setRendered(true);
+                setPageInfo({ page: 1, total });
+              }}
               onPageChanged={(page, total) => setPageInfo({ page, total })}
-              onError={() =>
+              onError={(error) => {
+                console.warn('[PDF] view error:', String(error));
                 setState({
                   loading: false,
                   uri: null,
                   error: 'Gagal menampilkan berkas PDF. Coba lagi.',
-                })
-              }
+                });
+              }}
             />
           ) : null}
         </View>

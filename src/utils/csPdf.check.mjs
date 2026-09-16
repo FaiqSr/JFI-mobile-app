@@ -7,7 +7,7 @@ import {
   closeCsPdfViewer,
   csPdfCacheFileName,
   isCsPdfTaskId,
-  isNonPdfBody,
+  isNonPdfContentType,
   openCsPdfViewer,
   subscribeToCsPdf,
 } from './csPdf.ts';
@@ -47,14 +47,17 @@ assert.equal(
 assert.equal(csPdfCacheFileName(7), 'CS_WorkOrder_7.pdf');
 assert.equal(csPdfCacheFileName(' 7 '), 'CS_WorkOrder_7.pdf');
 
-// 4. Only POSITIVE evidence of a non-PDF body rejects the download: a readable
-//    head that is not '%PDF-'. An empty/unreadable head is inconclusive.
-assert.equal(isNonPdfBody('%PDF-1.7'), false);
-assert.equal(isNonPdfBody('<!DOCTYP'), true);
-assert.equal(isNonPdfBody('{"status"'), true);
-assert.equal(isNonPdfBody(''), false);
-assert.equal(isNonPdfBody(null), false);
-assert.equal(isNonPdfBody(undefined), false);
+// 4. Only POSITIVE evidence of a non-PDF body rejects the download: a DECLARED
+//    content type that is not `application/pdf`. An unknown/absent type is
+//    inconclusive and must not block a valid download.
+assert.equal(isNonPdfContentType('application/pdf', undefined), false);
+assert.equal(isNonPdfContentType(null, { 'content-type': 'application/pdf' }), false);
+assert.equal(isNonPdfContentType(null, { 'Content-Type': 'application/pdf; charset=binary' }), false);
+assert.equal(isNonPdfContentType(undefined, undefined), false);
+assert.equal(isNonPdfContentType(null, {}), false);
+assert.equal(isNonPdfContentType(null, { 'content-type': 'text/html' }), true);
+assert.equal(isNonPdfContentType('text/html', undefined), true);
+assert.equal(isNonPdfContentType('application/json', { 'content-type': 'application/json' }), true);
 
 // 5. Viewer store (it lives in this same import-free module): opening emits the
 //    request with the numeric task id and the file label.

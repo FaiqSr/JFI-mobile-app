@@ -5,14 +5,36 @@ import {
   buildCsPdfUrl,
   csPdfCacheFileName,
   isCsPdfTaskId,
-  isNonPdfBody,
+  isNonPdfContentType,
 } from './csPdf';
 
 export type CsPdfFileResult =
   | { ok: true; uri: string }
   | { ok: false; error: string; unauthorized?: boolean };
 
+/**
+ * Bounded waits. A native promise that never settles must surface as an
+ * Indonesian error with a "Coba Lagi" button — never as an endless spinner.
+ */
+const DOWNLOAD_TIMEOUT_MS = 30_000;
+const CLEANUP_TIMEOUT_MS = 5_000;
+
 let isDownloading = false;
+
+const withTimeout = <T>(promise: Promise<T>, ms: number, label: string): Promise<T> =>
+  new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`${label} melewati batas waktu ${ms} ms`)), ms);
+    promise.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(timer);
+        reject(error);
+      }
+    );
+  });
 
 /**
  * Downloads the original CS/SO PDF of a task into the app cache and returns its
@@ -21,9 +43,12 @@ let isDownloading = false;
  *
  * Guards, in order: valid task id, no concurrent download, token present,
  * one refresh+retry on 401, non-200 reported as an Indonesian message, and a
- * body that is not `%PDF-` rejected and deleted. Any pre-existing file at the
- * target path is removed before downloading, so a stale document can never be
- * opened as the current task's CS.
+ * response whose DECLARED content type is not `application/pdf` rejected and
+ * deleted. Any pre-existing file at the target path is removed before
+ * downloading, so a stale document can never be opened as the current task's CS.
+ *
+ * Every native step is bounded by `withTimeout` and each phase logs with the
+ * `[PDF]` prefix, so a device log pinpoints where a run stalls.
  */
 export const downloadCsPdfFile = async (
   taskId: string | number,
@@ -49,8 +74,16 @@ export const downloadCsPdfFile = async (
       };
     }
 
-    const deleteLocal = () => FileSystem.deleteAsync(localUri, { idempotent: true }).catch(() => {});
+    // Best effort: a stale file at this path must never be served, but a failed
+    // (or hung) delete must not block the download either.
+    const deleteLocal = () =>
+      withTimeout(
+        FileSystem.deleteAsync(localUri, { idempotent: true }),
+        CLEANUP_TIMEOUT_MS,
+        'hapus berkas lama'
+      ).catch(() => {});
     await deleteLocal();
+    console.warn(`[PDF] unduh task=${taskId} dari ${url}`);
 
     const doDownload = (authToken: string) =>
       FileSystem.downloadAsync(url, localUri, {
@@ -60,7 +93,8 @@ export const downloadCsPdfFile = async (
         },
       });
 
-    let result = await doDownload(token);
+    let result = await withTimeout(doDownload(token), DOWNLOAD_TIMEOUT_MS, 'unduh CS');
+    console.warn(`[PDF] status=${result.status} mime=${result.mimeType ?? '-'} task=${taskId}`);
 
     if (result.status === 401) {
       const newToken = await authService.refreshAccessToken();
@@ -72,7 +106,8 @@ export const downloadCsPdfFile = async (
           unauthorized: true,
         };
       }
-      result = await doDownload(newToken);
+      result = await withTimeout(doDownload(newToken), DOWNLOAD_TIMEOUT_MS, 'unduh CS (setelah refresh)');
+      console.warn(`[PDF] status=${result.status} (setelah refresh) task=${taskId}`);
     }
 
     if (result.status !== 200) {
@@ -94,25 +129,31 @@ export const downloadCsPdfFile = async (
       return { ok: false, error: `Gagal membuka CS (HTTP ${result.status}).` };
     }
 
-    // A 200 whose body is HTML/JSON must never be shown as the CS.
-    const head = await FileSystem.readAsStringAsync(result.uri, {
-      encoding: 'utf8',
-      position: 0,
-      length: 5,
-    }).catch(() => '');
-
-    if (isNonPdfBody(head)) {
+    // A 200 whose DECLARED type is HTML/JSON must never be shown as the CS. This
+    // reads the download result's own metadata — the extra native byte-read it
+    // replaces was the step that could leave the modal spinning forever.
+    if (isNonPdfContentType(result.mimeType, result.headers)) {
       await deleteLocal();
-      console.error(`❌ [PDF Error] Berkas bukan PDF (head: ${JSON.stringify(head)}) Task ID ${taskId}`);
+      console.error(
+        `❌ [PDF Error] content-type bukan PDF (${result.mimeType ?? '-'}) Task ID ${taskId}`
+      );
       return {
         ok: false,
         error: 'Berkas dari server bukan PDF. Dokumen CS tidak valid — hubungi admin.',
       };
     }
 
+    console.warn(`[PDF] siap uri=${result.uri} task=${taskId}`);
     return { ok: true, uri: result.uri };
   } catch (error: any) {
-    console.error('❌ Error download PDF:', error?.message || error);
+    const detail = error?.message || String(error);
+    console.error('❌ Error download PDF:', detail);
+    if (String(detail).includes('melewati batas waktu')) {
+      return {
+        ok: false,
+        error: 'Gagal mengunduh berkas CS (waktu habis). Periksa koneksi lalu coba lagi.',
+      };
+    }
     return { ok: false, error: 'Terjadi kesalahan saat mengunduh berkas PDF.' };
   } finally {
     isDownloading = false;
