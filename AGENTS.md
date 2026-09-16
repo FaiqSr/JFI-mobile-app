@@ -10,7 +10,7 @@ backend, plus PDF viewing and profile editing. Expo SDK 57 + React Native 0.86 +
 - Do everything inside WSL: `wsl -d Ubuntu-24.04 --cd /home/celi/Documents/JFI-mobile-app -- bash -lc '<cmd>'`.
   Node v22.23.2 / npm 10.9.8 live there; the Windows shell cannot `cd` into the UNC path.
 - Install with `npm install` (npm + `package-lock.json`, no yarn/pnpm).
-- Repo has **no `.env`** (it is gitignored) — see "API URLs" below before running anything.
+- Repo has **no `.env`** (it is gitignore) — see "API URLs" below before running anything.
 
 ## Commands (verified)
 
