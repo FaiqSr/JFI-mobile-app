@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Modal, StyleSheet, Text, TouchableOpacity, TurboModuleRegistry, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CsPdfRequest, closeCsPdfViewer, subscribeToCsPdf } from '../../utils/csPdf';
@@ -60,7 +60,22 @@ export const CsPdfModalHost: React.FC = () => {
 
   // Dynamic import: on a build without the native module this must show a message
   // instead of crashing the runtime at startup (see the note on CsPdfViewProps).
+  // The probe runs FIRST, so a build without native PDF support never evaluates
+  // `react-native-pdf` / `react-native-blob-util` at all — importing them on such
+  // a build prints the package's own uncaught ERROR
+  // ("react-native-blob-util: the native module is not available…") to the device
+  // log, and `react-native-pdf` reads `ReactNativeBlobUtil.fs.dirs.CacheDir` for
+  // EVERY source (even a local file:// uri) — a read that throws inside an async
+  // helper, so it never reaches `onError` and only the watchdog would reply.
+  // Probing the exact module the viewer needs is what makes the honest Indonesian
+  // message instant instead of a "Membuka CS..." spinner that cannot end.
   useEffect(() => {
+    if (!TurboModuleRegistry.get('ReactNativeBlobUtil')) {
+      console.warn('[PDF] penampil PDF native tidak tersedia di build ini');
+      setNativePdfMissing(true);
+      return;
+    }
+
     let cancelled = false;
     import('react-native-pdf')
       .then((mod) => {
