@@ -7,21 +7,27 @@ backend, plus PDF viewing and profile editing. Expo SDK 57 + React Native 0.86 +
 
 ## Dev environment
 
-- Do everything inside WSL: `wsl -d Ubuntu-24.04 --cd /home/celi/Documents/JFI-mobile-app -- bash -lc '<cmd>'`.
-  Node v22.23.2 / npm 10.9.8 live there; the Windows shell cannot `cd` into the UNC path.
+- Everything runs **natively on Windows** from `C:\Users\Celi\Documents\ngodonf\JFI-Backend\JFI-mobile-app`
+  (git-bash; Node v24, npm 11). The WSL `Ubuntu-24.04` distro this repo used to live in no longer exists,
+  so do not drive it with `wsl -d Ubuntu-24.04 …` any more.
 - Install with `npm install` (npm + `package-lock.json`, no yarn/pnpm).
 - Repo has **no `.env`** (it is gitignore) — see "API URLs" below before running anything.
 
 ## Commands (verified)
 
 - `npm start` — Expo dev server (Metro). Also `npm run android`, `npm run ios`, `npm run web`.
-- `npx tsc --noEmit` — the only static check; ~3 s, currently clean. Run it before committing.
-- **No lint and no test runner exist** — no ESLint/Prettier/Jest config, dependency or script.
-  Do not invent `npm run lint` / `npm test`; verify changes with `tsc` plus a real device/emulator run.
-- `eas` CLI is at `/home/celi/.local/bin/eas` but is **22.0.0**, while `eas.json` demands
-  `cli.version >= 22.2.0` — any EAS command fails with "does not satisfy the CLI version
-  constraint". Upgrade first: `npm install -g eas-cli`. Build profiles: `development`,
-  `preview` (APK), `production` (`autoIncrement`).
+- `npx tsc --noEmit` — the only static check; ~10 s, currently clean. Run it before committing.
+- **There is no lint runner** — no ESLint/Prettier config, dependency or script; never invent
+  `npm run lint`. The only tests are the dependency-free self-checks run by plain node's type
+  stripping: `npm run check:alert` (`src/utils/appAlert.check.mjs`) and `npm run check:pdf`
+  (`src/utils/csPdf.check.mjs`). Because plain node resolves ESM specifiers literally, a module
+  under test must have **zero imports** — an extensionless relative import dies with
+  `ERR_MODULE_NOT_FOUND` and a `.ts`-suffixed one fails `tsc` with `TS5097`; inject config as a
+  parameter instead of importing it.
+- `eas-cli` is installed globally on the Windows side (`eas` → v24.6.0), which satisfies the
+  `cli.version >= 22.2.0` floor in `eas.json`. Build profiles: `development`, `preview` (APK),
+  `production` (`autoIncrement`). Adding a **native module** (e.g. `react-native-pdf`) cannot ship
+  over Expo Update — it needs a fresh `eas build`.
 
 ## API URLs (env vars)
 
@@ -53,6 +59,11 @@ the shared API config.
   `src/hooks/`, `src/type/`, `src/utils/`.
 - Dialogs: all user-facing alerts go through `src/utils/appAlert.ts` (`Alert.alert(title, message?, buttons?, options?)`),
   rendered by `src/component/common/AlertModalHost.tsx`, mounted once in `index.js`. Never import `Alert` from `react-native`.
+- **CS/SO PDF is viewed IN-APP, never via the OS share sheet**: `src/utils/pdfHandler.ts` only downloads
+  (`downloadCsPdfFile` — bearer token + one 401 refresh, deletes a stale cache file first, rejects a body that is
+  not `%PDF-`); the viewer store lives in `src/utils/csPdf.ts` (`openCsPdfViewer` / `subscribeToCsPdf`) and is rendered
+  by `src/component/common/CsPdfModalHost.tsx` (`react-native-pdf`), mounted once in `index.js`. Screens only call
+  `openCsPdfViewer(taskId, fileName)`. Never re-add `Sharing.shareAsync` or a locally generated "summary" document.
 - **API services**: one `async` function per endpoint using plain `fetch`, always returning
   `{ success, data? }` (never throwing), each owning its own Indonesian `AppAlert`/`Alert.alert(...)` call
   from `src/utils/appAlert.ts` (imported as `Alert` — the RN `Alert` from `react-native` is no longer used
