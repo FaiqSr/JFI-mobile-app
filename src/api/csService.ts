@@ -1,16 +1,7 @@
 import { Alert } from '../utils/appAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from './authService';
-
-const BASE_URL_CS = (
-  process.env.EXPO_PUBLIC_CS_BASE_URL ||
-  ''
-).replace(/\/+$/, '');
-
-const BASE_URL_PROD = (
-  process.env.EXPO_PUBLIC_PRODUCTION_BASE_URL ||
-  ''
-).replace(/\/+$/, '');
+import { CS_BASE_URL, PRODUCTION_BASE_URL } from './apiConfig';
 
 const getStatusLabel = (status: number): string => {
   switch (status) {
@@ -74,7 +65,7 @@ const postTaskSession = async (
   body?: object,
   retryWithNewToken = true
 ): Promise<any> => {
-  const url = `${BASE_URL_CS}/tasks/${taskId}/${action}`;
+  const url = `${CS_BASE_URL}/tasks/${taskId}/${action}`;
   console.log(`[API Request] POST -> ${url}`);
 
   try {
@@ -122,7 +113,7 @@ const postTaskSession = async (
 export const csService = {
   getOpenTasks: async (token: string, category?: string): Promise<any> => {
     const queryParam = category ? `?category=${encodeURIComponent(category)}` : '';
-    const url = `${BASE_URL_CS}/tasks/open${queryParam}`;
+    const url = `${CS_BASE_URL}/tasks/open${queryParam}`;
     console.log(`[API Request] GET -> ${url}`);
 
     try {
@@ -156,7 +147,7 @@ export const csService = {
   },
 
   getMyTasks: async (token: string): Promise<any> => {
-    const url = `${BASE_URL_CS}/tasks/me`;
+    const url = `${CS_BASE_URL}/tasks/me`;
     console.log(`[API Request] GET -> ${url}`);
 
     try {
@@ -204,7 +195,7 @@ export const csService = {
     if (params?.dateTo) query.append('dateTo', params.dateTo);
 
     const queryString = query.toString() ? `?${query.toString()}` : '';
-    const url = `${BASE_URL_PROD}/recent-history/me${queryString}`;
+    const url = `${PRODUCTION_BASE_URL}/recent-history/me${queryString}`;
     console.log(`[API Request] GET -> ${url}`);
 
     try {

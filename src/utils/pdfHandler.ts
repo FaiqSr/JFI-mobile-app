@@ -3,8 +3,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { TaskSession } from '../type/csType';
 import { authService } from '../api/authService';
-
-const API_BASE_URL = (process.env.EXPO_PUBLIC_CS_BASE_URL || '').replace(/\/+$/, '');
+import { CS_BASE_URL as API_BASE_URL } from '../api/apiConfig';
 
 let isDownloading = false;
 

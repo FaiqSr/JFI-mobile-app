@@ -2,9 +2,9 @@ import { Alert } from '../utils/appAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScreenType, ScreenFormData, initialFormState } from '../type/FormType';
 import { authService } from './authService';
+import { CS_BASE_URL, PRODUCTION_BASE_URL } from './apiConfig';
 
-const BASE_URL = process.env.EXPO_PUBLIC_PRODUCTION_BASE_URL || '';
-const CS_BASE_URL = process.env.EXPO_PUBLIC_CS_BASE_URL || '';
+const BASE_URL = PRODUCTION_BASE_URL;
 
 const formatIsoString = (val: any): string => {
   if (!val) return new Date().toISOString();

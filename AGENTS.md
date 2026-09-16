@@ -25,19 +25,19 @@ backend, plus PDF viewing and profile editing. Expo SDK 57 + React Native 0.86 +
 
 ## API URLs (env vars)
 
-`eas.json` injects `EXPO_PUBLIC_*` per build profile; only four are read in code:
+`eas.json` injects `EXPO_PUBLIC_API_URL` per build profile. The mobile app treats it as the
+origin only and derives all service prefixes in `src/api/apiConfig.ts`:
 
-| Var | Read by | Base for |
-| --- | --- | --- |
-| `EXPO_PUBLIC_API_URL` (fallback `EXPO_PUBLIC_AUTH_BASE_URL`) | `src/api/authService.ts` | `/user/login`, `/user/now` |
-| `EXPO_PUBLIC_CS_BASE_URL` | `csService.ts`, `FormService.ts`, `pdfHandler.ts` | `/tasks/*`, `/download/:id` |
-| `EXPO_PUBLIC_PRODUCTION_BASE_URL` | `csService.ts`, `FormService.ts` | `/ring-satu`, `/djg`, `/se`, … |
+| Derived base | Used for |
+| --- | --- |
+| `${EXPO_PUBLIC_API_URL}/api/auth` | `/user/login`, `/user/now` |
+| `${EXPO_PUBLIC_API_URL}/api/cs` | `/tasks/*`, `/download/:id` |
+| `${EXPO_PUBLIC_API_URL}/api/produksi` | `/ring-satu`, `/djg`, `/se`, … |
 
-Locally all of them are `undefined`, so the services fall back to `''` and every request hits a
-relative URL — login then reports "Koneksi Gagal". Create a gitignored `.env` with the four vars
-(or use an EAS development build, where `eas.json` bakes them in).
-`EXPO_PUBLIC_API_BASE_URL`, `_AUTH_LOGIN`, `_AUTH_REFRESH`, `_USER_PROFILE` are set in all three
-profiles but read nowhere — dead config; adding a base URL means editing `eas.json` *and* the constant.
+For local development, create the gitignored `.env` with
+`EXPO_PUBLIC_API_URL=https://jfi.faiqsr.my.id` (or the appropriate API origin). EAS profiles use
+the same origin value. Do not add service prefixes to the environment variable; they are owned by
+the shared API config.
 
 ## Architecture & conventions
 
