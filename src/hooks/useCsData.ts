@@ -73,37 +73,9 @@ const extractSessionData = (res: any): TaskSession[] => {
   return sessionList;
 };
 
-const extractHistoryData = (res: any): TaskSession[] => {
-  const rawList = getRawList(res);
-  const historyLogs: TaskSession[] = [];
-
-  rawList.forEach((taskItem: any, idx: number) => {
-    const logs = taskItem?.work_logs || taskItem?.logs;
-
-    if (Array.isArray(logs) && logs.length > 0) {
-      logs.forEach((log: any, lIdx: number) => {
-        historyLogs.push({
-          ...taskItem,
-          ...log,
-          id: `history_${taskItem.id || idx}_${log.id || lIdx}`,
-          parent_item: taskItem,
-        });
-      });
-    } else {
-      historyLogs.push({
-        ...taskItem,
-        id: `history_${taskItem.id || idx}`,
-      });
-    }
-  });
-
-  return historyLogs;
-};
-
 export const useCsData = (userToken: string) => {
   const [openTasks, setOpenTasks] = useState<TaskSession[]>([]);
   const [sessions, setSessions] = useState<TaskSession[]>([]);
-  const [history, setHistory] = useState<TaskSession[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
@@ -113,20 +85,13 @@ export const useCsData = (userToken: string) => {
         if (isManualRefresh) setRefreshing(true);
         else setLoading(true);
 
-        const [openRes, myRes, meHistoryRes] = await Promise.all([
+        const [openRes, myRes] = await Promise.all([
           csService.getOpenTasks(userToken),
           csService.getMySessions(userToken),
-          csService.getRecentHistoryMe ? csService.getRecentHistoryMe(userToken) : Promise.resolve(null),
         ]);
-
-        let userHistoryList: any[] = [];
-        if (meHistoryRes) {
-          userHistoryList = getRawList(meHistoryRes);
-        }
 
         setOpenTasks(extractOpenTasksData(openRes));
         setSessions(extractSessionData(myRes));
-        setHistory(extractHistoryData(userHistoryList));
       } catch (err) {
         console.error('Gagal mengambil data CS:', err);
       } finally {
@@ -143,5 +108,5 @@ export const useCsData = (userToken: string) => {
     }
   }, [userToken, fetchAllData]);
 
-  return { openTasks, sessions, history, loading, refreshing, fetchAllData };
+  return { openTasks, sessions, loading, refreshing, fetchAllData };
 };

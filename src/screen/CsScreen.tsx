@@ -14,8 +14,7 @@ import { TaskCard } from '../component/cs/TaskCard';
 import { CsFilterBox, DatePresetType } from '../component/cs/CsFilterBox';
 import { CsDetailModal } from '../component/cs/DetailModal';
 import { SessionTable } from '../component/cs/SessionTable';
-import { HistoryTable } from '../component/cs/HistoryTable';
-import { TaskCardSkeleton, SessionTableSkeleton, HistoryTableSkeleton } from '../component/cs/CsSkeleton';
+import { TaskCardSkeleton, SessionTableSkeleton } from '../component/cs/CsSkeleton';
 import { UserHeader } from '../component/common/UserHeader';
 import { useCsData } from '../hooks/useCsData';
 
@@ -28,11 +27,9 @@ import {
   getItemQty,
   getItemProduct,
   getItemJobDesc,
-  getItemSizeClass,
   getItemStartTime,
   getItemEndTime,
   formatDate,
-  formatTimeRange,
 } from '../utils/csHelpers';
 
 const getLocalDateString = (d: Date): string => {
@@ -71,7 +68,7 @@ export const CsScreen: React.FC<{
   userToken: string;
   userName?: string;
 }> = ({ onBack, onLogout, onSelectTask, userToken, userName }) => {
-  const [mainTab, setMainTab] = useState<'Pekerjaan Terbuka' | 'Sesi Saya' | 'Riwayat Pencatatan'>('Pekerjaan Terbuka');
+  const [mainTab, setMainTab] = useState<'Pekerjaan Terbuka' | 'Sesi Saya'>('Pekerjaan Terbuka');
   const [subTab, setSubTab] = useState<'Semua' | 'Ring' | 'SE' | 'DJG'>('Semua');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [datePreset, setDatePreset] = useState<DatePresetType>('Semua');
@@ -81,7 +78,7 @@ export const CsScreen: React.FC<{
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [expandedItems, setExpandedItems] = useState<{ [key: string]: boolean }>({});
 
-  const { openTasks, sessions, history, loading, refreshing, fetchAllData } =
+  const { openTasks, sessions, loading, refreshing, fetchAllData } =
     useCsData(userToken);
 
   const displayName = userName || 'Operator';
@@ -121,7 +118,7 @@ export const CsScreen: React.FC<{
   };
 
   const currentFilteredList = useMemo(() => {
-    let sourceData = mainTab === 'Pekerjaan Terbuka' ? openTasks : mainTab === 'Sesi Saya' ? sessions : history;
+    let sourceData = mainTab === 'Pekerjaan Terbuka' ? openTasks : sessions;
 
     if (subTab !== 'Semua') {
       sourceData = sourceData.filter((item: any) => getItemModule(item).includes(subTab.toUpperCase()));
@@ -163,7 +160,7 @@ export const CsScreen: React.FC<{
     }
 
     return sourceData;
-  }, [mainTab, subTab, openTasks, sessions, history, searchQuery, datePreset, startDate, endDate]);
+  }, [mainTab, subTab, openTasks, sessions, searchQuery, datePreset, startDate, endDate]);
 
   return (
     <View style={styles.container}>
@@ -186,7 +183,7 @@ export const CsScreen: React.FC<{
 
         <View style={styles.mainTabWrapper}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {(['Pekerjaan Terbuka', 'Sesi Saya', 'Riwayat Pencatatan'] as const).map((tab) => (
+            {(['Pekerjaan Terbuka', 'Sesi Saya'] as const).map((tab) => (
               <TouchableOpacity
                 key={tab}
                 style={[styles.mainTabPill, mainTab === tab && styles.mainTabPillActive]}
@@ -198,8 +195,7 @@ export const CsScreen: React.FC<{
           </ScrollView>
         </View>
 
-        {mainTab !== 'Riwayat Pencatatan' && (
-          <View style={styles.filterContainer}>
+        <View style={styles.filterContainer}>
             {(['Semua', 'Ring', 'SE', 'DJG'] as const).map((tab) => (
               <TouchableOpacity
                 key={tab}
@@ -210,17 +206,10 @@ export const CsScreen: React.FC<{
               </TouchableOpacity>
             ))}
           </View>
-        )}
 
         {loading ? (
           <View style={styles.sectionContainer}>
-            {mainTab === 'Pekerjaan Terbuka' ? (
-              <TaskCardSkeleton />
-            ) : mainTab === 'Sesi Saya' ? (
-              <SessionTableSkeleton />
-            ) : (
-              <HistoryTableSkeleton />
-            )}
+            {mainTab === 'Pekerjaan Terbuka' ? <TaskCardSkeleton /> : <SessionTableSkeleton />}
           </View>
         ) : (
           <View style={styles.sectionContainer}>
@@ -268,19 +257,6 @@ export const CsScreen: React.FC<{
                 getItemQty={getItemQty}
                 getItemStatus={getItemStatus}
                 formatDate={formatDate}
-              />
-            ) : mainTab === 'Riwayat Pencatatan' ? (
-              <HistoryTable
-                items={currentFilteredList}
-                getItemModule={getItemModule}
-                getItemSoNo={getItemSoNo}
-                getItemProduct={getItemProduct}
-                getItemJobDesc={getItemJobDesc}
-                getItemSizeClass={getItemSizeClass}
-                getItemStartTime={getItemStartTime}
-                getItemEndTime={getItemEndTime}
-                getItemQty={getItemQty}
-                formatTimeRange={formatTimeRange}
               />
             ) : (
               currentFilteredList.map((item: any, idx: number) => {
