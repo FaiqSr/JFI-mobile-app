@@ -23,12 +23,15 @@
     "expo-updates": "~57.0.22",
     "react": "19.2.3",
     "react-native": "0.86.3",
+    "react-native-blob-util": "^0.25.0",
+    "react-native-pdf": "^7.0.5",
     "react-native-responsive-fontsize": "^0.5.1",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-svg": "15.15.4"
   },
   "private": true,
   "devDependencies": {
+    "@config-plugins/react-native-pdf": "^14.0.2",
     "@types/react": "~19.2.4",
     "typescript": "~6.0.3"
   }

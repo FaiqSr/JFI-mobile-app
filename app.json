@@ -38,7 +38,8 @@
         }
       ],
       "expo-status-bar",
-      "expo-sharing"
+      "expo-sharing",
+      "@config-plugins/react-native-pdf"
     ],
     "extra": {
       "eas": {
