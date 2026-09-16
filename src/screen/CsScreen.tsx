@@ -8,7 +8,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Alert } from '../utils/appAlert';
-import { downloadAndOpenCsPdf, generateCsWorkOrderPDF } from '../utils/pdfHandler';
+import { openCsPdfViewer } from '../utils/csPdf';
 import { TaskSession } from '../type/csType';
 import { TaskCard } from '../component/cs/TaskCard';
 import { CsFilterBox, DatePresetType } from '../component/cs/CsFilterBox';
@@ -292,7 +292,17 @@ export const CsScreen: React.FC<{
         }}
         onOpenPdf={(item: any) => {
           if (!item) return;
-          item.id ? downloadAndOpenCsPdf(item.id, userToken) : generateCsWorkOrderPDF(item);
+          // Same gate as entry-web: the button exists only when a document is linked.
+          if (item.cs_document_id == null) {
+            Alert.alert('Informasi', 'Dokumen CS belum tersedia untuk pekerjaan ini.');
+            return;
+          }
+          // Session rows carry a synthetic id (`session_<task>_<session>`); the
+          // real task id lives on the parent item.
+          const taskId = item.parent_item?.id ?? item.id;
+          if (!openCsPdfViewer(taskId, item.cs_file_name ?? item.parent_item?.cs_file_name ?? null)) {
+            Alert.alert('Informasi', 'ID Task CS tidak valid, dokumen tidak bisa dibuka.');
+          }
         }}
         isPekerjaanTerbuka={mainTab === 'Pekerjaan Terbuka'}
       />
