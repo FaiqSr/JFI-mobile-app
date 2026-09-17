@@ -60,6 +60,8 @@ interface Ring2ScreenProps {
   setMaintenance: (v: number) => void;
   checking: number;
   setChecking: (v: number) => void;
+  shift: number | null;
+  setShift: (v: number | null) => void;
   noteTimeActivities?: string;
   setNoteTimeActivities?: (v: string) => void;
   finishGood: number;
@@ -68,6 +70,8 @@ interface Ring2ScreenProps {
   onBack: () => void;
   onSave: () => void;
   onClear?: () => void;
+  machineOptions?: string[];
+  machineSizes?: string[];
 }
 
 export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
@@ -137,6 +141,7 @@ export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
           setJobDescription={props.setJobDescription}
           jobNoted={props.jobNoted}
           setJobNoted={props.setJobNoted}
+          machineOptions={props.machineOptions}
         />
 
         <FormProductRing2
@@ -150,6 +155,7 @@ export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
           setThickness={props.setThickness}
           size={props.size}
           setSize={props.setSize}
+          machineSizes={props.machineSizes}
           classVal={props.classVal}
           setClassVal={props.setClassVal}
           notedSize={props.notedSize}
@@ -175,6 +181,8 @@ export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
           checking={props.checking}
           setChecking={props.setChecking}
           parseIntegerInput={props.parseIntegerInput}
+          shift={props.shift}
+          setShift={props.setShift}
           noteTimeActivities={props.noteTimeActivities}
           setNoteTimeActivities={props.setNoteTimeActivities}
         />

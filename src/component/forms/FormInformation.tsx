@@ -11,6 +11,7 @@ interface FormInformationProps {
   setJobDescription: (v: string) => void;
   jobNoted?: string;
   setJobNoted?: (v: string) => void;
+  machineOptions?: string[];
 }
 
 export const FormInformation: React.FC<FormInformationProps> = ({
@@ -22,17 +23,11 @@ export const FormInformation: React.FC<FormInformationProps> = ({
   setJobDescription,
   jobNoted = '',
   setJobNoted = () => {},
+  machineOptions = ['Tidak Ada Pilihan', 'CUT PLATE', 'P. PRESS 1', 'P. PRESS 2', 'P. PRESS 3', 'DEBURING'],
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const jobOptions = [
-    'Tidak Ada Pilihan',
-    'CUT PLATE', 
-    'P. PRESS 1', 
-    'P. PRESS 2',
-    'P. PRESS 3', 
-    'DEBURING',
-  ];
+  const jobOptions = machineOptions;
 
   const isNoChoice = jobDescription === 'Tidak Ada Pilihan' || jobDescription === '*Tidak ada pilihan';
 

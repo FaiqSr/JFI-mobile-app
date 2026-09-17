@@ -98,7 +98,7 @@ the shared API config.
 - `App.js` is an unreferenced Expo template stub ("Open up App.js…"). Metro resolves `./App` to
   `.tsx` before `.js` here, so `App.tsx` is the live root component — never edit `App.js` expecting
   a change. `CLAUDE.md` merely contains `@AGENTS.md`.
-- Form drafts persist to AsyncStorage under `@app_form_draft_v3` + `@app_last_active_screen` with a
+- Form drafts persist to AsyncStorage under `@app_form_draft_v4` + `@app_last_active_screen` with a
   500 ms debounce; bump the key version when the draft shape changes or stale drafts get restored.
   Auth keys: `userToken`, `refreshToken`, `userId`, `userName`, `userRole`, `userPermissions`.
 - `app.json` version (1.0.1) + `runtimeVersion.policy: appVersion` + `expo-updates`: an OTA update

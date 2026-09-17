@@ -22,6 +22,8 @@ interface FormTimeProps {
   checking: number;
   setChecking: (v: number) => void;
   parseIntegerInput: (text: string) => number;
+  shift?: number | null;
+  setShift?: (v: number | null) => void;
   noteTimeActivities?: string;
   setNoteTimeActivities?: (v: string) => void;
 }
@@ -45,6 +47,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
   checking,
   setChecking,
   parseIntegerInput,
+  shift = null,
+  setShift,
   noteTimeActivities = '',
   setNoteTimeActivities,
 }) => {
@@ -64,6 +68,34 @@ export const FormTime: React.FC<FormTimeProps> = ({
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Time & Activities</Text>
+
+      {Boolean(setShift) && (
+        <View style={styles.shiftContainer}>
+          <Text style={styles.shiftLabel}>Shift</Text>
+          <View style={styles.shiftRow}>
+            {[1, 2, 3].map((option) => {
+              const isActive = shift === option;
+              return (
+                <TouchableOpacity
+                  key={option}
+                  style={[styles.shiftChip, isActive && styles.shiftChipActive]}
+                  onPress={() => setShift?.(isActive ? null : option)}
+                  activeOpacity={0.8}
+                >
+                  <Text
+                    style={[
+                      styles.shiftChipText,
+                      isActive && styles.shiftChipTextActive,
+                    ]}
+                  >
+                    Shift {option}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+      )}
 
       <View style={styles.row}>
         <View style={styles.col}>
@@ -188,5 +220,12 @@ const styles = StyleSheet.create({
   stopButtonStyle: { backgroundColor: '#D92D20' },
   endButtonStyle: { backgroundColor: '#667085' },
   startStopButtonText: { color: '#FFFFFF',  fontSize: RFValue(15), letterSpacing: 1 },
+  shiftContainer: { marginBottom: 16 },
+  shiftLabel: { fontSize: RFValue(12), fontWeight: '600', color: '#344054', marginBottom: 6 },
+  shiftRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  shiftChip: { flex: 1, paddingVertical: 10, borderRadius: 12, alignItems: 'center', marginHorizontal: 4, borderWidth: 1, borderColor: '#E4E7EC', backgroundColor: '#FFFFFF' },
+  shiftChipActive: { backgroundColor: '#000000', borderColor: '#000000' },
+  shiftChipText: { fontSize: RFValue(13), color: '#344054' },
+  shiftChipTextActive: { color: '#FFFFFF' },
   noteContainer: { marginTop: 8 },
 });

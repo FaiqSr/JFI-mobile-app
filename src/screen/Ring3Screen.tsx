@@ -61,6 +61,8 @@ interface Ring3ScreenProps {
   setMaintenance: (v: number) => void;
   checking: number;
   setChecking: (v: number) => void;
+  shift: number | null;
+  setShift: (v: number | null) => void;
   noteTimeActivities?: string;
   setNoteTimeActivities?: (v: string) => void;
   finishGood: number;
@@ -69,6 +71,8 @@ interface Ring3ScreenProps {
   onBack: () => void;
   onSave: () => void;
   onClear?: () => void;
+  machineOptions?: string[];
+  machineSizes?: string[];
 }
 
 export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
@@ -138,6 +142,7 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
           setJobDescription={props.setJobDescription}
           jobNoted={props.jobNoted}
           setJobNoted={props.setJobNoted}
+          machineOptions={props.machineOptions}
         />
 
         <FormProductRing3
@@ -151,6 +156,7 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
           setThickness={props.setThickness}
           size={props.size}
           setSize={props.setSize}
+          machineSizes={props.machineSizes}
           classVal={props.classVal}
           setClassVal={props.setClassVal}
           notedSize={props.notedSize}
@@ -176,6 +182,8 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
           checking={props.checking}
           setChecking={props.setChecking}
           parseIntegerInput={props.parseIntegerInput}
+          shift={props.shift}
+          setShift={props.setShift}
           noteTimeActivities={props.noteTimeActivities}
           setNoteTimeActivities={props.setNoteTimeActivities}
         />

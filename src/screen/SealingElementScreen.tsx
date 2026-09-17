@@ -65,6 +65,8 @@ export interface SealingElementScreenProps {
   setMaintenance: (v: number) => void;
   checking: number;
   setChecking: (v: number) => void;
+  shift: number | null;
+  setShift: (v: number | null) => void;
   noteTimeActivities?: string;
   setNoteTimeActivities?: (v: string) => void;
   finishGood: number;
@@ -73,6 +75,8 @@ export interface SealingElementScreenProps {
   onBack: () => void;
   onSave: () => void;
   onClear?: () => void;
+  machineOptions?: string[];
+  machineSizes?: string[];
 }
 
 export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props) => {
@@ -143,11 +147,13 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props)
           setJobDescription={props.setJobDescription}
           jobNoted={props.jobNoted}
           setJobNoted={props.setJobNoted}
+          machineOptions={props.machineOptions}
         />
 
         <FormSealingElement
           size={props.size}
           setSize={props.setSize}
+          machineSizes={props.machineSizes}
           className={props.classVal}
           setClassName={props.setClassVal}
           thickness={props.thickness}
@@ -185,6 +191,8 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props)
           checking={props.checking}
           setChecking={props.setChecking}
           parseIntegerInput={props.parseIntegerInput}
+          shift={props.shift}
+          setShift={props.setShift}
           noteTimeActivities={props.noteTimeActivities}
           setNoteTimeActivities={props.setNoteTimeActivities}
         />

@@ -25,6 +25,7 @@ export interface FormProductRing1Props {
   setClassVal: (v: string) => void;
   notedSize?: string;
   setNotedSize?: (v: string) => void;
+  machineSizes?: string[];
 }
 
 export const FormProductRing1: React.FC<FormProductRing1Props> = ({
@@ -42,6 +43,7 @@ export const FormProductRing1: React.FC<FormProductRing1Props> = ({
   setClassVal,
   notedSize: externalNotedSize,
   setNotedSize: externalSetNotedSize,
+  machineSizes = [],
 }) => {
   const [activeModal, setActiveModal] = useState<
     'product' | 'material' | 'thickness' | null
@@ -211,6 +213,7 @@ export const FormProductRing1: React.FC<FormProductRing1Props> = ({
             value={materialNotedVal}
             onChangeText={handleMaterialNotedChange}
           />
+          {machineSizes.length > 0 && <View style={styles.row}>{machineSizes.map((value) => <TouchableOpacity key={value} onPress={() => setSize(value)}><Text>{value}</Text></TouchableOpacity>)}</View>}
           {isNoChoiceMaterialNoted && (
             <Text style={styles.warningText}>
               Wajib diisi karena Product/Material Type 'Tidak Ada Pilihan'

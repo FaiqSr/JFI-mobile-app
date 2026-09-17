@@ -6,6 +6,27 @@ import { CS_BASE_URL, PRODUCTION_BASE_URL } from './apiConfig';
 
 const BASE_URL = PRODUCTION_BASE_URL;
 
+export interface LhpMasterCatalog {
+  area: string;
+  machines: { namaMc: string; sizes: string[] }[];
+}
+
+export const getLhpMasterCatalog = async (area: string, retry = true): Promise<LhpMasterCatalog | null> => {
+  const token = await AsyncStorage.getItem('userToken');
+  try {
+    const response = await fetch(`${BASE_URL.replace(/\/+$/, '')}/lhp/master-catalog?area=${encodeURIComponent(area)}`, {
+      headers: { Accept: 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    });
+    if (response.status === 401 && retry) {
+      if (await authService.refreshAccessToken()) return getLhpMasterCatalog(area, false);
+      return null;
+    }
+    return response.ok ? (await response.json() as LhpMasterCatalog) : null;
+  } catch {
+    return null;
+  }
+};
+
 const formatIsoString = (val: any): string => {
   if (!val) return new Date().toISOString();
   if (typeof val === 'string') return val;
@@ -41,6 +62,7 @@ const buildPayload = (
     maintenanceE: Number(activeData.maintenance) || 0,
     checkingF: Number(activeData.checking) || 0,
     finishGoodFG: Number(activeData.finishGood) || 0,
+    shift: activeData.shift ?? null,
     timeNote: activeData.noteTimeActivities
       ? activeData.noteTimeActivities.trim()
       : null,
@@ -261,7 +283,8 @@ const getPdfUrlByTaskId = (taskId?: string | number) => {
 
 export const getRingProps = (
   screen: 'RING_1' | 'RING_2' | 'RING_3',
-  options: HelperOptions
+  options: HelperOptions,
+  catalog?: LhpMasterCatalog
 ) => {
   const {
     userToken,
@@ -318,6 +341,8 @@ export const getRingProps = (
     isStarted: curData.isStarted,
     handleToggleStartStop,
     formatHHMM,
+    shift: curData.shift,
+    setShift: (val: number | null) => updateFormField(screen, 'shift', val),
     gantiOrder: curData.gantiOrder,
     setGantiOrder: (val: number) => updateFormField(screen, 'gantiOrder', Number(val)),
     repair: curData.repair,
@@ -338,10 +363,12 @@ export const getRingProps = (
     onBack: () => handleNavigate('PEKERJAAN_CS'),
     onSave: handleSimpan,
     onClear: () => confirmClearAlert(handleClear),
+    machineOptions: ['Tidak Ada Pilihan', ...(catalog?.machines.map(({ namaMc }) => namaMc) ?? [])],
+    machineSizes: catalog?.machines.find(({ namaMc }) => namaMc === curData.jobDescription)?.sizes ?? [],
   };
 };
 
-export const getSealingProps = (options: HelperOptions) => {
+export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatalog) => {
   const {
     userToken,
     formsData,
@@ -399,6 +426,8 @@ export const getSealingProps = (options: HelperOptions) => {
     isStarted: curData.isStarted,
     handleToggleStartStop,
     formatHHMM,
+    shift: curData.shift,
+    setShift: (val: number | null) => updateFormField('SEALING_ELEMENT', 'shift', val),
     gantiOrder: curData.gantiOrder,
     setGantiOrder: (val: number) => updateFormField('SEALING_ELEMENT', 'gantiOrder', Number(val)),
     repair: curData.repair,
@@ -419,6 +448,8 @@ export const getSealingProps = (options: HelperOptions) => {
     onBack: () => handleNavigate('PEKERJAAN_CS'),
     onSave: handleSimpan,
     onClear: () => confirmClearAlert(handleClear),
+    machineOptions: ['Tidak Ada Pilihan', ...(catalog?.machines.map(({ namaMc }) => namaMc) ?? [])],
+    machineSizes: catalog?.machines.find(({ namaMc }) => namaMc === curData.jobDescription)?.sizes ?? [],
   };
 };
 
