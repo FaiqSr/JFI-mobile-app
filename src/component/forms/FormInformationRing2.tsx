@@ -11,6 +11,7 @@ interface FormInformationProps {
   setJobDescription: (v: string) => void;
   jobNoted?: string;
   setJobNoted?: (v: string) => void;
+  machineOptions?: string[];
 }
 
 export const FormInformationRing2: React.FC<FormInformationProps> = ({
@@ -22,10 +23,11 @@ export const FormInformationRing2: React.FC<FormInformationProps> = ({
   setJobDescription,
   jobNoted = '',
   setJobNoted = () => {},
+  machineOptions,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const jobOptions = [
+  const jobOptions = machineOptions ?? [
     'Tidak Ada Pilihan',
     'Las Pahat - Asah Pahat', 
     'BUBUT 1', 

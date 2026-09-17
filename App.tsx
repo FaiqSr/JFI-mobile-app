@@ -29,6 +29,8 @@ import {
   getRingProps,
   getSealingProps,
   getDoubleJacketProps,
+  getLhpMasterCatalog,
+  type LhpMasterCatalog,
 } from './src/api/FormService';
 import { authService } from './src/api/authService';
 import { csService } from './src/api/csService';
@@ -76,6 +78,15 @@ export default function App() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRestored, setIsRestored] = useState(false);
+  const [lhpCatalogs, setLhpCatalogs] = useState<Record<string, LhpMasterCatalog>>({});
+
+  useEffect(() => {
+    if (!isLoggedIn || !userToken) return;
+    let cancelled = false;
+    Promise.all(['RING_1', 'RING_2', 'RING_3', 'SE'].map((area) => getLhpMasterCatalog(area).then((catalog) => [area, catalog] as const)))
+      .then((entries) => { if (!cancelled) setLhpCatalogs(Object.fromEntries(entries.filter(([, catalog]) => catalog)) as Record<string, LhpMasterCatalog>); });
+    return () => { cancelled = true; };
+  }, [isLoggedIn, userToken]);
 
   const saveLastActiveScreen = useCallback(async (screen: ScreenType | null) => {
     setLastActiveScreen(screen);
@@ -631,7 +642,7 @@ export default function App() {
       case 'RING_1':
         return (
           <Ring1Screen
-            {...getRingProps('RING_1', helperOptions)}
+            {...getRingProps('RING_1', helperOptions, lhpCatalogs.RING_1)}
             taskId={formsData.RING_1.taskId}
             userToken={userToken}
           />
@@ -640,7 +651,7 @@ export default function App() {
       case 'RING_2':
         return (
           <Ring2Screen
-            {...getRingProps('RING_2', helperOptions)}
+            {...getRingProps('RING_2', helperOptions, lhpCatalogs.RING_2)}
             taskId={formsData.RING_2.taskId}
             userToken={userToken}
           />
@@ -649,7 +660,7 @@ export default function App() {
       case 'RING_3':
         return (
           <Ring3Screen
-            {...getRingProps('RING_3', helperOptions)}
+            {...getRingProps('RING_3', helperOptions, lhpCatalogs.RING_3)}
             taskId={formsData.RING_3.taskId}
             userToken={userToken}
           />
@@ -658,7 +669,7 @@ export default function App() {
       case 'SEALING_ELEMENT':
         return (
           <SealingElementScreen
-            {...getSealingProps(helperOptions)}
+            {...getSealingProps(helperOptions, lhpCatalogs.SE)}
             taskId={formsData.SEALING_ELEMENT.taskId}
             userToken={userToken}
           />

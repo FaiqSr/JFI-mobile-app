@@ -75,6 +75,8 @@ export interface SealingElementScreenProps {
   onBack: () => void;
   onSave: () => void;
   onClear?: () => void;
+  machineOptions?: string[];
+  machineSizes?: string[];
 }
 
 export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props) => {
@@ -145,11 +147,13 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props)
           setJobDescription={props.setJobDescription}
           jobNoted={props.jobNoted}
           setJobNoted={props.setJobNoted}
+          machineOptions={props.machineOptions}
         />
 
         <FormSealingElement
           size={props.size}
           setSize={props.setSize}
+          machineSizes={props.machineSizes}
           className={props.classVal}
           setClassName={props.setClassVal}
           thickness={props.thickness}

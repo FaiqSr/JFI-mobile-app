@@ -13,6 +13,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 export interface FormSealingElementProps {
   size: string;
   setSize: (v: string) => void;
+  machineSizes?: string[];
   className: string;
   setClassName: (v: string) => void;
   thickness: string;
@@ -34,6 +35,7 @@ export interface FormSealingElementProps {
 export const FormSealingElement: React.FC<FormSealingElementProps> = ({
   size,
   setSize,
+  machineSizes = [],
   className,
   setClassName,
   thickness,
@@ -216,6 +218,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
               value={size}
               onChangeText={setSize}
             />
+            {machineSizes.length > 0 && <View style={styles.row}>{machineSizes.map((value) => <TouchableOpacity key={value} onPress={() => setSize(value)}><Text>{value}</Text></TouchableOpacity>)}</View>}
           </View>
           <View style={styles.halfInputContainer}>
             <Text style={styles.label}>

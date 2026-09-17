@@ -70,6 +70,8 @@ interface RingScreenProps {
   onBack: () => void;
   onSave: () => void;
   onClear?: () => void;
+  machineOptions?: string[];
+  machineSizes?: string[];
 }
 
 export const Ring1Screen: React.FC<RingScreenProps> = (props) => {
@@ -138,6 +140,7 @@ export const Ring1Screen: React.FC<RingScreenProps> = (props) => {
           setJobDescription={props.setJobDescription}
           jobNoted={props.jobNoted}
           setJobNoted={props.setJobNoted}
+          machineOptions={props.machineOptions}
         />
 
         <FormProductRing1
@@ -149,6 +152,7 @@ export const Ring1Screen: React.FC<RingScreenProps> = (props) => {
           setMaterialNoted={props.setMaterialNoted}
           size={props.size}
           setSize={props.setSize}
+          machineSizes={props.machineSizes}
           classVal={props.classVal}
           setClassVal={props.setClassVal}
           thickness={props.thickness}
