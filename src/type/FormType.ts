@@ -1,15 +1,10 @@
-export type ScreenType =
-  | 'HOME'
-  | 'RING_1'
-  | 'RING_2'
-  | 'RING_3'
-  | 'SEALING_ELEMENT'
-  | 'DOUBLE_JACKETED';
+export type ScreenType = "HOME" | "RING_1" | "RING_2" | "RING_3" | "SEALING_ELEMENT" | "DOUBLE_JACKETED";
 
 export interface ScreenFormData {
   taskId?: string | number;
   namaOperator: string;
   nomorSO: string;
+  nomorCS: string;
   jobDescription: string;
   jobNoted: string;
   product: string;
@@ -17,7 +12,7 @@ export interface ScreenFormData {
   materialType: string;
   materialNoted: string;
   notedSize: string;
-  notedSizeOdId: string; 
+  notedSizeOdId: string;
   size: string;
   classVal: string;
   workType: string;
@@ -46,19 +41,20 @@ export interface ScreenFormData {
 
 export const initialFormState: ScreenFormData = {
   taskId: undefined,
-  namaOperator: '',
-  nomorSO: '',
-  jobDescription: '',
-  jobNoted: '',
-  product: '',
-  productName: '',
-  materialType: '',
-  materialNoted: '',
-  notedSize: '',
-  notedSizeOdId: '', 
-  size: '',
-  classVal: '',
-  workType: '',
+  namaOperator: "",
+  nomorSO: "",
+  nomorCS: "",
+  jobDescription: "",
+  jobNoted: "",
+  product: "",
+  productName: "",
+  materialType: "",
+  materialNoted: "",
+  notedSize: "",
+  notedSizeOdId: "",
+  size: "",
+  classVal: "",
+  workType: "",
   startTimestamp: null,
   stopTimestamp: null,
   isStarted: false,
@@ -69,15 +65,15 @@ export const initialFormState: ScreenFormData = {
   maintenance: 0,
   checking: 0,
   finishGood: 0,
-  hoop: '',
-  filler: '',
-  ir: '',
-  orVal: '',
-  idVal: '',
-  odVal: '',
-  thickness: '',
-  metal: '',
+  hoop: "",
+  filler: "",
+  ir: "",
+  orVal: "",
+  idVal: "",
+  odVal: "",
+  thickness: "",
+  metal: "",
   rework: 0,
   shift: null,
-  noteTimeActivities: '',
+  noteTimeActivities: "",
 };

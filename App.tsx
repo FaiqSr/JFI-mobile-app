@@ -62,10 +62,10 @@ const hasValue = (val: string | number | undefined | null): boolean => {
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [currentScreen, setCurrentScreen] = useState<ExtendedScreenType>('HOME');
-  const [userToken, setUserToken] = useState<string>(''); 
+  const [userToken, setUserToken] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [selectedCsTask, setSelectedCsTask] = useState<OpenTaskItem | WorkQueueTask | null>(null);
-  
+
   const [lastActiveScreen, setLastActiveScreen] = useState<ScreenType | null>(null);
 
   const [formsData, setFormsData] = useState<Record<string, ScreenFormData>>({
@@ -157,7 +157,7 @@ export default function App() {
       try {
         const jsonDraft = await AsyncStorage.getItem(DRAFT_KEY);
         const savedLastScreen = await AsyncStorage.getItem(LAST_SCREEN_KEY);
-        
+
         if (jsonDraft !== null) {
           const draft = JSON.parse(jsonDraft);
           if (draft.formsData) {
@@ -288,6 +288,7 @@ export default function App() {
         (activeData as any)?.noSO ||
         (fallbackSo !== '-' ? fallbackSo : '') ||
         '';
+      const preservedCS = activeData?.nomorCS || String(fallbackTaskObj?.slip_no || '');
 
       const preservedClass =
         activeData?.classVal ||
@@ -306,6 +307,7 @@ export default function App() {
           taskId: String(preservedTaskId),
           namaOperator: String(preservedOperator),
           nomorSO: String(preservedSO),
+          nomorCS: preservedCS,
           classVal: String(preservedClass),
           size: String(preservedSize),
           materialNoted: String(preservedMaterial),
@@ -473,26 +475,26 @@ export default function App() {
     const combinedStr = `${helperMod} ${directMod} ${JSON.stringify(taskObj)}`.toUpperCase();
 
     let targetScreen: ScreenType | null = null;
-    
+
     if (combinedStr.includes('DJG') || combinedStr.includes('DOUBLE')) {
       targetScreen = 'DOUBLE_JACKETED';
     } else if (combinedStr.includes('SEALING') || combinedStr.includes('SE_')) {
       targetScreen = 'SEALING_ELEMENT';
     } else if (
-      combinedStr.includes('RING 2') || 
-      combinedStr.includes('RING_2') || 
+      combinedStr.includes('RING 2') ||
+      combinedStr.includes('RING_2') ||
       combinedStr.includes('RING2')
     ) {
       targetScreen = 'RING_2';
     } else if (
-      combinedStr.includes('RING 3') || 
-      combinedStr.includes('RING_3') || 
+      combinedStr.includes('RING 3') ||
+      combinedStr.includes('RING_3') ||
       combinedStr.includes('RING3')
     ) {
       targetScreen = 'RING_3';
     } else if (
-      combinedStr.includes('RING 1') || 
-      combinedStr.includes('RING_1') || 
+      combinedStr.includes('RING 1') ||
+      combinedStr.includes('RING_1') ||
       combinedStr.includes('RING1')
     ) {
       targetScreen = 'RING_1';
@@ -505,22 +507,22 @@ export default function App() {
         taskObj.taskId || taskObj.task_id || taskObj.id_task || taskObj.id || task.id || ''
       );
 
-      const operatorName = 
+      const operatorName =
         userName || taskObj.operator_name || taskObj.operator || taskObj.nama_operator || taskObj.pic || '-';
 
       const detectedSo = getItemSoNo(taskObj);
       const soNum = detectedSo !== '-' ? detectedSo : (taskObj.so_no || taskObj.so_number || taskObj.nomor_so || '-');
-      
-      const classVal = 
-        taskObj.class !== undefined && taskObj.class !== null ? String(taskObj.class) :
-        taskObj.class_val !== undefined && taskObj.class_val !== null ? String(taskObj.class_val) :
-        taskObj.rating !== undefined && taskObj.rating !== null ? String(taskObj.rating) :
-        taskObj.class_rating !== undefined && taskObj.class_rating !== null ? String(taskObj.class_rating) : '';
 
-      const sizeVal = 
+      const classVal =
+        taskObj.class !== undefined && taskObj.class !== null ? String(taskObj.class) :
+          taskObj.class_val !== undefined && taskObj.class_val !== null ? String(taskObj.class_val) :
+            taskObj.rating !== undefined && taskObj.rating !== null ? String(taskObj.rating) :
+              taskObj.class_rating !== undefined && taskObj.class_rating !== null ? String(taskObj.class_rating) : '';
+
+      const sizeVal =
         taskObj.size !== undefined && taskObj.size !== null ? String(taskObj.size) :
-        taskObj.ukuran !== undefined && taskObj.ukuran !== null ? String(taskObj.ukuran) :
-        taskObj.dimension !== undefined && taskObj.dimension !== null ? String(taskObj.dimension) : '';
+          taskObj.ukuran !== undefined && taskObj.ukuran !== null ? String(taskObj.ukuran) :
+            taskObj.dimension !== undefined && taskObj.dimension !== null ? String(taskObj.dimension) : '';
 
       const certNo = taskObj.cert_no_material || taskObj.cert_no || taskObj.material_cert_no || '-';
 
@@ -531,6 +533,7 @@ export default function App() {
           taskId: taskIdVal,
           namaOperator: String(operatorName),
           nomorSO: String(soNum),
+          nomorCS: String(taskObj.slip_no || taskObj.cs_no || taskObj.csNo || ''),
           classVal: classVal,
           size: sizeVal,
           materialNoted: `Cert No. Material: ${certNo}`,
