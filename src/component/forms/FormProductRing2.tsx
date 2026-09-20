@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { EditableSelect } from '../common/EditableSelect';
 
 export interface FormProductRing2Props {
   product: string;
@@ -146,7 +147,7 @@ export const FormProductRing2: React.FC<FormProductRing2Props> = ({
         return {
           title: '',
           data: [],
-          onSelect: (_v: string) => {},
+          onSelect: (_v: string) => { },
           selected: '',
         };
     }
@@ -212,7 +213,6 @@ export const FormProductRing2: React.FC<FormProductRing2Props> = ({
             value={materialNotedVal}
             onChangeText={handleMaterialNotedChange}
           />
-          {machineSizes.length > 0 && <View style={styles.row}>{machineSizes.map((value) => <TouchableOpacity key={value} onPress={() => setSize(value)}><Text>{value}</Text></TouchableOpacity>)}</View>}
           {isNoChoiceMaterialNoted && (
             <Text style={styles.warningText}>
               Wajib diisi karena Product/Material Type 'Tidak Ada Pilihan'
@@ -246,12 +246,12 @@ export const FormProductRing2: React.FC<FormProductRing2Props> = ({
           <Text style={styles.label}>
             Size <Text style={styles.asterisk}>*</Text>
           </Text>
-          <TextInput
-            style={styles.input}
-            placeholder='1"'
-            placeholderTextColor="#98A2B3"
+          <EditableSelect
             value={size}
             onChangeText={setSize}
+            options={machineSizes}
+            title="Pilih Size"
+            placeholder='1"'
           />
         </View>
 
@@ -339,14 +339,14 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: RFValue(16),
     fontWeight: '700',
-    
+
     color: '#101828',
     marginBottom: 16,
   },
   label: {
     fontSize: RFValue(12),
     fontWeight: '600',
-    
+
     color: '#344054',
     marginBottom: 6,
   },
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: RFValue(13),
-    
+
     color: '#101828',
     backgroundColor: '#FFFFFF',
     marginBottom: 4,
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
   },
   dropdownText: {
     fontSize: RFValue(13),
-    
+
     color: '#101828',
   },
   placeholderText: {
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
   warningText: {
     fontSize: RFValue(11),
     color: '#D97706',
-    
+
     marginTop: 2,
     marginBottom: 8,
   },
@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: RFValue(16),
     fontWeight: '600',
-    
+
     color: '#101828',
     marginBottom: 12,
   },
@@ -433,7 +433,7 @@ const styles = StyleSheet.create({
   },
   modalItemText: {
     fontSize: RFValue(14),
-    
+
     color: '#344054',
   },
   selectedItemText: {

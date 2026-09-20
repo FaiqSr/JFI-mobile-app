@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { EditableSelect } from '../common/EditableSelect';
 
 export interface FormSealingElementProps {
   size: string;
@@ -195,7 +196,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
           selected: orVal,
         };
       default:
-        return { title: '', data: [], onSelect: (_v: string) => {}, selected: '' };
+        return { title: '', data: [], onSelect: (_v: string) => { }, selected: '' };
     }
   };
 
@@ -203,7 +204,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
 
   return (
     <>
-      
+
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Type</Text>
         <View style={styles.row}>
@@ -211,14 +212,13 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
             <Text style={styles.label}>
               Size <Text style={styles.asterisk}>*</Text>
             </Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter size"
-              placeholderTextColor="#98A2B3"
+            <EditableSelect
               value={size}
               onChangeText={setSize}
+              options={machineSizes}
+              title="Pilih Size"
+              placeholder="Enter size"
             />
-            {machineSizes.length > 0 && <View style={styles.row}>{machineSizes.map((value) => <TouchableOpacity key={value} onPress={() => setSize(value)}><Text>{value}</Text></TouchableOpacity>)}</View>}
           </View>
           <View style={styles.halfInputContainer}>
             <Text style={styles.label}>
@@ -263,7 +263,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
         />
       </View>
 
-      
+
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Material</Text>
         <View style={styles.row}>
@@ -364,7 +364,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
         />
       </View>
 
-      
+
       <Modal visible={activeModal !== null} transparent animationType="fade">
         <TouchableOpacity
           style={styles.modalOverlay}
@@ -389,7 +389,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
                       (item === modalConfig.selected ||
                         (item === '*Tidak ada pilihan' &&
                           !modalConfig.selected)) &&
-                        styles.selectedItemText,
+                      styles.selectedItemText,
                     ]}
                   >
                     {item}
@@ -421,14 +421,14 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: RFValue(16),
     fontWeight: '700',
-    
+
     color: '#101828',
     marginBottom: 14,
   },
   label: {
     fontSize: RFValue(12),
     fontWeight: '600',
-    
+
     color: '#344054',
     marginBottom: 6,
   },
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: RFValue(13),
-    
+
     fontWeight: 'normal',
     color: '#101828',
     marginBottom: 12,
@@ -463,7 +463,7 @@ const styles = StyleSheet.create({
   dropdownText: {
     flex: 1,
     fontSize: RFValue(13),
-    
+
     color: '#101828',
     marginRight: 4,
   },
@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: RFValue(16),
     fontWeight: '600',
-    
+
     color: '#101828',
     marginBottom: 12,
   },
@@ -509,7 +509,7 @@ const styles = StyleSheet.create({
   },
   modalItemText: {
     fontSize: RFValue(14),
-    
+
     color: '#344054',
   },
   selectedItemText: {

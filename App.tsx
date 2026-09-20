@@ -424,6 +424,10 @@ export default function App() {
       );
       return;
     }
+    if (activeData.shift !== 1 && activeData.shift !== 2) {
+      Alert.alert('Gagal', 'Shift wajib dipilih (Shift 1 atau Shift 2).');
+      return;
+    }
 
     const strStart = formatHHMM(activeData.startTimestamp);
     const strEnd = formatHHMM(activeData.stopTimestamp);
