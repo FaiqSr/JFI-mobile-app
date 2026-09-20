@@ -22,6 +22,7 @@ interface Ring3ScreenProps {
   namaOperator: string;
   setNamaOperator: (v: string) => void;
   nomorSO: string;
+  nomorCS?: string;
   setNomorSO: (v: string) => void;
   jobDescription: string;
   setJobDescription: (v: string) => void;
@@ -138,6 +139,7 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
           setNamaOperator={props.setNamaOperator}
           nomorSO={props.nomorSO}
           setNomorSO={props.setNomorSO}
+          nomorCS={props.nomorCS}
           jobDescription={props.jobDescription}
           setJobDescription={props.setJobDescription}
           jobNoted={props.jobNoted}
@@ -233,14 +235,14 @@ const styles = StyleSheet.create({
   },
   pageTitle: {
     fontSize: RFValue(26),
-    
+
     color: '#101828',
     marginBottom: 6,
   },
   pageSubtitle: {
     fontSize: RFValue(13),
     color: '#667085',
-    
+
     marginBottom: 20,
     lineHeight: 18,
   },
@@ -265,7 +267,7 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     color: '#FFFFFF',
-    
+
     fontSize: RFValue(15),
   },
   floatingCsButton: {
@@ -284,7 +286,7 @@ const styles = StyleSheet.create({
   },
   floatingCsText: {
     color: '#FFFFFF',
-    
+
     fontWeight: '700',
     fontSize: RFValue(12),
   },

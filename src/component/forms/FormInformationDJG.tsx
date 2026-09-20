@@ -15,6 +15,7 @@ interface FormInformationProps {
   setNamaOperator: (v: string) => void;
   nomorSO: string;
   setNomorSO: (v: string) => void;
+  nomorCS?: string;
   jobDescription: string;
   setJobDescription: (v: string) => void;
   jobNoted?: string;
@@ -28,12 +29,13 @@ export const FormInformationDJG: React.FC<FormInformationProps> = ({
   setNamaOperator,
   nomorSO,
   setNomorSO,
+  nomorCS = '',
   productName,
   setProductName,
   jobDescription,
   setJobDescription,
   jobNoted = '',
-  setJobNoted = () => {},
+  setJobNoted = () => { },
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -80,6 +82,9 @@ export const FormInformationDJG: React.FC<FormInformationProps> = ({
         onChangeText={setNamaOperator}
         editable={false}
       />
+
+      <View style={styles.labelRow}><Text style={styles.label}>No. CS</Text></View>
+      <TextInput style={[styles.input, styles.disabledInput]} value={nomorCS || '-'} editable={false} />
 
       {/* SO Number */}
       <View style={styles.labelRow}>
@@ -204,7 +209,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: RFValue(16),
     fontWeight: '700',
-    
+
     color: '#101828',
     marginBottom: 16,
   },
@@ -215,7 +220,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: RFValue(12),
     fontWeight: '600',
-    
+
     color: '#344054',
     marginBottom: 6,
   },
@@ -236,7 +241,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: RFValue(13),
-    
+
     color: '#101828',
     backgroundColor: '#FFFFFF',
     marginBottom: 4,
@@ -251,13 +256,13 @@ const styles = StyleSheet.create({
   helperText: {
     fontSize: RFValue(11),
     color: '#667085',
-    
+
     marginBottom: 12,
   },
   warningText: {
     fontSize: RFValue(11),
     color: '#D97706',
-    
+
     marginTop: 2,
     marginBottom: 12,
   },
@@ -277,7 +282,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 8,
     fontSize: RFValue(13),
-    
+
     color: '#101828',
   },
   placeholderText: {
@@ -304,7 +309,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: RFValue(16),
     fontWeight: '600',
-    
+
     color: '#101828',
     marginBottom: 12,
   },
@@ -315,7 +320,7 @@ const styles = StyleSheet.create({
   },
   modalItemText: {
     fontSize: RFValue(14),
-    
+
     color: '#344054',
   },
   selectedItemText: {
