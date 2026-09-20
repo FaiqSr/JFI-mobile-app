@@ -22,7 +22,6 @@ export interface SealingElementScreenProps {
   namaOperator: string;
   setNamaOperator: (v: string) => void;
   nomorSO: string;
-  nomorCS?: string;
   setNomorSO: (v: string) => void;
   jobDescription: string;
   setJobDescription: (v: string) => void;
@@ -144,7 +143,6 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props)
           setNamaOperator={props.setNamaOperator}
           nomorSO={props.nomorSO}
           setNomorSO={props.setNomorSO}
-          nomorCS={props.nomorCS}
           jobDescription={props.jobDescription}
           setJobDescription={props.setJobDescription}
           jobNoted={props.jobNoted}
@@ -245,7 +243,7 @@ const styles = StyleSheet.create({
   },
   pageTitle: {
     fontSize: RFValue(22),
-
+    
     fontWeight: 'normal',
     color: '#101828',
     marginBottom: 6,
@@ -254,7 +252,7 @@ const styles = StyleSheet.create({
   pageSubtitle: {
     fontSize: RFValue(13),
     color: '#667085',
-
+    
     fontWeight: 'normal',
     marginBottom: 20,
     lineHeight: 18,
@@ -280,7 +278,7 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     color: '#FFFFFF',
-
+    
     fontWeight: 'normal',
     fontSize: RFValue(15),
   },
@@ -300,7 +298,7 @@ const styles = StyleSheet.create({
   },
   floatingCsText: {
     color: '#FFFFFF',
-
+    
     fontWeight: '700',
     fontSize: RFValue(12),
   },
