@@ -73,7 +73,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
         <View style={styles.shiftContainer}>
           <Text style={styles.shiftLabel}>Shift</Text>
           <View style={styles.shiftRow}>
-            {[1, 2].map((option) => {
+            {[1, 2, 3].map((option) => {
               const isActive = shift === option;
               return (
                 <TouchableOpacity
@@ -212,14 +212,14 @@ export const FormTime: React.FC<FormTimeProps> = ({
 
 const styles = StyleSheet.create({
   card: { backgroundColor: '#FFFFFF', borderRadius: 12, padding: 16, marginBottom: 16, borderWidth: 1, borderColor: '#EAECF0' },
-  cardTitle: { fontSize: RFValue(18), color: '#101828', marginBottom: 16 },
+  cardTitle: { fontSize: RFValue(18),  color: '#101828', marginBottom: 16 },
   row: { flexDirection: 'row', justifyContent: 'space-between' },
   col: { width: '48%' },
   startStopButton: { paddingVertical: 12, borderRadius: 12, alignItems: 'center', marginBottom: 16 },
   startButtonStyle: { backgroundColor: '#000000' },
   stopButtonStyle: { backgroundColor: '#D92D20' },
   endButtonStyle: { backgroundColor: '#667085' },
-  startStopButtonText: { color: '#FFFFFF', fontSize: RFValue(15), letterSpacing: 1 },
+  startStopButtonText: { color: '#FFFFFF',  fontSize: RFValue(15), letterSpacing: 1 },
   shiftContainer: { marginBottom: 16 },
   shiftLabel: { fontSize: RFValue(12), fontWeight: '600', color: '#344054', marginBottom: 6 },
   shiftRow: { flexDirection: 'row', justifyContent: 'space-between' },
