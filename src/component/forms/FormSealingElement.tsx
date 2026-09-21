@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { SearchableSizeInput } from '../common/SearchableSizeInput';
 
 export interface FormSealingElementProps {
   size: string;
@@ -54,7 +55,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
   setMaterialNoted: externalSetMaterialNoted,
 }) => {
   const [activeModal, setActiveModal] = useState<
-    'thickness' | 'hoop' | 'filler' | 'ir' | 'or' | null
+    'thickness' | 'hoop' | 'filler' | 'ir' | 'or' | 'size' | null
   >(null);
 
   const [internalNotedSize, setInternalNotedSize] = useState('');
@@ -83,6 +84,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
     '4.5 mm',
     '6.4 mm',
   ];
+
 
   const hoopOptions = [
     '*Tidak ada pilihan',
@@ -211,14 +213,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
             <Text style={styles.label}>
               Size <Text style={styles.asterisk}>*</Text>
             </Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter size"
-              placeholderTextColor="#98A2B3"
-              value={size}
-              onChangeText={setSize}
-            />
-            {machineSizes.length > 0 && <View style={styles.row}>{machineSizes.map((value) => <TouchableOpacity key={value} onPress={() => setSize(value)}><Text>{value}</Text></TouchableOpacity>)}</View>}
+            <SearchableSizeInput value={size} onChangeText={setSize} sizes={machineSizes} />
           </View>
           <View style={styles.halfInputContainer}>
             <Text style={styles.label}>
@@ -379,9 +374,9 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.modalItem}
-                  onPress={() =>
-                    handleSelectOption(item, modalConfig.onSelect)
-                  }
+                  onPress={() => {
+                    handleSelectOption(item, modalConfig.onSelect);
+                  }}
                 >
                   <Text
                     style={[

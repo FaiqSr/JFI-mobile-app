@@ -73,7 +73,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
         <View style={styles.shiftContainer}>
           <Text style={styles.shiftLabel}>Shift</Text>
           <View style={styles.shiftRow}>
-            {[1, 2, 3].map((option) => {
+            {[1, 2].map((option) => {
               const isActive = shift === option;
               return (
                 <TouchableOpacity
