@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { SearchableSizeInput } from '../common/SearchableSizeInput';
 
 export interface FormProductRing1Props {
   product: string;
@@ -46,7 +47,7 @@ export const FormProductRing1: React.FC<FormProductRing1Props> = ({
   machineSizes = [],
 }) => {
   const [activeModal, setActiveModal] = useState<
-    'product' | 'material' | 'thickness' | null
+    'product' | 'material' | 'thickness' | 'size' | null
   >(null);
 
   const [internalMaterialNoted, setInternalMaterialNoted] = useState('');
@@ -113,6 +114,7 @@ export const FormProductRing1: React.FC<FormProductRing1Props> = ({
     '4 mm',
     '5 mm',
   ];
+
 
   const isNoProduct = product === 'Tidak Ada Pilihan' || product === '*Tidak ada pilihan';
   const isNoMaterialType = materialType === 'Tidak Ada Pilihan' || materialType === '*Tidak ada pilihan';
@@ -213,7 +215,6 @@ export const FormProductRing1: React.FC<FormProductRing1Props> = ({
             value={materialNotedVal}
             onChangeText={handleMaterialNotedChange}
           />
-          {machineSizes.length > 0 && <View style={styles.row}>{machineSizes.map((value) => <TouchableOpacity key={value} onPress={() => setSize(value)}><Text>{value}</Text></TouchableOpacity>)}</View>}
           {isNoChoiceMaterialNoted && (
             <Text style={styles.warningText}>
               Wajib diisi karena Product/Material Type 'Tidak Ada Pilihan'
@@ -247,13 +248,7 @@ export const FormProductRing1: React.FC<FormProductRing1Props> = ({
           <Text style={styles.label}>
             Size <Text style={styles.asterisk}>*</Text>
           </Text>
-          <TextInput
-            style={styles.input}
-            placeholder='1"'
-            placeholderTextColor="#98A2B3"
-            value={size}
-            onChangeText={setSize}
-          />
+          <SearchableSizeInput value={size} onChangeText={setSize} sizes={machineSizes} />
         </View>
 
         <View style={styles.column}>
