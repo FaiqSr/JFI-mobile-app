@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   StyleSheet,
   BackHandler,
@@ -14,7 +14,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { LoginScreen } from './src/screen/LoginScreen';
 import { HomeScreen } from './src/screen/HomeScreen';
-import { CsScreen } from './src/screen/CsScreen';
 import { ProfileScreen } from './src/screen/ProfileScreen';
 import { Ring1Screen } from './src/screen/Ring1Screen';
 import { Ring2Screen } from './src/screen/Ring2Screen';
@@ -23,7 +22,6 @@ import { SealingElementScreen } from './src/screen/SealingElementScreen';
 import { DoubleJacketScreen } from './src/screen/DoubleJacketScreen';
 
 import { ScreenType, ScreenFormData, initialFormState } from './src/type/FormType';
-import { OpenTaskItem, WorkQueueTask } from './src/type/csType';
 import {
   submitProductionData,
   getRingProps,
@@ -33,8 +31,6 @@ import {
   type LhpMasterCatalog,
 } from './src/api/FormService';
 import { authService } from './src/api/authService';
-import { csService } from './src/api/csService';
-import { getItemModule, getItemSoNo } from './src/utils/csHelpers';
 
 if ((Text as any).defaultProps) {
   (Text as any).defaultProps.allowFontScaling = false;
@@ -51,7 +47,8 @@ if ((TextInput as any).defaultProps) {
 const DRAFT_KEY = '@app_form_draft_v4';
 const LAST_SCREEN_KEY = '@app_last_active_screen';
 
-export type ExtendedScreenType = ScreenType | 'PEKERJAAN_CS' | 'PROFIL';
+/** The five production-area worksheets, in the plant's area order. */
+export type ExtendedScreenType = ScreenType | 'PROFIL';
 
 const hasValue = (val: string | number | undefined | null): boolean => {
   if (val === null || val === undefined) return false;
@@ -62,10 +59,9 @@ const hasValue = (val: string | number | undefined | null): boolean => {
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [currentScreen, setCurrentScreen] = useState<ExtendedScreenType>('HOME');
-  const [userToken, setUserToken] = useState<string>(''); 
+  const [userToken, setUserToken] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
-  const [selectedCsTask, setSelectedCsTask] = useState<OpenTaskItem | WorkQueueTask | null>(null);
-  
+
   const [lastActiveScreen, setLastActiveScreen] = useState<ScreenType | null>(null);
 
   const [formsData, setFormsData] = useState<Record<string, ScreenFormData>>({
@@ -111,7 +107,7 @@ export default function App() {
     const activeTaskKey = Object.keys(formsData).find((key) => {
       const form = formsData[key];
       if (!form) return false;
-      return hasValue(form.taskId) || hasValue(form.nomorSO);
+      return hasValue(form.nomorSO);
     });
     if (activeTaskKey) return activeTaskKey as ScreenType;
 
@@ -157,12 +153,12 @@ export default function App() {
       try {
         const jsonDraft = await AsyncStorage.getItem(DRAFT_KEY);
         const savedLastScreen = await AsyncStorage.getItem(LAST_SCREEN_KEY);
-        
+
         if (jsonDraft !== null) {
           const draft = JSON.parse(jsonDraft);
           if (draft.formsData) {
             const hasAnyData = Object.values(draft.formsData).some(
-              (form: any) => hasValue(form.taskId) || hasValue(form.nomorSO)
+              (form: any) => hasValue(form.nomorSO)
             );
 
             if (hasAnyData) {
@@ -207,103 +203,21 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [isRestored, currentScreen, formsData, activeScreen]);
 
-  // Validasi draf terhadap server: pastikan task "Lanjutkan Pekerjaan Aktif"
-  // masih ada di board GET /tasks/open. Task yang sudah ditutup foreman tidak
-  // muncul lagi di sana, jadi drafnya dibersihkan supaya tombol kembali KOSONG.
-  // Hanya jalan sekali setelah restore+login; gagal jaringan = fail-open
-  // (draf TIDAK dihapus, operator tidak kehilangan isian produksi).
-  const draftValidatedRef = useRef(false);
-  useEffect(() => {
-    if (draftValidatedRef.current) return;
-    if (!isRestored || !isLoggedIn || !userToken) return;
-
-    const screen = activeScreen;
-    if (!screen) return; // activeScreen selalu screen form atau null
-
-    const form = formsData[screen as ScreenType];
-    const draftTaskId = form?.taskId ? String(form.taskId).trim() : '';
-    const draftSo =
-      form?.nomorSO && String(form.nomorSO).trim() !== '-'
-        ? String(form.nomorSO).trim()
-        : '';
-    if (!draftTaskId && !draftSo) return; // tidak ada kunci untuk diverifikasi
-
-    draftValidatedRef.current = true;
-    let cancelled = false;
-
-    (async () => {
-      const res = await csService.getOpenTasks(userToken);
-      if (cancelled || !res?.success) return;
-
-      const list: any[] = Array.isArray(res.data) ? res.data : [];
-      const stillOpen = list.some((t: any) => {
-        if (draftTaskId && String(t?.id ?? '') === draftTaskId) return true;
-        if (draftSo && String(t?.so_no ?? '').trim() === draftSo) return true;
-        return false;
-      });
-
-      if (!stillOpen) {
-        setFormsData((prev) => ({
-          ...prev,
-          [screen]: { ...initialFormState, namaOperator: prev[screen]?.namaOperator || userName },
-        }));
-        saveLastActiveScreen(null);
-        Alert.alert(
-          'Pekerjaan Telah Ditutup',
-          'Task aktif sudah ditutup di server, jadi draf pekerjaan dibersihkan. Silakan pilih task baru dari Pekerjaan CS.'
-        );
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-    // Sengaja tidak bergantung pada formsData/activeScreen: validasi ini
-    // hanyalah pemeriksaan cold-start terhadap draf yang baru dimuat.
-  }, [isRestored, isLoggedIn, userToken]);
-
-  // FIX: Mengunci nomorSO dan header data agar tidak hilang saat clear/simpan
+  // Mengunci nama operator pada setiap form agar tidak hilang saat clear/simpan
   const handleClear = useCallback(async () => {
-    if (
-      currentScreen !== 'HOME' &&
-      currentScreen !== 'PEKERJAAN_CS' &&
-      currentScreen !== 'PROFIL'
-    ) {
+    if (currentScreen !== 'HOME' && currentScreen !== 'PROFIL') {
       const activeData = formsData[currentScreen];
 
-      // Ambil nilai fallback dari selectedCsTask jika di state form bernilai kosong
-      const fallbackSo = selectedCsTask ? getItemSoNo(selectedCsTask) : '';
-      const fallbackTaskObj = selectedCsTask
-        ? ((selectedCsTask as any)?.item || (selectedCsTask as any)?.task || selectedCsTask)
-        : null;
-
-      const preservedTaskId =
-        activeData?.taskId ||
-        (fallbackTaskObj?.taskId || fallbackTaskObj?.task_id || fallbackTaskObj?.id || '');
-
       const preservedOperator = activeData?.namaOperator || userName;
-
-      const preservedSO =
-        activeData?.nomorSO ||
-        (activeData as any)?.noSO ||
-        (fallbackSo !== '-' ? fallbackSo : '') ||
-        '';
-
-      const preservedClass =
-        activeData?.classVal ||
-        (fallbackTaskObj?.class ? String(fallbackTaskObj.class) : '');
-
-      const preservedSize =
-        activeData?.size ||
-        (fallbackTaskObj?.size ? String(fallbackTaskObj.size) : '');
-
+      const preservedSO = activeData?.nomorSO || '';
+      const preservedClass = activeData?.classVal || '';
+      const preservedSize = activeData?.size || '';
       const preservedMaterial = activeData?.materialNoted || '';
 
       setFormsData((prev) => ({
         ...prev,
         [currentScreen]: {
           ...initialFormState,
-          taskId: String(preservedTaskId),
           namaOperator: String(preservedOperator),
           nomorSO: String(preservedSO),
           classVal: String(preservedClass),
@@ -315,7 +229,6 @@ export default function App() {
       saveLastActiveScreen(currentScreen as ScreenType);
     } else {
       setLastActiveScreen(null);
-      setSelectedCsTask(null);
       const emptyForms: Record<string, ScreenFormData> = {
         RING_1: { ...initialFormState, namaOperator: userName },
         RING_2: { ...initialFormState, namaOperator: userName },
@@ -332,14 +245,10 @@ export default function App() {
         console.error('Gagal membersihkan draf dari penyimpanan:', e);
       }
     }
-  }, [currentScreen, formsData, userName, selectedCsTask, saveLastActiveScreen]);
+  }, [currentScreen, formsData, userName, saveLastActiveScreen]);
 
   const handleNavigate = useCallback((screen: ExtendedScreenType) => {
-    if (
-      screen !== 'HOME' &&
-      screen !== 'PEKERJAAN_CS' &&
-      screen !== 'PROFIL'
-    ) {
+    if (screen !== 'HOME' && screen !== 'PROFIL') {
       saveLastActiveScreen(screen as ScreenType);
     }
     setCurrentScreen(screen);
@@ -374,41 +283,23 @@ export default function App() {
     return `${hours}:${minutes}`;
   };
 
+  // Timer lokal saja — entry tidak lagi terikat sesi kerja CS di server.
   const handleToggleStartStop = async () => {
-    if (currentScreen === 'HOME' || currentScreen === 'PEKERJAAN_CS' || currentScreen === 'PROFIL') return;
+    if (currentScreen === 'HOME' || currentScreen === 'PROFIL') return;
     const currentData = formsData[currentScreen];
 
     if (!currentData.isStarted) {
-      // Mulai sesi kerja di server CS sebelum menyalakan timer lokal.
-      // Server idempoten untuk sesi ACTIVE yang sudah ada.
-      const taskId = currentData.taskId;
-      if (!hasValue(taskId)) {
-        Alert.alert('Gagal', 'Task CS tidak valid. Buka form dari daftar pekerjaan CS.');
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-        const res = await csService.startTask(taskId as string | number);
-        if (!res?.success) {
-          Alert.alert('Gagal Memulai', res?.message || 'Tidak dapat memulai sesi kerja.');
-          return;
-        }
-        updateFormField(currentScreen, 'startTimestamp', Date.now());
-        updateFormField(currentScreen, 'stopTimestamp', null);
-        updateFormField(currentScreen, 'isStarted', true);
-      } finally {
-        setIsLoading(false);
-      }
+      updateFormField(currentScreen, 'startTimestamp', Date.now());
+      updateFormField(currentScreen, 'stopTimestamp', null);
+      updateFormField(currentScreen, 'isStarted', true);
     } else {
-      // STOP hanya menghentikan timer lokal; sesi server ditutup foreman saat task di-close.
       updateFormField(currentScreen, 'stopTimestamp', Date.now());
       updateFormField(currentScreen, 'isStarted', false);
     }
   };
 
   const handleSimpan = async () => {
-    if (currentScreen === 'HOME' || currentScreen === 'PEKERJAAN_CS' || currentScreen === 'PROFIL') return;
+    if (currentScreen === 'HOME' || currentScreen === 'PROFIL') return;
     const activeData = formsData[currentScreen];
 
     if (!activeData.startTimestamp) {
@@ -436,113 +327,12 @@ export default function App() {
       );
 
       if (isSuccess) {
-        // Laporkan progress sesi ke server CS sebelum form dibersihkan.
-        const productId = (activeData.productName || activeData.product || '').trim();
-        const jobDesc = (activeData.jobDescription || '').trim();
-        const progressRes = await csService.progressTask(
-          activeData.taskId as string | number,
-          {
-            qty: Number(activeData.finishGood) || 0,
-            product_name: productId || null,
-            job_description: jobDesc || null,
-          }
-        );
-        if (!progressRes?.success) {
-          // Form TIDAK dibersihkan — draft tetap tersimpan, operator bisa retry Simpan.
-          Alert.alert(
-            'Progress Gagal Terkirim',
-            progressRes?.message || 'Data produksi tersimpan, tapi progress ke task CS gagal. Silakan tekan Simpan lagi.'
-          );
-          return;
-        }
         await handleClear();
       }
     } catch (error) {
       Alert.alert('Kendala Jaringan', `${error}`);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleSelectCsTask = (task: any) => {
-    setSelectedCsTask(task);
-
-    const taskObj = task?.item || task?.task || task;
-    const helperMod = getItemModule(task);
-    const directMod = getItemModule(taskObj);
-    const combinedStr = `${helperMod} ${directMod} ${JSON.stringify(taskObj)}`.toUpperCase();
-
-    let targetScreen: ScreenType | null = null;
-    
-    if (combinedStr.includes('DJG') || combinedStr.includes('DOUBLE')) {
-      targetScreen = 'DOUBLE_JACKETED';
-    } else if (combinedStr.includes('SEALING') || combinedStr.includes('SE_')) {
-      targetScreen = 'SEALING_ELEMENT';
-    } else if (
-      combinedStr.includes('RING 2') || 
-      combinedStr.includes('RING_2') || 
-      combinedStr.includes('RING2')
-    ) {
-      targetScreen = 'RING_2';
-    } else if (
-      combinedStr.includes('RING 3') || 
-      combinedStr.includes('RING_3') || 
-      combinedStr.includes('RING3')
-    ) {
-      targetScreen = 'RING_3';
-    } else if (
-      combinedStr.includes('RING 1') || 
-      combinedStr.includes('RING_1') || 
-      combinedStr.includes('RING1')
-    ) {
-      targetScreen = 'RING_1';
-    } else if (helperMod.includes('RING') || directMod.includes('RING')) {
-      targetScreen = 'RING_1';
-    }
-
-    if (targetScreen) {
-      const taskIdVal = String(
-        taskObj.taskId || taskObj.task_id || taskObj.id_task || taskObj.id || task.id || ''
-      );
-
-      const operatorName = 
-        userName || taskObj.operator_name || taskObj.operator || taskObj.nama_operator || taskObj.pic || '-';
-
-      const detectedSo = getItemSoNo(taskObj);
-      const soNum = detectedSo !== '-' ? detectedSo : (taskObj.so_no || taskObj.so_number || taskObj.nomor_so || '-');
-      
-      const classVal = 
-        taskObj.class !== undefined && taskObj.class !== null ? String(taskObj.class) :
-        taskObj.class_val !== undefined && taskObj.class_val !== null ? String(taskObj.class_val) :
-        taskObj.rating !== undefined && taskObj.rating !== null ? String(taskObj.rating) :
-        taskObj.class_rating !== undefined && taskObj.class_rating !== null ? String(taskObj.class_rating) : '';
-
-      const sizeVal = 
-        taskObj.size !== undefined && taskObj.size !== null ? String(taskObj.size) :
-        taskObj.ukuran !== undefined && taskObj.ukuran !== null ? String(taskObj.ukuran) :
-        taskObj.dimension !== undefined && taskObj.dimension !== null ? String(taskObj.dimension) : '';
-
-      const certNo = taskObj.cert_no_material || taskObj.cert_no || taskObj.material_cert_no || '-';
-
-      const updatedForms = {
-        ...formsData,
-        [targetScreen]: {
-          ...initialFormState,
-          taskId: taskIdVal,
-          namaOperator: String(operatorName),
-          nomorSO: String(soNum),
-          classVal: classVal,
-          size: sizeVal,
-          materialNoted: `Cert No. Material: ${certNo}`,
-        },
-      };
-
-      setFormsData(updatedForms);
-      saveLastActiveScreen(targetScreen);
-
-      setCurrentScreen(targetScreen);
-    } else {
-      Alert.alert('Peringatan', `Modul "${helperMod}" tidak terdeteksi.`);
     }
   };
 
@@ -619,17 +409,6 @@ export default function App() {
           />
         );
 
-      case 'PEKERJAAN_CS':
-        return (
-          <CsScreen
-            onBack={() => setCurrentScreen('HOME')}
-            onSelectTask={handleSelectCsTask}
-            onLogout={handleLogoutSuccess}
-            userToken={userToken}
-            userName={userName}
-          />
-        );
-
       case 'PROFIL':
         return (
           <ProfileScreen
@@ -640,49 +419,19 @@ export default function App() {
         );
 
       case 'RING_1':
-        return (
-          <Ring1Screen
-            {...getRingProps('RING_1', helperOptions, lhpCatalogs.RING_1)}
-            taskId={formsData.RING_1.taskId}
-            userToken={userToken}
-          />
-        );
+        return <Ring1Screen {...getRingProps('RING_1', helperOptions, lhpCatalogs.RING_1)} />;
 
       case 'RING_2':
-        return (
-          <Ring2Screen
-            {...getRingProps('RING_2', helperOptions, lhpCatalogs.RING_2)}
-            taskId={formsData.RING_2.taskId}
-            userToken={userToken}
-          />
-        );
+        return <Ring2Screen {...getRingProps('RING_2', helperOptions, lhpCatalogs.RING_2)} />;
 
       case 'RING_3':
-        return (
-          <Ring3Screen
-            {...getRingProps('RING_3', helperOptions, lhpCatalogs.RING_3)}
-            taskId={formsData.RING_3.taskId}
-            userToken={userToken}
-          />
-        );
+        return <Ring3Screen {...getRingProps('RING_3', helperOptions, lhpCatalogs.RING_3)} />;
 
       case 'SEALING_ELEMENT':
-        return (
-          <SealingElementScreen
-            {...getSealingProps(helperOptions, lhpCatalogs.SE)}
-            taskId={formsData.SEALING_ELEMENT.taskId}
-            userToken={userToken}
-          />
-        );
+        return <SealingElementScreen {...getSealingProps(helperOptions, lhpCatalogs.SE)} />;
 
       case 'DOUBLE_JACKETED':
-        return (
-          <DoubleJacketScreen
-            {...getDoubleJacketProps(helperOptions)}
-            taskId={formsData.DOUBLE_JACKETED.taskId}
-            userToken={userToken}
-          />
-        );
+        return <DoubleJacketScreen {...getDoubleJacketProps(helperOptions)} />;
 
       default:
         return null;

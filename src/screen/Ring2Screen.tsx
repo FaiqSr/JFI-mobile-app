@@ -12,11 +12,8 @@ import { FormInformationRing2 } from '../component/forms/FormInformationRing2';
 import { FormProductRing2 } from '../component/forms/FormProductRing2';
 import { FormTime } from '../component/forms/FormTime';
 import { FormQuantity } from '../component/forms/FormQuantity';
-import { openCsPdfViewer } from '../utils/csPdf';
 
 interface Ring2ScreenProps {
-  taskId?: string | number;
-  pdfUrl?: string;
   userToken?: string;
   namaOperator: string;
   setNamaOperator: (v: string) => void;
@@ -113,12 +110,6 @@ export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
     }
   };
 
-  const handleDownloadAndOpenPdf = () => {
-    if (!openCsPdfViewer(props.taskId ?? '', null)) {
-      Alert.alert('Informasi', 'ID Task CS tidak ditemukan.');
-    }
-  };
-
   return (
     <View style={styles.container}>
       <ScrollView
@@ -207,14 +198,6 @@ export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
           <Text style={styles.actionButtonText}>Clear</Text>
         </TouchableOpacity>
       </ScrollView>
-
-      <TouchableOpacity
-        style={styles.floatingCsButton}
-        onPress={handleDownloadAndOpenPdf}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.floatingCsText}>Lihat CS (PDF)</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -266,25 +249,5 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     
     fontSize: RFValue(15),
-  },
-  floatingCsButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 16,
-    backgroundColor: '#101828',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 14,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-  },
-  floatingCsText: {
-    color: '#FFFFFF',
-    
-    fontWeight: '700',
-    fontSize: RFValue(12),
   },
 });

@@ -17,6 +17,20 @@ interface HomeScreenProps {
   activeScreen?: ExtendedScreenType | null;
 }
 
+/** The five production-area worksheets, in the plant's area order. */
+const WORKSHEETS: { screen: ExtendedScreenType; label: string; badge: string }[] = [
+  { screen: 'RING_1', label: 'Ring 1', badge: 'R1' },
+  { screen: 'RING_2', label: 'Ring 2', badge: 'R2' },
+  { screen: 'RING_3', label: 'Ring 3', badge: 'R3' },
+  { screen: 'SEALING_ELEMENT', label: 'Sealing Element', badge: 'SE' },
+  { screen: 'DOUBLE_JACKETED', label: 'Double Jacketed Gasket', badge: 'DJG' },
+];
+
+/**
+ * Home screen: one worksheet entry per production area (Ring 1/2/3, Sealing
+ * Element, Double Jacketed Gasket) plus the profile. Entry is flat data input —
+ * there is no CS/SO task to pick first.
+ */
 export const HomeScreen = ({
   userName = '',
   onNavigate,
@@ -24,19 +38,8 @@ export const HomeScreen = ({
   activeScreen,
 }: HomeScreenProps) => {
   const isTaskActive = Boolean(
-    activeScreen &&
-      activeScreen !== 'HOME' &&
-      activeScreen !== 'PEKERJAAN_CS' &&
-      activeScreen !== 'PROFIL'
+    activeScreen && activeScreen !== 'HOME' && activeScreen !== 'PROFIL'
   );
-
-  const handleLanjutkanPekerjaan = () => {
-    if (isTaskActive && activeScreen) {
-      onNavigate(activeScreen);
-    } else {
-      onNavigate('PEKERJAAN_CS');
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -62,40 +65,19 @@ export const HomeScreen = ({
         </View>
 
         <View style={styles.menuContainer}>
-          <TouchableOpacity
-            style={styles.cardBtn}
-            onPress={() => onNavigate('PEKERJAAN_CS')}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.cardLabel}>Pekerjaan CS/SO</Text>
-            <View style={[styles.badgeTag, styles.csBadge]}>
-              <Text style={styles.csBadgeText}>CS</Text>
-            </View>
-          </TouchableOpacity>
-
-          {/* Tombol Lanjutkan Pekerjaan Aktif */}
-          <TouchableOpacity
-            style={styles.cardBtn}
-            onPress={handleLanjutkanPekerjaan}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.cardLabel}>Lanjutkan Pekerjaan Aktif</Text>
-
-            <View
-              style={[
-                styles.badgeTag,
-                isTaskActive ? styles.aktifBadge : styles.inaktifBadge,
-              ]}
+          {WORKSHEETS.map((sheet) => (
+            <TouchableOpacity
+              key={sheet.screen}
+              style={styles.cardBtn}
+              onPress={() => onNavigate(sheet.screen)}
+              activeOpacity={0.7}
             >
-              <Text
-                style={
-                  isTaskActive ? styles.aktifBadgeText : styles.inaktifBadgeText
-                }
-              >
-                {isTaskActive ? 'AKTIF' : 'KOSONG'}
-              </Text>
-            </View>
-          </TouchableOpacity>
+              <Text style={styles.cardLabel}>{sheet.label}</Text>
+              <View style={[styles.badgeTag, styles.areaBadge]}>
+                <Text style={styles.areaBadgeText}>{sheet.badge}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
 
           <TouchableOpacity
             style={styles.cardBtn}
@@ -108,6 +90,12 @@ export const HomeScreen = ({
             </View>
           </TouchableOpacity>
         </View>
+
+        {isTaskActive && (
+          <Text style={styles.activeHint}>
+            Ada isian yang belum disimpan pada salah satu worksheet.
+          </Text>
+        )}
       </ScrollView>
     </View>
   );
@@ -146,7 +134,6 @@ const styles = StyleSheet.create({
   },
   worksheetText: {
     fontSize: 13,
-    
     fontWeight: '700',
     color: '#334155',
     letterSpacing: 1.5,
@@ -189,7 +176,6 @@ const styles = StyleSheet.create({
   },
   cardLabel: {
     fontSize: 16,
-    
     fontWeight: '700',
     color: '#0F172A',
   },
@@ -198,31 +184,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 12,
   },
-  csBadge: {
+  areaBadge: {
     backgroundColor: '#0F172A',
   },
-  csBadgeText: {
+  areaBadgeText: {
     color: '#FFFFFF',
     fontSize: 11,
-    
-    fontWeight: '700',
-  },
-  aktifBadge: {
-    backgroundColor: '#FEF3C7',
-  },
-  aktifBadgeText: {
-    color: '#D97706',
-    fontSize: 11,
-    
-    fontWeight: '700',
-  },
-  inaktifBadge: {
-    backgroundColor: '#F1F5F9',
-  },
-  inaktifBadgeText: {
-    color: '#94A3B8',
-    fontSize: 11,
-    
     fontWeight: '700',
   },
   akunBadge: {
@@ -231,7 +198,12 @@ const styles = StyleSheet.create({
   akunBadgeText: {
     color: '#475569',
     fontSize: 11,
-    
     fontWeight: '700',
+  },
+  activeHint: {
+    marginTop: 20,
+    fontSize: 12,
+    color: '#94A3B8',
+    textAlign: 'center',
   },
 });

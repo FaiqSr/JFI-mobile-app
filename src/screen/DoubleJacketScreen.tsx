@@ -13,12 +13,9 @@ import { FormInformationDJG } from '../component/forms/FormInformationDJG';
 import { FormDoubleJacket } from '../component/forms/FormDoubleJacket';
 import { FormTime } from '../component/forms/FormTime';
 import { FormQuantityDJG } from '../component/forms/FormQuantityDJG';
-import { openCsPdfViewer } from '../utils/csPdf';
 
 export interface DoubleJacketScreenProps {
-  taskId?: string | number;
   userToken?: string;
-  pdfUrl?: string;
   namaOperator: string;
   setNamaOperator: (v: string) => void;
   nomorSO: string;
@@ -117,12 +114,6 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
     }
   };
 
-  const handleDownloadAndOpenPdf = () => {
-    if (!openCsPdfViewer(props.taskId ?? '', null)) {
-      Alert.alert('Informasi', 'ID Task CS tidak ditemukan.');
-    }
-  };
-
   return (
     <View style={styles.container}>
       <ScrollView
@@ -214,15 +205,7 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Floating Button CS PDF disamakan dengan Ring 2, Ring 3, & SE */}
-      <TouchableOpacity
-        style={styles.floatingCsButton}
-        onPress={handleDownloadAndOpenPdf}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.floatingCsText}>Lihat CS (PDF)</Text>
-      </TouchableOpacity>
-    </View>
+      {/* Floating Button CS PDF disamakan dengan Ring 2, Ring 3, & SE */}    </View>
   );
 };
 
@@ -277,25 +260,5 @@ const styles = StyleSheet.create({
     
     fontWeight: 'normal',
     fontSize: RFValue(15),
-  },
-  floatingCsButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 16,
-    backgroundColor: '#101828',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 14,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-  },
-  floatingCsText: {
-    color: '#FFFFFF',
-    
-    fontWeight: '700',
-    fontSize: RFValue(12),
   },
 });

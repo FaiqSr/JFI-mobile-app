@@ -13,11 +13,8 @@ import { FormInformationSE } from '../component/forms/FormInformationSE';
 import { FormSealingElement } from '../component/forms/FormSealingElement';
 import { FormTime } from '../component/forms/FormTime';
 import { FormQuantity } from '../component/forms/FormQuantity';
-import { openCsPdfViewer } from '../utils/csPdf';
 
 export interface SealingElementScreenProps {
-  taskId?: string | number;
-  pdfUrl?: string;
   userToken?: string;
   namaOperator: string;
   setNamaOperator: (v: string) => void;
@@ -119,12 +116,6 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props)
     }
   };
 
-  const handleDownloadAndOpenPdf = () => {
-    if (!openCsPdfViewer(props.taskId ?? '', null)) {
-      Alert.alert('Informasi', 'ID Task CS tidak ditemukan.');
-    }
-  };
-
   return (
     <View style={styles.container}>
       <ScrollView
@@ -218,15 +209,7 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props)
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Floating Button CS PDF disamakan dengan Ring 2 & 3 */}
-      <TouchableOpacity
-        style={styles.floatingCsButton}
-        onPress={handleDownloadAndOpenPdf}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.floatingCsText}>Lihat CS (PDF)</Text>
-      </TouchableOpacity>
-    </View>
+      {/* Floating Button CS PDF disamakan dengan Ring 2 & 3 */}    </View>
   );
 };
 
@@ -281,25 +264,5 @@ const styles = StyleSheet.create({
     
     fontWeight: 'normal',
     fontSize: RFValue(15),
-  },
-  floatingCsButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 16,
-    backgroundColor: '#101828',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 14,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-  },
-  floatingCsText: {
-    color: '#FFFFFF',
-    
-    fontWeight: '700',
-    fontSize: RFValue(12),
   },
 });

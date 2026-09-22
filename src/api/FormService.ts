@@ -2,7 +2,7 @@ import { Alert } from '../utils/appAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScreenType, ScreenFormData, initialFormState } from '../type/FormType';
 import { authService } from './authService';
-import { CS_BASE_URL, PRODUCTION_BASE_URL } from './apiConfig';
+import { PRODUCTION_BASE_URL } from './apiConfig';
 
 const BASE_URL = PRODUCTION_BASE_URL;
 
@@ -276,11 +276,6 @@ const confirmClearAlert = (onConfirm: () => void) => {
   );
 };
 
-const getPdfUrlByTaskId = (taskId?: string | number) => {
-  if (!taskId || !CS_BASE_URL) return undefined;
-  return `${CS_BASE_URL.replace(/\/+$/, '')}/download/${taskId}`;
-};
-
 export const getRingProps = (
   screen: 'RING_1' | 'RING_2' | 'RING_3',
   options: HelperOptions,
@@ -306,8 +301,6 @@ export const getRingProps = (
 
   return {
     userToken,
-    taskId: curData.taskId,
-    pdfUrl: getPdfUrlByTaskId(curData.taskId),
     namaOperator: curData.namaOperator,
     setNamaOperator: (val: string) => updateFormField(screen, 'namaOperator', val),
     nomorSO: curData.nomorSO,
@@ -360,7 +353,7 @@ export const getRingProps = (
     finishGood: curData.finishGood,
     setFinishGood: (val: number) => updateFormField(screen, 'finishGood', Number(val)),
     parseIntegerInput,
-    onBack: () => handleNavigate('PEKERJAAN_CS'),
+    onBack: () => handleNavigate('HOME'),
     onSave: handleSimpan,
     onClear: () => confirmClearAlert(handleClear),
     machineOptions: ['Tidak Ada Pilihan', ...(catalog?.machines.map(({ namaMc }) => namaMc) ?? [])],
@@ -389,8 +382,6 @@ export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatal
 
   return {
     userToken,
-    taskId: curData.taskId,
-    pdfUrl: getPdfUrlByTaskId(curData.taskId),
     namaOperator: curData.namaOperator,
     setNamaOperator: (val: string) => updateFormField('SEALING_ELEMENT', 'namaOperator', val),
     nomorSO: curData.nomorSO,
@@ -445,7 +436,7 @@ export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatal
     finishGood: curData.finishGood,
     setFinishGood: (val: number) => updateFormField('SEALING_ELEMENT', 'finishGood', Number(val)),
     parseIntegerInput,
-    onBack: () => handleNavigate('PEKERJAAN_CS'),
+    onBack: () => handleNavigate('HOME'),
     onSave: handleSimpan,
     onClear: () => confirmClearAlert(handleClear),
     machineOptions: ['Tidak Ada Pilihan', ...(catalog?.machines.map(({ namaMc }) => namaMc) ?? [])],
@@ -474,8 +465,6 @@ export const getDoubleJacketProps = (options: HelperOptions) => {
 
   return {
     userToken,
-    taskId: curData.taskId,
-    pdfUrl: getPdfUrlByTaskId(curData.taskId),
     namaOperator: curData.namaOperator,
     setNamaOperator: (val: string) => updateFormField('DOUBLE_JACKETED', 'namaOperator', val),
     nomorSO: curData.nomorSO,
@@ -528,7 +517,7 @@ export const getDoubleJacketProps = (options: HelperOptions) => {
     rework: curData.rework,
     setRework: (val: number) => updateFormField('DOUBLE_JACKETED', 'rework', Number(val)),
     parseIntegerInput,
-    onBack: () => handleNavigate('PEKERJAAN_CS'),
+    onBack: () => handleNavigate('HOME'),
     onSave: handleSimpan,
     onClear: () => confirmClearAlert(handleClear),
   };
