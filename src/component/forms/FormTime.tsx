@@ -6,8 +6,12 @@ import { CustomInput } from '../common/CustomInput';
 interface FormTimeProps {
   startTimestamp: number | null;
   stopTimestamp: number | null;
+  startTimeText: string;
+  stopTimeText: string;
   isStarted: boolean;
   handleToggleStartStop: () => void;
+  handleChangeStartTime: (text: string) => void;
+  handleChangeStopTime: (text: string) => void;
   formatHHMM: (time: number | null) => string;
   gantiOrder: number;
   setGantiOrder: (v: number) => void;
@@ -31,8 +35,12 @@ interface FormTimeProps {
 export const FormTime: React.FC<FormTimeProps> = ({
   startTimestamp,
   stopTimestamp,
+  startTimeText,
+  stopTimeText,
   isStarted,
   handleToggleStartStop,
+  handleChangeStartTime,
+  handleChangeStopTime,
   formatHHMM,
   gantiOrder,
   setGantiOrder,
@@ -102,8 +110,10 @@ export const FormTime: React.FC<FormTimeProps> = ({
           <CustomInput
             label="Time Start"
             placeholder="HH:MM"
-            editable={false}
-            value={formatHHMM(startTimestamp)}
+            keyboardType="number-pad"
+            maxLength={5}
+            value={startTimeText || formatHHMM(startTimestamp)}
+            onChangeText={handleChangeStartTime}
             style={{ textAlign: 'center' }}
           />
         </View>
@@ -111,8 +121,10 @@ export const FormTime: React.FC<FormTimeProps> = ({
           <CustomInput
             label="Time Stop"
             placeholder="HH:MM"
-            editable={false}
-            value={formatHHMM(stopTimestamp)}
+            keyboardType="number-pad"
+            maxLength={5}
+            value={stopTimeText || formatHHMM(stopTimestamp)}
+            onChangeText={handleChangeStopTime}
             style={{ textAlign: 'center' }}
           />
         </View>

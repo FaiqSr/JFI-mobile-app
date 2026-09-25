@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { SE_JOB_DESC } from '../../constants/jobDescOptions';
 
 interface FormInformationProps {
   namaOperator: string;
@@ -35,25 +36,7 @@ export const FormInformationSE: React.FC<FormInformationProps> = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const jobOptions = machineOptions ?? [
-    '*Tidak Ada Pilihan',
-    'MARKING',
-    'WINDING 01',
-    'WINDING 03',
-    'WINDING 05',
-    'WINDING 06',
-    'WINDING 07',
-    'WINDING 09',
-    'WINDING 11',
-    'WINDING 13',
-    'SHAPING',
-    'ASSY MANUAL',
-    'ASSY MACHINE',
-    'CUT HOOP',
-    'CLEANING',
-    'ROLLING',
-    'PACKAGING',
-  ];
+  const jobOptions = machineOptions ?? SE_JOB_DESC;
 
   const cleanJobDesc = jobDescription.toLowerCase().replace('*', '').trim();
   const isNoChoice = cleanJobDesc === 'tidak ada pilihan';
@@ -84,12 +67,13 @@ export const FormInformationSE: React.FC<FormInformationProps> = ({
         </Text>
       </View>
       <TextInput
-        style={[styles.input, styles.disabledInput]}
+        style={styles.input}
         placeholder="Enter SO number"
         placeholderTextColor="#98A2B3"
         value={nomorSO}
         onChangeText={setNomorSO}
-        editable={false}
+        autoCapitalize="characters"
+        autoCorrect={false}
       />
 
       {/* Job Description Dropdown */}

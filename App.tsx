@@ -31,6 +31,12 @@ import {
   type LhpMasterCatalog,
 } from './src/api/FormService';
 import { authService } from './src/api/authService';
+import {
+  isValidTime,
+  normalizeTimeInput,
+  timestampToHHMM,
+  timeStringToTimestamp,
+} from './src/utils/time';
 
 if ((Text as any).defaultProps) {
   (Text as any).defaultProps.allowFontScaling = false;
@@ -54,6 +60,56 @@ const hasValue = (val: string | number | undefined | null): boolean => {
   if (val === null || val === undefined) return false;
   const str = String(val).trim();
   return str.length > 0;
+};
+
+/**
+ * True when the operator has entered anything meaningful on a worksheet.
+ * `namaOperator` is deliberately excluded: it is auto-filled from the logged-in
+ * user, so counting it would mark every worksheet active and drafts would never clear.
+ */
+const hasMeaningfulData = (form: ScreenFormData | undefined): boolean => {
+  if (!form) return false;
+
+  const textFields: (keyof ScreenFormData)[] = [
+    'nomorSO',
+    'jobDescription',
+    'jobNoted',
+    'product',
+    'productName',
+    'materialType',
+    'materialNoted',
+    'size',
+    'notedSize',
+    'notedSizeOdId',
+    'classVal',
+    'workType',
+    'thickness',
+    'hoop',
+    'filler',
+    'ir',
+    'orVal',
+    'idVal',
+    'odVal',
+    'metal',
+    'noteTimeActivities',
+    'startTimeText',
+    'stopTimeText',
+  ];
+  if (textFields.some((field) => hasValue(form[field] as string | undefined))) return true;
+
+  const counters: (keyof ScreenFormData)[] = [
+    'gantiOrder',
+    'repair',
+    'materialTunggu',
+    'operatorTime',
+    'maintenance',
+    'checking',
+    'finishGood',
+    'rework',
+  ];
+  if (counters.some((field) => Number(form[field]) > 0)) return true;
+
+  return hasValue(form.startTimestamp) || hasValue(form.stopTimestamp);
 };
 
 export default function App() {
@@ -84,6 +140,34 @@ export default function App() {
     return () => { cancelled = true; };
   }, [isLoggedIn, userToken]);
 
+  // Ambil nama operator terbaru dari profil server (GET /user/now) saat app
+  // dibuka / sesudah login, supaya worksheet tidak memakai nama yang basi.
+  useEffect(() => {
+    if (!isLoggedIn || !userToken) return;
+    let cancelled = false;
+    authService.syncUserName().then((name) => {
+      if (!cancelled && name) setUserName(name);
+    });
+    return () => { cancelled = true; };
+  }, [isLoggedIn, userToken]);
+
+  // Nama operator pada setiap worksheet selalu diisi dari akun yang login dan
+  // tidak boleh kosong. Field-nya read-only di UI, jadi ini satu-satunya sumber.
+  useEffect(() => {
+    if (!isRestored || !userName) return;
+    setFormsData((prev) => {
+      let changed = false;
+      const next: Record<string, ScreenFormData> = { ...prev };
+      Object.keys(next).forEach((key) => {
+        const form = next[key];
+        if (!form || form.namaOperator === userName) return;
+        next[key] = { ...form, namaOperator: userName };
+        changed = true;
+      });
+      return changed ? next : prev;
+    });
+  }, [isRestored, userName]);
+
   const saveLastActiveScreen = useCallback(async (screen: ScreenType | null) => {
     setLastActiveScreen(screen);
     try {
@@ -107,7 +191,7 @@ export default function App() {
     const activeTaskKey = Object.keys(formsData).find((key) => {
       const form = formsData[key];
       if (!form) return false;
-      return hasValue(form.nomorSO);
+      return hasMeaningfulData(form);
     });
     if (activeTaskKey) return activeTaskKey as ScreenType;
 
@@ -158,11 +242,25 @@ export default function App() {
           const draft = JSON.parse(jsonDraft);
           if (draft.formsData) {
             const hasAnyData = Object.values(draft.formsData).some(
-              (form: any) => hasValue(form.nomorSO)
+              (form: any) => hasMeaningfulData(form)
             );
 
             if (hasAnyData) {
-              setFormsData(draft.formsData);
+              // Backfill fields added after the draft was written (e.g. the
+              // manual time-entry text mirrors) so old drafts still hydrate.
+              const hydratedForms: Record<string, ScreenFormData> = {};
+              Object.entries(draft.formsData).forEach(([key, form]) => {
+                const raw = (form ?? {}) as Partial<ScreenFormData>;
+                hydratedForms[key] = {
+                  ...initialFormState,
+                  ...raw,
+                  startTimeText:
+                    raw.startTimeText ?? timestampToHHMM(raw.startTimestamp ?? null),
+                  stopTimeText:
+                    raw.stopTimeText ?? timestampToHHMM(raw.stopTimestamp ?? null),
+                };
+              });
+              setFormsData(hydratedForms);
               if (savedLastScreen) {
                 setLastActiveScreen(savedLastScreen as ScreenType);
               }
@@ -275,13 +373,9 @@ export default function App() {
     return cleaned === '' ? 0 : parseInt(cleaned, 10);
   };
 
-  const formatHHMM = (time: number | null): string => {
-    if (!time) return '';
-    const date = new Date(time);
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
+  const formatHHMM = (time: number | null): string => timestampToHHMM(time);
+
+  const nowHHMM = (): string => timestampToHHMM(Date.now());
 
   // Timer lokal saja — entry tidak lagi terikat sesi kerja CS di server.
   const handleToggleStartStop = async () => {
@@ -290,18 +384,52 @@ export default function App() {
 
     if (!currentData.isStarted) {
       updateFormField(currentScreen, 'startTimestamp', Date.now());
+      updateFormField(currentScreen, 'startTimeText', nowHHMM());
       updateFormField(currentScreen, 'stopTimestamp', null);
+      updateFormField(currentScreen, 'stopTimeText', '');
       updateFormField(currentScreen, 'isStarted', true);
     } else {
       updateFormField(currentScreen, 'stopTimestamp', Date.now());
+      updateFormField(currentScreen, 'stopTimeText', nowHHMM());
       updateFormField(currentScreen, 'isStarted', false);
     }
+  };
+
+  // Manual time entry: typing updates the text mirror immediately and the
+  // timestamp whenever the text becomes a complete valid HH:MM. `isStarted`
+  // (timer running) stays in sync = start set but stop not set yet.
+  const handleChangeStartTime = (text: string) => {
+    if (currentScreen === 'HOME' || currentScreen === 'PROFIL') return;
+    const normalized = normalizeTimeInput(text);
+    const startTs = isValidTime(normalized) ? timeStringToTimestamp(normalized) : null;
+    const stopTs = formsData[currentScreen]?.stopTimestamp ?? null;
+    updateFormField(currentScreen, 'startTimeText', normalized);
+    updateFormField(currentScreen, 'startTimestamp', startTs);
+    updateFormField(currentScreen, 'isStarted', startTs !== null && stopTs === null);
+  };
+
+  const handleChangeStopTime = (text: string) => {
+    if (currentScreen === 'HOME' || currentScreen === 'PROFIL') return;
+    const normalized = normalizeTimeInput(text);
+    const stopTs = isValidTime(normalized) ? timeStringToTimestamp(normalized) : null;
+    const startTs = formsData[currentScreen]?.startTimestamp ?? null;
+    updateFormField(currentScreen, 'stopTimeText', normalized);
+    updateFormField(currentScreen, 'stopTimestamp', stopTs);
+    updateFormField(currentScreen, 'isStarted', startTs !== null && stopTs === null);
   };
 
   const handleSimpan = async () => {
     if (currentScreen === 'HOME' || currentScreen === 'PROFIL') return;
     const activeData = formsData[currentScreen];
 
+    if (!hasValue(activeData.namaOperator)) {
+      Alert.alert('Gagal', 'Nama operator tidak boleh kosong.');
+      return;
+    }
+    if (!hasValue(activeData.nomorSO)) {
+      Alert.alert('Gagal', 'Nomor SO wajib diisi.');
+      return;
+    }
     if (!activeData.startTimestamp) {
       Alert.alert('Gagal', 'Tombol START belum ditekan!');
       return;
@@ -390,6 +518,8 @@ export default function App() {
     formsData,
     updateFormField,
     handleToggleStartStop,
+    handleChangeStartTime,
+    handleChangeStopTime,
     formatHHMM,
     parseIntegerInput,
     handleNavigate,
@@ -415,6 +545,7 @@ export default function App() {
             userName={userName}
             onBack={() => setCurrentScreen('HOME')}
             onLogout={handleLogoutSuccess}
+            onUpdateUserName={setUserName}
           />
         );
 

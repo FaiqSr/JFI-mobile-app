@@ -44,7 +44,11 @@ interface Ring2ScreenProps {
   isStarted: boolean;
   setIsStarted?: (v: boolean) => void;
   handleToggleStartStop: () => void;
+  handleChangeStartTime: (text: string) => void;
+  handleChangeStopTime: (text: string) => void;
   formatHHMM: (time: number | null) => string;
+  startTimeText: string;
+  stopTimeText: string;
   gantiOrder: number;
   setGantiOrder: (v: number) => void;
   repair: number;
@@ -158,7 +162,11 @@ export const Ring2Screen: React.FC<Ring2ScreenProps> = (props) => {
           stopTimestamp={props.stopTimestamp}
           isStarted={props.isStarted}
           handleToggleStartStop={props.handleToggleStartStop}
+          handleChangeStartTime={props.handleChangeStartTime}
+          handleChangeStopTime={props.handleChangeStopTime}
           formatHHMM={props.formatHHMM}
+          startTimeText={props.startTimeText}
+          stopTimeText={props.stopTimeText}
           gantiOrder={props.gantiOrder}
           setGantiOrder={props.setGantiOrder}
           repair={props.repair}

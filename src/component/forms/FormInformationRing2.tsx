@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, FlatList } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { RING2_JOB_DESC } from '../../constants/jobDescOptions';
 
 interface FormInformationProps {
   namaOperator: string;
@@ -27,27 +28,7 @@ export const FormInformationRing2: React.FC<FormInformationProps> = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const jobOptions = machineOptions ?? [
-    'Tidak Ada Pilihan',
-    'Las Pahat - Asah Pahat', 
-    'BUBUT 1', 
-    'BUBUT 2', 
-    'BUBUT 3', 
-    'BUBUT 4', 
-    'BUBUT 5', 
-    'BUBUT 6', 
-    'BUBUT 7', 
-    'BUBUT 8', 
-    'BUBUT 9', 
-    'BUBUT 10', 
-    'BUBUT 11', 
-    'CNC', 
-    'TURRET 1', 
-    'TURRET 2', 
-    'TURRET 3', 
-    'TURRET 4', 
-    'TURRET 5',
-  ];
+  const jobOptions = machineOptions ?? RING2_JOB_DESC;
 
   const isNoChoice = jobDescription === 'Tidak Ada Pilihan' || jobDescription === '*Tidak ada pilihan';
 
@@ -75,12 +56,13 @@ export const FormInformationRing2: React.FC<FormInformationProps> = ({
         </Text>
       </View>
       <TextInput
-        style={[styles.input, styles.disabledInput]}
+        style={styles.input}
         placeholder="Enter SO number"
         placeholderTextColor="#98A2B3"
         value={nomorSO}
         onChangeText={setNomorSO}
-        editable={false}
+        autoCapitalize="characters"
+        autoCorrect={false}
       />
 
       <Text style={styles.label}>

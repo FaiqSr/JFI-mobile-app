@@ -54,7 +54,7 @@ export const HomeScreen = ({
           />
 
           <View style={styles.worksheetBadge}>
-            <Text style={styles.worksheetText}>WORK SHEET</Text>
+            <Text style={styles.worksheetText}>WORK SHEET JFI</Text>
           </View>
 
           <View style={styles.dividerContainer}>

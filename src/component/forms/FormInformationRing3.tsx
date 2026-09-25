@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { RING3_JOB_DESC } from '../../constants/jobDescOptions';
 
 interface FormInformationProps {
   namaOperator: string;
@@ -35,26 +36,7 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const jobOptions = machineOptions ?? [
-    '*Tidak ada pilihan',
-    'LASER CUTTING',
-    'CUT STRIP',
-    'STRAIGHTENING',
-    'BENDING (automatic)',
-    'BENDING (manual)',
-    'FLATTENING',
-    'CUT RING',
-    'WELDING',
-    'GRINDING',
-    'GRINDING (welding)',
-    'GRINDING(solid)',
-    'ANGLING IR',
-    'GROVE OR',
-    'POLESHING',
-    'BUBUT',
-    'PAINTING',
-    'POWDER COATING',
-  ];
+  const jobOptions = machineOptions ?? RING3_JOB_DESC;
 
   const isNoChoice =
     jobDescription === 'Tidak Ada Pilihan' ||
@@ -87,12 +69,13 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
         </Text>
       </View>
       <TextInput
-        style={[styles.input, styles.disabledInput]}
+        style={styles.input}
         placeholder="Enter SO number"
         placeholderTextColor="#98A2B3"
         value={nomorSO}
         onChangeText={setNomorSO}
-        editable={false}
+        autoCapitalize="characters"
+        autoCorrect={false}
       />
 
       {/* Job Description Dropdown */}

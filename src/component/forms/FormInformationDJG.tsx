@@ -88,12 +88,13 @@ export const FormInformationDJG: React.FC<FormInformationProps> = ({
         </Text>
       </View>
       <TextInput
-        style={[styles.input, styles.disabledInput]}
+        style={styles.input}
         placeholder="Enter SO number"
         placeholderTextColor="#98A2B3"
         value={nomorSO}
         onChangeText={setNomorSO}
-        editable={false}
+        autoCapitalize="characters"
+        autoCorrect={false}
       />
 
       {/* Product Name */}

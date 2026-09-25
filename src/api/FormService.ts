@@ -3,6 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScreenType, ScreenFormData, initialFormState } from '../type/FormType';
 import { authService } from './authService';
 import { PRODUCTION_BASE_URL } from './apiConfig';
+import {
+  RING1_JOB_DESC,
+  RING2_JOB_DESC,
+  RING3_JOB_DESC,
+  SE_JOB_DESC,
+} from '../constants/jobDescOptions';
 
 const BASE_URL = PRODUCTION_BASE_URL;
 
@@ -257,6 +263,8 @@ interface HelperOptions {
     value: ScreenFormData[K]
   ) => void;
   handleToggleStartStop: () => void;
+  handleChangeStartTime: (text: string) => void;
+  handleChangeStopTime: (text: string) => void;
   formatHHMM: (time: number | null) => string;
   parseIntegerInput: (text: string) => number;
   handleNavigate: (screen: any) => void;
@@ -286,6 +294,8 @@ export const getRingProps = (
     formsData,
     updateFormField,
     handleToggleStartStop,
+    handleChangeStartTime,
+    handleChangeStopTime,
     formatHHMM,
     parseIntegerInput,
     handleNavigate,
@@ -293,6 +303,12 @@ export const getRingProps = (
     handleClear,
   } = options;
   const curData = formsData[screen] || initialFormState;
+
+  const ringJobDescOptions: Record<'RING_1' | 'RING_2' | 'RING_3', string[]> = {
+    RING_1: RING1_JOB_DESC,
+    RING_2: RING2_JOB_DESC,
+    RING_3: RING3_JOB_DESC,
+  };
 
   const setProductBoth = (val: string) => {
     updateFormField(screen, 'product', val);
@@ -331,8 +347,12 @@ export const getRingProps = (
     setWorkType: (val: string) => updateFormField(screen, 'workType', val),
     startTimestamp: curData.startTimestamp,
     stopTimestamp: curData.stopTimestamp,
+    startTimeText: curData.startTimeText,
+    stopTimeText: curData.stopTimeText,
     isStarted: curData.isStarted,
     handleToggleStartStop,
+    handleChangeStartTime,
+    handleChangeStopTime,
     formatHHMM,
     shift: curData.shift,
     setShift: (val: number | null) => updateFormField(screen, 'shift', val),
@@ -356,7 +376,7 @@ export const getRingProps = (
     onBack: () => handleNavigate('HOME'),
     onSave: handleSimpan,
     onClear: () => confirmClearAlert(handleClear),
-    machineOptions: ['Tidak Ada Pilihan', ...(catalog?.machines.map(({ namaMc }) => namaMc) ?? [])],
+    machineOptions: ringJobDescOptions[screen],
     machineSizes: catalog?.machines.find(({ namaMc }) => namaMc === curData.jobDescription)?.sizes ?? [],
   };
 };
@@ -367,6 +387,8 @@ export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatal
     formsData,
     updateFormField,
     handleToggleStartStop,
+    handleChangeStartTime,
+    handleChangeStopTime,
     formatHHMM,
     parseIntegerInput,
     handleNavigate,
@@ -414,8 +436,12 @@ export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatal
     setMaterialNoted: (val: string) => updateFormField('SEALING_ELEMENT', 'materialNoted', val),
     startTimestamp: curData.startTimestamp,
     stopTimestamp: curData.stopTimestamp,
+    startTimeText: curData.startTimeText,
+    stopTimeText: curData.stopTimeText,
     isStarted: curData.isStarted,
     handleToggleStartStop,
+    handleChangeStartTime,
+    handleChangeStopTime,
     formatHHMM,
     shift: curData.shift,
     setShift: (val: number | null) => updateFormField('SEALING_ELEMENT', 'shift', val),
@@ -439,7 +465,7 @@ export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatal
     onBack: () => handleNavigate('HOME'),
     onSave: handleSimpan,
     onClear: () => confirmClearAlert(handleClear),
-    machineOptions: ['Tidak Ada Pilihan', ...(catalog?.machines.map(({ namaMc }) => namaMc) ?? [])],
+    machineOptions: SE_JOB_DESC,
     machineSizes: catalog?.machines.find(({ namaMc }) => namaMc === curData.jobDescription)?.sizes ?? [],
   };
 };
@@ -450,6 +476,8 @@ export const getDoubleJacketProps = (options: HelperOptions) => {
     formsData,
     updateFormField,
     handleToggleStartStop,
+    handleChangeStartTime,
+    handleChangeStopTime,
     formatHHMM,
     parseIntegerInput,
     handleNavigate,
@@ -495,8 +523,12 @@ export const getDoubleJacketProps = (options: HelperOptions) => {
     setMaterialNoted: (val: string) => updateFormField('DOUBLE_JACKETED', 'materialNoted', val),
     startTimestamp: curData.startTimestamp,
     stopTimestamp: curData.stopTimestamp,
+    startTimeText: curData.startTimeText,
+    stopTimeText: curData.stopTimeText,
     isStarted: curData.isStarted,
     handleToggleStartStop,
+    handleChangeStartTime,
+    handleChangeStopTime,
     formatHHMM,
     gantiOrder: curData.gantiOrder,
     setGantiOrder: (val: number) => updateFormField('DOUBLE_JACKETED', 'gantiOrder', Number(val)),

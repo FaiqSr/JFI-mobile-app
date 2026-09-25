@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, FlatList } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { RING1_JOB_DESC } from '../../constants/jobDescOptions';
 
 interface FormInformationProps {
   namaOperator?: string;
@@ -23,7 +24,7 @@ export const FormInformation: React.FC<FormInformationProps> = ({
   setJobDescription,
   jobNoted = '',
   setJobNoted = () => {},
-  machineOptions = ['Tidak Ada Pilihan', 'CUT PLATE', 'P. PRESS 1', 'P. PRESS 2', 'P. PRESS 3', 'DEBURING'],
+  machineOptions = RING1_JOB_DESC,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -55,12 +56,13 @@ export const FormInformation: React.FC<FormInformationProps> = ({
         </Text>
       </View>
       <TextInput
-        style={[styles.input, styles.disabledInput]}
+        style={styles.input}
         placeholder="Enter SO number"
         placeholderTextColor="#98A2B3"
         value={nomorSO}
         onChangeText={setNomorSO}
-        editable={false}
+        autoCapitalize="characters"
+        autoCorrect={false}
       />
 
       <Text style={styles.label}>

@@ -138,6 +138,27 @@ export const authService = {
     }
   },
 
+  /**
+   * Ambil nama tampilan dari server (GET /user/now) dan simpan ke AsyncStorage
+   * `userName`. Dipakai saat app dibuka / sesudah login supaya nama operator
+   * selalu berasal dari akun yang aktif, bukan nilai lama di storage.
+   * Return '' kalau profil gagal diambil (pemanggil boleh pakai nilai cache).
+   */
+  syncUserName: async (): Promise<string> => {
+    const res = await authService.getProfile();
+    if (!res.success || !res.data) return '';
+
+    const name = String(
+      res.data.full_name || res.data.name || res.data.username || ''
+    ).trim();
+
+    if (name) {
+      await AsyncStorage.setItem('userName', name);
+    }
+
+    return name;
+  },
+
   updateProfile: async (payload: { full_name?: string; password?: string }, retryWithNewToken = true): Promise<{ success: boolean; data?: any }> => {
     const url = `${AUTH_BASE_URL}/user/now`;
     try {
