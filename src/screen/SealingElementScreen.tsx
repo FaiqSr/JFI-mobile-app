@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { Alert } from '../utils/appAlert';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import { FormInformationSE } from '../component/forms/FormInformationSE';
@@ -14,8 +13,7 @@ import { FormSealingElement } from '../component/forms/FormSealingElement';
 import { FormTime } from '../component/forms/FormTime';
 import { FormQuantity } from '../component/forms/FormQuantity';
 
-export interface SealingElementScreenProps {
-  userToken?: string;
+interface SealingElementScreenProps {
   namaOperator: string;
   setNamaOperator: (v: string) => void;
   nomorSO: string;
@@ -83,7 +81,6 @@ export interface SealingElementScreenProps {
 export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props) => {
   const handleClearForm = async () => {
     const activeOperator = props.namaOperator;
-    const activeSO = props.nomorSO;
 
     props.setJobDescription('');
     if (props.setJobNoted) props.setJobNoted('');
@@ -113,7 +110,6 @@ export const SealingElementScreen: React.FC<SealingElementScreenProps> = (props)
 
     props.setFinishGood(0);
     props.setNamaOperator(activeOperator);
-    props.setNomorSO(activeSO);
 
     if (props.onClear) {
       props.onClear();

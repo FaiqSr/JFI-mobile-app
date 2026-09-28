@@ -188,8 +188,6 @@ export const FormInformationDJG: React.FC<FormInformationProps> = ({
   );
 };
 
-export default FormInformationDJG;
-
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFFFFF',
@@ -223,13 +221,6 @@ const styles = StyleSheet.create({
   asterisk: {
     color: '#D92D20',
   },
-  lockedBadge: {
-    fontSize: RFValue(10),
-    fontWeight: '600',
-    color: '#667085',
-    marginLeft: 6,
-    marginBottom: 6,
-  },
   input: {
     borderWidth: 1,
     borderColor: '#EAECF0',
@@ -247,12 +238,6 @@ const styles = StyleSheet.create({
     color: '#475467',
   },
   marginBottom12: {
-    marginBottom: 12,
-  },
-  helperText: {
-    fontSize: RFValue(11),
-    color: '#667085',
-    
     marginBottom: 12,
   },
   warningText: {

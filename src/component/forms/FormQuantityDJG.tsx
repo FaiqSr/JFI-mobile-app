@@ -50,8 +50,6 @@ export const FormQuantityDJG: React.FC<FormQuantityDJGProps> = ({
   );
 };
 
-export default FormQuantityDJG;
-
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFFFFF',

@@ -8,15 +8,15 @@
  * Requests are queued FIFO and rendered by `src/component/common/AlertModalHost.tsx`,
  * which is mounted once as a sibling of <App /> in `index.js`.
  */
-export type AlertButtonStyle = 'default' | 'cancel' | 'destructive';
+type AlertButtonStyle = 'default' | 'cancel' | 'destructive';
 
-export interface AlertButton {
+interface AlertButton {
   text?: string;
   onPress?: () => void;
   style?: AlertButtonStyle;
 }
 
-export interface AlertOptions {
+interface AlertOptions {
   cancelable?: boolean;
   onDismiss?: () => void;
 }

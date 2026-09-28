@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
-export interface FormProductRing2Props {
+interface FormProductRing2Props {
   product: string;
   setProduct: (v: string) => void;
   materialType: string;
@@ -321,8 +321,6 @@ export const FormProductRing2: React.FC<FormProductRing2Props> = ({
     </View>
   );
 };
-
-export default FormProductRing2;
 
 const styles = StyleSheet.create({
   card: {

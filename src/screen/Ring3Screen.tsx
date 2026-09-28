@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { Alert } from '../utils/appAlert';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import { FormInformationRing3 } from '../component/forms/FormInformationRing3';
@@ -15,7 +14,6 @@ import { FormTime } from '../component/forms/FormTime';
 import { FormQuantity } from '../component/forms/FormQuantity';
 
 interface Ring3ScreenProps {
-  userToken?: string;
   namaOperator: string;
   setNamaOperator: (v: string) => void;
   nomorSO: string;
@@ -79,7 +77,6 @@ interface Ring3ScreenProps {
 export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
   const handleClearForm = async () => {
     const activeOperator = props.namaOperator;
-    const activeSO = props.nomorSO;
 
     props.setJobDescription('');
     if (props.setJobNoted) props.setJobNoted('');
@@ -108,7 +105,6 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
     props.setFinishGood(0);
 
     props.setNamaOperator(activeOperator);
-    props.setNomorSO(activeSO);
 
     if (props.onClear) {
       props.onClear();

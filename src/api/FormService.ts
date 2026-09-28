@@ -255,7 +255,6 @@ export const submitProductionData = async (
 };
 
 interface HelperOptions {
-  userToken?: string;
   formsData: Record<string, ScreenFormData>;
   updateFormField: <K extends keyof ScreenFormData>(
     screen: ScreenType,
@@ -290,7 +289,6 @@ export const getRingProps = (
   catalog?: LhpMasterCatalog
 ) => {
   const {
-    userToken,
     formsData,
     updateFormField,
     handleToggleStartStop,
@@ -316,7 +314,6 @@ export const getRingProps = (
   };
 
   return {
-    userToken,
     namaOperator: curData.namaOperator,
     setNamaOperator: (val: string) => updateFormField(screen, 'namaOperator', val),
     nomorSO: curData.nomorSO,
@@ -326,9 +323,7 @@ export const getRingProps = (
     jobNoted: curData.jobNoted,
     setJobNoted: (val: string) => updateFormField(screen, 'jobNoted', val),
     product: curData.product || curData.productName || '',
-    productName: curData.productName || curData.product || '',
     setProduct: setProductBoth,
-    setProductName: setProductBoth,
     materialType: curData.materialType,
     setMaterialType: (val: string) => updateFormField(screen, 'materialType', val),
     materialNoted: curData.materialNoted,
@@ -337,14 +332,10 @@ export const getRingProps = (
     setSize: (val: string) => updateFormField(screen, 'size', val),
     notedSize: curData.notedSize,
     setNotedSize: (val: string) => updateFormField(screen, 'notedSize', val),
-    notedSizeOdId: curData.notedSizeOdId,
-    setNotedSizeOdId: (val: string) => updateFormField(screen, 'notedSizeOdId', val),
     classVal: curData.classVal,
     setClassVal: (val: string) => updateFormField(screen, 'classVal', val),
     thickness: curData.thickness,
     setThickness: (val: string) => updateFormField(screen, 'thickness', val),
-    workType: curData.workType,
-    setWorkType: (val: string) => updateFormField(screen, 'workType', val),
     startTimestamp: curData.startTimestamp,
     stopTimestamp: curData.stopTimestamp,
     startTimeText: curData.startTimeText,
@@ -383,7 +374,6 @@ export const getRingProps = (
 
 export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatalog) => {
   const {
-    userToken,
     formsData,
     updateFormField,
     handleToggleStartStop,
@@ -397,21 +387,11 @@ export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatal
   } = options;
   const curData = formsData['SEALING_ELEMENT'] || initialFormState;
 
-  const setProductBoth = (val: string) => {
-    updateFormField('SEALING_ELEMENT', 'product', val);
-    updateFormField('SEALING_ELEMENT', 'productName', val);
-  };
-
   return {
-    userToken,
     namaOperator: curData.namaOperator,
     setNamaOperator: (val: string) => updateFormField('SEALING_ELEMENT', 'namaOperator', val),
     nomorSO: curData.nomorSO,
     setNomorSO: (val: string) => updateFormField('SEALING_ELEMENT', 'nomorSO', val),
-    product: curData.product || curData.productName || '',
-    productName: curData.productName || curData.product || '',
-    setProduct: setProductBoth,
-    setProductName: setProductBoth,
     jobDescription: curData.jobDescription,
     setJobDescription: (val: string) => updateFormField('SEALING_ELEMENT', 'jobDescription', val),
     jobNoted: curData.jobNoted,
@@ -472,7 +452,6 @@ export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatal
 
 export const getDoubleJacketProps = (options: HelperOptions) => {
   const {
-    userToken,
     formsData,
     updateFormField,
     handleToggleStartStop,
@@ -492,14 +471,11 @@ export const getDoubleJacketProps = (options: HelperOptions) => {
   };
 
   return {
-    userToken,
     namaOperator: curData.namaOperator,
     setNamaOperator: (val: string) => updateFormField('DOUBLE_JACKETED', 'namaOperator', val),
     nomorSO: curData.nomorSO,
     setNomorSO: (val: string) => updateFormField('DOUBLE_JACKETED', 'nomorSO', val),
-    product: curData.product || curData.productName || '',
     productName: curData.productName || curData.product || '',
-    setProduct: setProductBoth,
     setProductName: setProductBoth,
     productType: curData.workType,
     setProductType: (val: string) => updateFormField('DOUBLE_JACKETED', 'workType', val),

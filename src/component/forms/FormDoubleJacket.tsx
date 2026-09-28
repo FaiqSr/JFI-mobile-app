@@ -439,8 +439,6 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
   );
 };
 
-export default FormDoubleJacket;
-
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFFFFF',

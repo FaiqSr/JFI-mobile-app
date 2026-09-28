@@ -307,20 +307,12 @@ export default function App() {
       const activeData = formsData[currentScreen];
 
       const preservedOperator = activeData?.namaOperator || userName;
-      const preservedSO = activeData?.nomorSO || '';
-      const preservedClass = activeData?.classVal || '';
-      const preservedSize = activeData?.size || '';
-      const preservedMaterial = activeData?.materialNoted || '';
 
       setFormsData((prev) => ({
         ...prev,
         [currentScreen]: {
           ...initialFormState,
           namaOperator: String(preservedOperator),
-          nomorSO: String(preservedSO),
-          classVal: String(preservedClass),
-          size: String(preservedSize),
-          materialNoted: String(preservedMaterial),
         },
       }));
 
@@ -348,9 +340,26 @@ export default function App() {
   const handleNavigate = useCallback((screen: ExtendedScreenType) => {
     if (screen !== 'HOME' && screen !== 'PROFIL') {
       saveLastActiveScreen(screen as ScreenType);
+      // Saat worksheet dibuka, kosongkan seluruh form kecuali nama operator.
+      // Status timer (mulai/stop) tetap dipertahankan.
+      setFormsData((prev) => {
+        const existing = prev[screen];
+        return {
+          ...prev,
+          [screen]: {
+            ...initialFormState,
+            namaOperator: existing?.namaOperator || userName,
+            startTimestamp: existing?.startTimestamp ?? null,
+            stopTimestamp: existing?.stopTimestamp ?? null,
+            startTimeText: existing?.startTimeText ?? '',
+            stopTimeText: existing?.stopTimeText ?? '',
+            isStarted: existing?.isStarted ?? false,
+          },
+        };
+      });
     }
     setCurrentScreen(screen);
-  }, [saveLastActiveScreen]);
+  }, [saveLastActiveScreen, userName]);
 
   useEffect(() => {
     const backAction = () => {
@@ -514,7 +523,6 @@ export default function App() {
   }
 
   const helperOptions = {
-    userToken,
     formsData,
     updateFormField,
     handleToggleStartStop,

@@ -22,6 +22,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     if (!username.trim() || !password.trim()) {
@@ -79,14 +80,26 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Kata sandi</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Masukkan kata sandi"
-                placeholderTextColor="#A0AEC0"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-              />
+              <View style={styles.passwordWrapper}>
+                <TextInput
+                  style={[styles.input, styles.passwordInput]}
+                  placeholder="Masukkan kata sandi"
+                  placeholderTextColor="#A0AEC0"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPassword}
+                />
+                <TouchableOpacity
+                  style={styles.eyeButton}
+                  onPress={() => setShowPassword((v) => !v)}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.eyeIcon}>
+                    {showPassword ? 'Sembunyikan' : 'Tampilkan'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
             <TouchableOpacity
@@ -209,6 +222,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     fontSize: 14,
     
+    color: '#2D3748',
+  },
+  passwordWrapper: {
+    width: '100%',
+    justifyContent: 'center',
+  },
+  passwordInput: {
+    paddingRight: 110,
+  },
+  eyeButton: {
+    position: 'absolute',
+    right: 12,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  eyeIcon: {
+    fontSize: 13,
+    fontWeight: '600',
     color: '#2D3748',
   },
   button: {

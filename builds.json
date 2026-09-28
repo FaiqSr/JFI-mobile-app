@@ -1,0 +1,450 @@
+[
+  {
+    "id": "443ebc44-a978-4553-ac97-5ce771034342",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/tS2dm-jZn2gJ4mL5nSNf_dUdBR4DVQFvnqBbHf8mP0Y.apk",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/tS2dm-jZn2gJ4mL5nSNf_dUdBR4DVQFvnqBbHf8mP0Y.apk"
+    },
+    "fingerprint": {
+      "id": "01a0c6c5-9bfe-7960-94eb-4de66220e876",
+      "hash": "27273ffc40488732d46ccf7ae9e36a535f942808"
+    },
+    "initiatingActor": {
+      "id": "bf489faa-e97c-43b1-9992-f299f8e635ac",
+      "displayName": "celsr13"
+    },
+    "logFiles": [
+      "https://storage.googleapis.com/eas-workflows-production/logs/25232509-ce4e-4c1b-af1f-b5a98e93435a/443ebc44-a978-4553-ac97-5ce771034342/2026-09-22T01%3A40%3A38Z-43659281-a1d3-4257-9af6-a46e4a4a378e.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260928%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260928T044024Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=858dd576be15893e750dbc8249914fcbaeb1e2ae22c4bfd8b5269649dea5f88f2f544973b35ef5ed0dae71790c21ccbdfc2e980cf2708948225c41da4878ff50d64b0d79116ae730509bfbbe6d8fc95dfdc72a825130cb97581b1b16a01026290a45470c46a80795c64be749b6492075c2e0a9db6ca22e9ab172f58048787fd3d4d5c03436c66ba430c785592a74144a9e76a3653e6792b8e8fcf555e748b80b33a496fbe09fa8423b0347df1b19b1e66c1c9ff7cc584d4c12d36e838a7d53c048e3d1f4b8f151fce1aa6545b688ac2549e72ab9a7364a6b3312f57be0f23e39204ecfbcd1364458b2d0b89aaae9ad9410ba97a874f66ba5f204e985c31662e2"
+    ],
+    "app": {
+      "id": "25232509-ce4e-4c1b-af1f-b5a98e93435a",
+      "name": "jfi-Gasket",
+      "slug": "jfi-Gasket",
+      "ownerAccount": {
+        "id": "c665a6c2-2428-4b11-b984-81145f819c41",
+        "name": "celsr13"
+      }
+    },
+    "updateChannel": {
+      "id": "01a0a84c-985d-70b4-ae7e-4f266e2c3f2e",
+      "name": "preview"
+    },
+    "distribution": "INTERNAL",
+    "buildProfile": "preview",
+    "appIdentifier": "com.jfigasket.app",
+    "sdkVersion": "57.0.0",
+    "appVersion": "1.0.1",
+    "appBuildVersion": "1",
+    "runtime": {
+      "id": "01a0a84c-985d-7a83-959d-0223fb845ea9",
+      "version": "1.0.1"
+    },
+    "gitCommitHash": "80b6cfb399fc81eda465b8962f070dadbb902ea4",
+    "gitCommitMessage": "Refactor: Remove PDF handling and related functionality from Ring and Sealing Element screens\n\n- Removed taskId and pdfUrl props from Ring1Screen, Ring2Screen, Ring3Screen, and SealingElementScreen.\n- Eliminated handleDownloadAndOpenPdf function and associated floating button for PDF viewing.\n- Cleaned up styles related to the floating button in the aforementioned screens.\n- Deleted csType and csHelpers utility files, along with csPdf and pdfHandler modules, as they are no longer needed.\n- Updated FormType to remove taskId from ScreenFormData.",
+    "priority": "NORMAL",
+    "createdAt": "2026-09-22T01:40:34.372Z",
+    "updatedAt": "2026-09-22T01:47:44.519Z",
+    "completedAt": "2026-09-22T01:47:44.345Z",
+    "expirationDate": "2026-10-06T01:40:34.419Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 3758,
+      "buildQueueTime": 4706,
+      "buildDuration": 421509
+    }
+  },
+  {
+    "id": "760b523f-150e-493c-80dc-8f8f4d6cff53",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/bvcj_-HhVv-GxWStm_UpiYxBYqlcloYeXbgjYybw2ok.apk",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/bvcj_-HhVv-GxWStm_UpiYxBYqlcloYeXbgjYybw2ok.apk"
+    },
+    "fingerprint": {
+      "id": "01a0c45c-bf07-71e7-ab69-eb5e8467cfa0",
+      "hash": "9e2d97dec2e0080233d801f81b290d5481404853"
+    },
+    "initiatingActor": {
+      "id": "bf489faa-e97c-43b1-9992-f299f8e635ac",
+      "displayName": "celsr13"
+    },
+    "logFiles": [
+      "https://storage.googleapis.com/eas-workflows-production/logs/25232509-ce4e-4c1b-af1f-b5a98e93435a/760b523f-150e-493c-80dc-8f8f4d6cff53/2026-09-21T14%3A57%3A29Z-f4cdfe12-2ac4-4e94-94e2-b1bf0648bc0d.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260928%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260928T044024Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=78f119aff47b4fd225df09328a5c113005a7c1b32ce5ab33549a21b4a210be80475035650a7f9cc83b85fb4ceebc3309d4b3f94cc5bf9e949f097f500465d221211f6da7d3d89a5475ae80637546c312784e371bf80223994f12cdf887ab2ed338841d234ab89ec230fc9ddbf6a47b1659a47c30ed163e942ce1d247568ef683d1e4c568530b7daec6e03d3ec95b719f374dfcf0809657f4005386703b3185fb7668c77ee77a9f354b392c45a349e570a4c34530206e77168884e703aef81db830c7f64e1b81aa25417c5dedd518e3acba917726db81c469cdbf1cf76195190acf74f96dcbfaa1942cfa44eef230d77e956b39d6ac8725c366f0791c466daa8a"
+    ],
+    "app": {
+      "id": "25232509-ce4e-4c1b-af1f-b5a98e93435a",
+      "name": "jfi-Gasket",
+      "slug": "jfi-Gasket",
+      "ownerAccount": {
+        "id": "c665a6c2-2428-4b11-b984-81145f819c41",
+        "name": "celsr13"
+      }
+    },
+    "updateChannel": {
+      "id": "01a0a84c-985d-70b4-ae7e-4f266e2c3f2e",
+      "name": "preview"
+    },
+    "distribution": "INTERNAL",
+    "buildProfile": "preview",
+    "appIdentifier": "com.jfigasket.app",
+    "sdkVersion": "57.0.0",
+    "appVersion": "1.0.1",
+    "appBuildVersion": "1",
+    "runtime": {
+      "id": "01a0a84c-985d-7a83-959d-0223fb845ea9",
+      "version": "1.0.1"
+    },
+    "gitCommitHash": "9ca2cfed40cc7933de4358d3d44811ce35ccbcd2",
+    "gitCommitMessage": "Merge pull request #6 from FaiqSr/revert-5-feat/cs-no-on-input\n\nRevert \"feat(forms): align production form options\"",
+    "priority": "NORMAL",
+    "createdAt": "2026-09-21T14:26:47.627Z",
+    "updatedAt": "2026-09-21T15:05:15.021Z",
+    "completedAt": "2026-09-21T15:05:14.740Z",
+    "expirationDate": "2026-10-05T14:26:47.676Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 4507,
+      "buildQueueTime": 1841556,
+      "buildDuration": 461050
+    }
+  },
+  {
+    "id": "367506d2-a5eb-44aa-b5e9-25f35e940342",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/ZHabtSsL2Z-A_YJ2NAnRPCNbqBMwnse-59Z62cm7GOc.apk",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/ZHabtSsL2Z-A_YJ2NAnRPCNbqBMwnse-59Z62cm7GOc.apk"
+    },
+    "fingerprint": {
+      "id": "01a0c221-2d1b-71bc-8fa5-a98508f40e9a",
+      "hash": "136fcd9b24f595653c1b092178dc4d4cadce739b"
+    },
+    "initiatingActor": {
+      "id": "bf489faa-e97c-43b1-9992-f299f8e635ac",
+      "displayName": "celsr13"
+    },
+    "logFiles": [
+      "https://storage.googleapis.com/eas-workflows-production/logs/25232509-ce4e-4c1b-af1f-b5a98e93435a/367506d2-a5eb-44aa-b5e9-25f35e940342/2026-09-21T04%3A02%3A34Z-6109ef76-7ebe-466a-86ae-e8a99d015820.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260928%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260928T044024Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=189760cf8886b28d4eba89c707c055cf15e97b172a9c5adb9278336ce1c45bb7d760f6828e07dc2ecc4c8f0259c195f47fa50b66d808d6cbf92ce24f04fd87405aed0782800446854d433b97ac0420e4432e69a5c247f002034ea608b01dc18b134fcc5fbfd0837343786ae7f332d89336ce8825d4cde13dc313adb06d33ff7e46cde8b1773be2889d19978c75989562f5adbe14378f51f2a162c43e34388adfbe6a28188b6e5df94ddc789e666836f0c12a41fb356c95212d7e2c5e36c4f523e268c4d1427b1dbdb4c99a7f184b8d954294dc4ff68f3634e74dd57a0b3733f01cfd71ba3c2e6bb8ad5cb71bcb9381f79fa09b12688f08c981808de47126b693"
+    ],
+    "app": {
+      "id": "25232509-ce4e-4c1b-af1f-b5a98e93435a",
+      "name": "jfi-Gasket",
+      "slug": "jfi-Gasket",
+      "ownerAccount": {
+        "id": "c665a6c2-2428-4b11-b984-81145f819c41",
+        "name": "celsr13"
+      }
+    },
+    "updateChannel": {
+      "id": "01a0a84c-985d-70b4-ae7e-4f266e2c3f2e",
+      "name": "preview"
+    },
+    "distribution": "INTERNAL",
+    "buildProfile": "preview",
+    "appIdentifier": "com.jfigasket.app",
+    "sdkVersion": "57.0.0",
+    "appVersion": "1.0.1",
+    "appBuildVersion": "1",
+    "runtime": {
+      "id": "01a0a84c-985d-7a83-959d-0223fb845ea9",
+      "version": "1.0.1"
+    },
+    "gitCommitHash": "9ca2cfed40cc7933de4358d3d44811ce35ccbcd2",
+    "gitCommitMessage": "Merge pull request #6 from FaiqSr/revert-5-feat/cs-no-on-input\n\nRevert \"feat(forms): align production form options\"",
+    "priority": "NORMAL",
+    "createdAt": "2026-09-21T04:02:29.239Z",
+    "updatedAt": "2026-09-21T04:10:15.756Z",
+    "completedAt": "2026-09-21T04:10:15.584Z",
+    "expirationDate": "2026-10-05T04:02:29.268Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 4841,
+      "buildQueueTime": 4572,
+      "buildDuration": 456932
+    }
+  },
+  {
+    "id": "3236dea4-5959-460c-887e-e98c04ebd34a",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/MT3n9YGxGhyEzN7UedJ0253HbZlUXX4x69btv2_1NBw.apk",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/MT3n9YGxGhyEzN7UedJ0253HbZlUXX4x69btv2_1NBw.apk"
+    },
+    "fingerprint": {
+      "id": "01a0a911-5ec3-78b6-9c17-52e06906f79b",
+      "hash": "013582570ff18fab29bd1f279b9f3f4af8648f06"
+    },
+    "initiatingActor": {
+      "id": "bf489faa-e97c-43b1-9992-f299f8e635ac",
+      "displayName": "celsr13"
+    },
+    "logFiles": [
+      "https://storage.googleapis.com/eas-workflows-production/logs/25232509-ce4e-4c1b-af1f-b5a98e93435a/3236dea4-5959-460c-887e-e98c04ebd34a/2026-09-21T01%3A24%3A54Z-c59c9571-0e8b-4842-a428-104a8fcb3481.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260928%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260928T044024Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=7553bd4ba459001d75d36a2e853ddd823676e2978ee33b96c72a69b231bdcdfed2f5fac382bc9857313c143d9d1ad7c282673ff3e83eb5e3beec764bb3ea8ed244ee03036307fb873f5cc36e82712d33a2ef5ed3383bc6cfc1ae35edc1c03ddba6318468934b0b60b8d464f7387791a003d378dd0387d9bb2cb6c764d70826facef0a2c61e4c55c6a35e603c4f9a47a47b7d48b13f80e7d8fb2556752987c59f86bcc826bd1eb4e0ce0de2089daafc58ac4bd30e7187115f8e38f1697f192526e1128546f85bb8e04af0670a378c3e31486e01cbb94a2ce059621da09776105be69d0c6830037d6e1398109058a1f1097fda989db072f9a832c9fba2870cf552"
+    ],
+    "app": {
+      "id": "25232509-ce4e-4c1b-af1f-b5a98e93435a",
+      "name": "jfi-Gasket",
+      "slug": "jfi-Gasket",
+      "ownerAccount": {
+        "id": "c665a6c2-2428-4b11-b984-81145f819c41",
+        "name": "celsr13"
+      }
+    },
+    "updateChannel": {
+      "id": "01a0a84c-985d-70b4-ae7e-4f266e2c3f2e",
+      "name": "preview"
+    },
+    "distribution": "INTERNAL",
+    "buildProfile": "preview",
+    "appIdentifier": "com.jfigasket.app",
+    "sdkVersion": "57.0.0",
+    "appVersion": "1.0.1",
+    "appBuildVersion": "1",
+    "runtime": {
+      "id": "01a0a84c-985d-7a83-959d-0223fb845ea9",
+      "version": "1.0.1"
+    },
+    "gitCommitHash": "9ca2cfed40cc7933de4358d3d44811ce35ccbcd2",
+    "gitCommitMessage": "Merge pull request #6 from FaiqSr/revert-5-feat/cs-no-on-input\n\nRevert \"feat(forms): align production form options\"",
+    "priority": "NORMAL",
+    "createdAt": "2026-09-21T01:24:50.017Z",
+    "updatedAt": "2026-09-21T01:33:36.524Z",
+    "completedAt": "2026-09-21T01:33:36.219Z",
+    "expirationDate": "2026-10-05T01:24:50.061Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 4073,
+      "buildQueueTime": 24965,
+      "buildDuration": 497164
+    }
+  },
+  {
+    "id": "dc6fcd61-a270-4c31-ac0a-ae73e9d5e368",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/PC2lh2nXmi4HHLj95KsO65xfq9HWIs4cEaO-R-fB8wI.apk",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/PC2lh2nXmi4HHLj95KsO65xfq9HWIs4cEaO-R-fB8wI.apk"
+    },
+    "fingerprint": {
+      "id": "01a0a911-5ec3-78b6-9c17-52e06906f79b",
+      "hash": "013582570ff18fab29bd1f279b9f3f4af8648f06"
+    },
+    "initiatingActor": {
+      "id": "bf489faa-e97c-43b1-9992-f299f8e635ac",
+      "displayName": "celsr13"
+    },
+    "logFiles": [
+      "https://storage.googleapis.com/eas-workflows-production/logs/25232509-ce4e-4c1b-af1f-b5a98e93435a/dc6fcd61-a270-4c31-ac0a-ae73e9d5e368/2026-09-20T13%3A32%3A44Z-abd48942-6c0b-48fb-bf27-9db1c1d2fcb4.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260928%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260928T044024Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=60b92d556c1c70e005f49064c946bdf860146bf6ebd50f654319c8aa0d4f2e7036771f4c187eb5ecf2ed6b28d010538d0be6c0d03326f5a18d44b5aad40b4e668464d6935f3630b8f97e7c54d4c16534bb9cbe3969dd68b37a79db0015b5444b19c2565484e70d1117f9f9c97d161b4323ec78b4b55874164b6827f498e08fb50fa272ee9c3d2ddd5c48fe193c740a16b237636ab9e4450e3bf7643e6923d7f8a1b34e6e2471c763540dd47699a3318f2ddc58c2b36ae50b4c519faed46297724552f06d23909f66240f39b01fbd4555e8256186473a40b438189904897c499260ef5ee0480c4ee431bae227fc84745a4f9b87592cb84650bf023896b4e77950"
+    ],
+    "app": {
+      "id": "25232509-ce4e-4c1b-af1f-b5a98e93435a",
+      "name": "jfi-Gasket",
+      "slug": "jfi-Gasket",
+      "ownerAccount": {
+        "id": "c665a6c2-2428-4b11-b984-81145f819c41",
+        "name": "celsr13"
+      }
+    },
+    "updateChannel": {
+      "id": "01a0a871-942d-7bac-a036-d1dd9da76487",
+      "name": "development"
+    },
+    "distribution": "INTERNAL",
+    "buildProfile": "development",
+    "appIdentifier": "com.jfigasket.app",
+    "sdkVersion": "57.0.0",
+    "appVersion": "1.0.1",
+    "appBuildVersion": "1",
+    "runtime": {
+      "id": "01a0a84c-985d-7a83-959d-0223fb845ea9",
+      "version": "1.0.1"
+    },
+    "gitCommitHash": "c340a3264dde4dd63ec544b8f9d9402443ccc0f1",
+    "gitCommitMessage": "chore: save pending changes",
+    "priority": "NORMAL",
+    "createdAt": "2026-09-20T13:32:41.253Z",
+    "updatedAt": "2026-09-20T13:44:14.751Z",
+    "completedAt": "2026-09-20T13:44:14.556Z",
+    "expirationDate": "2026-10-04T13:32:41.282Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 2831,
+      "buildQueueTime": 4644,
+      "buildDuration": 685828
+    }
+  },
+  {
+    "id": "82d1230d-d8d5-40e0-bbcd-d11bcaa6f9ae",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/BTVpsO1kBe2bdrAqz6bkrtpTvmXXgi_A54a7O5rIjsY.apk",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/BTVpsO1kBe2bdrAqz6bkrtpTvmXXgi_A54a7O5rIjsY.apk"
+    },
+    "fingerprint": {
+      "id": "01a0a911-5ec3-78b6-9c17-52e06906f79b",
+      "hash": "013582570ff18fab29bd1f279b9f3f4af8648f06"
+    },
+    "initiatingActor": {
+      "id": "bf489faa-e97c-43b1-9992-f299f8e635ac",
+      "displayName": "celsr13"
+    },
+    "logFiles": [
+      "https://storage.googleapis.com/eas-workflows-production/logs/25232509-ce4e-4c1b-af1f-b5a98e93435a/82d1230d-d8d5-40e0-bbcd-d11bcaa6f9ae/2026-09-16T07%3A14%3A49Z-9a3ad1e9-7589-4c4a-b97a-7ebc27759ee2.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260928%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260928T044024Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=92c88ec32469d779a1e8661b6c009bbc95b26e723a340e6da8ff73cc7efb78776a7841d98be266ea8c0561fd4b0ecfea030b8db88268488370c602cfc31dc98b1420f1aab91d372bf5996193c0102f0c2909e803c9767af115198b97f9940599a76a63cd159c3a629e6b45d8037c7e075e1caea1f45aa2e7fa109528a3d102e1d65231ebbd3f0b724ac0e28d1acd10ac4dea1864c39068fb441800b6da46cc10b8cf2db56e9361a68a09d692529b230484cc5a651d6274ffa71269f679d6b465570e08f2a9b9e68c8362e1638b1febdfb608ed8dd4343bdf9c6f4252ebd77822715706637a604e2b70a7fe17597a3701e5c1649456af0dbe1faabcc783fbee20"
+    ],
+    "app": {
+      "id": "25232509-ce4e-4c1b-af1f-b5a98e93435a",
+      "name": "jfi-Gasket",
+      "slug": "jfi-Gasket",
+      "ownerAccount": {
+        "id": "c665a6c2-2428-4b11-b984-81145f819c41",
+        "name": "celsr13"
+      }
+    },
+    "updateChannel": {
+      "id": "01a0a84c-985d-70b4-ae7e-4f266e2c3f2e",
+      "name": "preview"
+    },
+    "distribution": "INTERNAL",
+    "buildProfile": "preview",
+    "appIdentifier": "com.jfigasket.app",
+    "sdkVersion": "57.0.0",
+    "appVersion": "1.0.1",
+    "appBuildVersion": "1",
+    "runtime": {
+      "id": "01a0a84c-985d-7a83-959d-0223fb845ea9",
+      "version": "1.0.1"
+    },
+    "gitCommitHash": "cb569d7ca3665546e98bd387439a4b74f6e73c54",
+    "gitCommitMessage": "fix(cs-pdf): batasi waktu unduh/render dan buang pembacaan byte yang bisa menggantung",
+    "priority": "NORMAL_PLUS",
+    "createdAt": "2026-09-16T07:14:42.956Z",
+    "updatedAt": "2026-09-16T07:26:44.107Z",
+    "completedAt": "2026-09-16T07:26:43.920Z",
+    "expirationDate": "2026-09-30T07:14:42.998Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 5179,
+      "buildQueueTime": 5579,
+      "buildDuration": 710206
+    }
+  },
+  {
+    "id": "4ee29429-c70f-4d2f-99ee-30665e9d5efb",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/5yTFmg_b7-jcMdvLZo7WMAO0mJcLnjOfmYoT4QRI_XI.apk",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/5yTFmg_b7-jcMdvLZo7WMAO0mJcLnjOfmYoT4QRI_XI.apk"
+    },
+    "fingerprint": {
+      "id": "01a0a871-9437-7150-a7ee-6d6558011b41",
+      "hash": "2fc27055351fa2b8e97c3d78f239eb216c151573"
+    },
+    "initiatingActor": {
+      "id": "bf489faa-e97c-43b1-9992-f299f8e635ac",
+      "displayName": "celsr13"
+    },
+    "logFiles": [
+      "https://storage.googleapis.com/eas-workflows-production/logs/25232509-ce4e-4c1b-af1f-b5a98e93435a/4ee29429-c70f-4d2f-99ee-30665e9d5efb/2026-09-16T04%3A20%3A13Z-8813936c-ca56-4a0f-ae63-fbe26f1c452a.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260928%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260928T044024Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=891a9e20d80148529594e237df5c5065763e4b0c55eae2e75221ba4b7a9a8adad34b9fbab8dec2baac40d686921a517832e13c4e1c54d5ef7fa86071d489b16322896111cea166029ceee7420dd09ae01ef914af37621315876a86deff1b78911e1877806477f411a531c843186714abd300efe6b2f08c49e1d4ec20da0605615626677e9181bf9dc8e31e53403a9a72d5cde54c0813dd77453a5ede144fcff3de225797c481ff52a9781b97f905f90f972cb2dd279e2398f6c653663c8e15a57f666a89e22e74d737ddd9de8e880d58fb7e46b85b0c3f08d95fc7dfef9e6f61a3ca599a99d0b77bbdb72e674bf47065c2ecad98307d0e3bcdc8b3c72cc415b6"
+    ],
+    "app": {
+      "id": "25232509-ce4e-4c1b-af1f-b5a98e93435a",
+      "name": "jfi-Gasket",
+      "slug": "jfi-Gasket",
+      "ownerAccount": {
+        "id": "c665a6c2-2428-4b11-b984-81145f819c41",
+        "name": "celsr13"
+      }
+    },
+    "updateChannel": {
+      "id": "01a0a871-942d-7bac-a036-d1dd9da76487",
+      "name": "development"
+    },
+    "distribution": "INTERNAL",
+    "buildProfile": "development",
+    "appIdentifier": "com.jfigasket.app",
+    "sdkVersion": "57.0.0",
+    "appVersion": "1.0.1",
+    "appBuildVersion": "1",
+    "runtime": {
+      "id": "01a0a84c-985d-7a83-959d-0223fb845ea9",
+      "version": "1.0.1"
+    },
+    "gitCommitHash": "3c5892d95131f2719108a2559d13188e9a0e9a15",
+    "gitCommitMessage": "chore: retarget PRODUCTION_BASE_URL to /api/cs/produksi\n\nUpdate EAS projectId and owner (celsr13) in app.json; fix AGENTS.md wording.",
+    "priority": "NORMAL_PLUS",
+    "createdAt": "2026-09-16T04:20:10.524Z",
+    "updatedAt": "2026-09-16T04:29:30.443Z",
+    "completedAt": "2026-09-16T04:29:30.273Z",
+    "expirationDate": "2026-09-30T04:20:10.924Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 2801,
+      "buildQueueTime": 4433,
+      "buildDuration": 552515
+    }
+  },
+  {
+    "id": "9b34e332-581c-4f1e-910e-0e54c3479e88",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/eGo7DqaqzYR2mVrxhDJH3evEYv58ULqHf8J0-R0sIwY.apk",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/eGo7DqaqzYR2mVrxhDJH3evEYv58ULqHf8J0-R0sIwY.apk"
+    },
+    "fingerprint": {
+      "id": "01a0a84c-9869-7588-9925-16f51b78b3f2",
+      "hash": "956e3b202e1a92428b1f33f90c6b62ca2ae6905d"
+    },
+    "initiatingActor": {
+      "id": "bf489faa-e97c-43b1-9992-f299f8e635ac",
+      "displayName": "celsr13"
+    },
+    "logFiles": [
+      "https://storage.googleapis.com/eas-workflows-production/logs/25232509-ce4e-4c1b-af1f-b5a98e93435a/9b34e332-581c-4f1e-910e-0e54c3479e88/2026-09-16T03%3A39%3A48Z-3316d974-4b67-45ee-8abb-871a3ce3fffc.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260928%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260928T044024Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=762254f6fbe65bfa8437832bae9291d0104d02b811ddcebafed493669a39b54218ebe22e77dfbca1ac5de7e90d75ff763b8087cb3940156b655367857eedb7833df5af4eb6b3e0cb3de69e0f064cbd9ee3c0da23bedddeb0035e3696cba4ab7ea4abdd7e0383049a5160f4327788ac6b8845cc39b1319a342cc86bf2f10db8cbdc99328cca09d257e24cb1f091ad747db8c6964754771e4d7c66780549c0f046238c8302d963d49c7c2409b6ba975ed62bf5557a6cbf28404a061a1861c1acb489cbea2aad57f2077d3a15497a6540b079b4f838b5412a49207561a9db5e2124a20463cf0ec729a54fe68dd65b3c7101960979256e2ba22a195528d8d10365ad"
+    ],
+    "app": {
+      "id": "25232509-ce4e-4c1b-af1f-b5a98e93435a",
+      "name": "jfi-Gasket",
+      "slug": "jfi-Gasket",
+      "ownerAccount": {
+        "id": "c665a6c2-2428-4b11-b984-81145f819c41",
+        "name": "celsr13"
+      }
+    },
+    "updateChannel": {
+      "id": "01a0a84c-985d-70b4-ae7e-4f266e2c3f2e",
+      "name": "preview"
+    },
+    "distribution": "INTERNAL",
+    "buildProfile": "preview",
+    "appIdentifier": "com.jfigasket.app",
+    "sdkVersion": "57.0.0",
+    "appVersion": "1.0.1",
+    "appBuildVersion": "1",
+    "runtime": {
+      "id": "01a0a84c-985d-7a83-959d-0223fb845ea9",
+      "version": "1.0.1"
+    },
+    "gitCommitHash": "6dfd2d2ea27b491117ce08a41020ec5a2d4fbd0d",
+    "gitCommitMessage": "feat: refactor API URL handling and update service calls to use derived base URLs",
+    "priority": "NORMAL_PLUS",
+    "createdAt": "2026-09-16T03:39:47.128Z",
+    "updatedAt": "2026-09-16T03:50:32.464Z",
+    "completedAt": "2026-09-16T03:50:32.313Z",
+    "expirationDate": "2026-09-30T03:39:47.164Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 1021,
+      "buildQueueTime": 4663,
+      "buildDuration": 639501
+    }
+  }
+]

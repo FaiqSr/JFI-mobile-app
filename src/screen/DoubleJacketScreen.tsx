@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { Alert } from '../utils/appAlert';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import { FormInformationDJG } from '../component/forms/FormInformationDJG';
@@ -14,8 +13,7 @@ import { FormDoubleJacket } from '../component/forms/FormDoubleJacket';
 import { FormTime } from '../component/forms/FormTime';
 import { FormQuantityDJG } from '../component/forms/FormQuantityDJG';
 
-export interface DoubleJacketScreenProps {
-  userToken?: string;
+interface DoubleJacketScreenProps {
   namaOperator: string;
   setNamaOperator: (v: string) => void;
   nomorSO: string;
@@ -81,7 +79,6 @@ export interface DoubleJacketScreenProps {
 export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => {
   const handleClearForm = async () => {
     const activeOperator = props.namaOperator;
-    const activeSO = props.nomorSO;
 
     props.setProductName('');
     props.setJobDescription('');
@@ -111,7 +108,6 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
     props.setFinishGood(0);
     props.setRework(0);
     props.setNamaOperator(activeOperator);
-    props.setNomorSO(activeSO);
 
     if (props.onClear) {
       props.onClear();

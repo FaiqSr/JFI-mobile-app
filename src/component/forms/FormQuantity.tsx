@@ -30,8 +30,6 @@ export const FormQuantity: React.FC<FormQuantityProps> = ({
   );
 };
 
-export default FormQuantity;
-
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFFFFF',

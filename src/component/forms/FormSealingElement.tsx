@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
-export interface FormSealingElementProps {
+interface FormSealingElementProps {
   size: string;
   setSize: (v: string) => void;
   machineSizes?: string[];
@@ -403,8 +403,6 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
     </>
   );
 };
-
-export default FormSealingElement;
 
 const styles = StyleSheet.create({
   card: {
