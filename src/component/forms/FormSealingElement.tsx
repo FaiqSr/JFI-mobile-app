@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { SizeCombobox } from '../common/SizeCombobox';
 
 interface FormSealingElementProps {
   size: string;
@@ -211,14 +212,12 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
             <Text style={styles.label}>
               Size <Text style={styles.asterisk}>*</Text>
             </Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter size"
-              placeholderTextColor="#98A2B3"
+            <SizeCombobox
               value={size}
-              onChangeText={setSize}
+              onChange={setSize}
+              suggestions={machineSizes}
+              placeholder="Enter size"
             />
-            {machineSizes.length > 0 && <View style={styles.row}>{machineSizes.map((value) => <TouchableOpacity key={value} onPress={() => setSize(value)}><Text>{value}</Text></TouchableOpacity>)}</View>}
           </View>
           <View style={styles.halfInputContainer}>
             <Text style={styles.label}>

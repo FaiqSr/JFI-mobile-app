@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { SizeCombobox } from '../common/SizeCombobox';
 
 interface FormProductRing3Props {
   product: string;
@@ -215,7 +216,6 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
             value={materialNotedVal}
             onChangeText={handleMaterialNotedChange}
           />
-          {machineSizes.length > 0 && <View style={styles.row}>{machineSizes.map((value) => <TouchableOpacity key={value} onPress={() => setSize(value)}><Text>{value}</Text></TouchableOpacity>)}</View>}
           {isNoChoiceMaterialNoted && (
             <Text style={styles.warningText}>
               Wajib diisi karena Product/Material Type 'Tidak Ada Pilihan'
@@ -251,12 +251,11 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
           <Text style={styles.label}>
             Size <Text style={styles.asterisk}>*</Text>
           </Text>
-          <TextInput
-            style={styles.input}
-            placeholder='1"'
-            placeholderTextColor="#98A2B3"
+          <SizeCombobox
             value={size}
-            onChangeText={setSize}
+            onChange={setSize}
+            suggestions={machineSizes}
+            placeholder='1"'
           />
         </View>
 

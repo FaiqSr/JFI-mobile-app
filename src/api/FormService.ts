@@ -9,6 +9,7 @@ import {
   RING3_JOB_DESC,
   SE_JOB_DESC,
 } from '../constants/jobDescOptions';
+import { resolveMachineSizes } from '../constants/jobDescToNamaMc';
 
 const BASE_URL = PRODUCTION_BASE_URL;
 
@@ -368,7 +369,7 @@ export const getRingProps = (
     onSave: handleSimpan,
     onClear: () => confirmClearAlert(handleClear),
     machineOptions: ringJobDescOptions[screen],
-    machineSizes: catalog?.machines.find(({ namaMc }) => namaMc === curData.jobDescription)?.sizes ?? [],
+    machineSizes: resolveMachineSizes(catalog, screen, curData.jobDescription),
   };
 };
 
@@ -446,7 +447,7 @@ export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatal
     onSave: handleSimpan,
     onClear: () => confirmClearAlert(handleClear),
     machineOptions: SE_JOB_DESC,
-    machineSizes: catalog?.machines.find(({ namaMc }) => namaMc === curData.jobDescription)?.sizes ?? [],
+    machineSizes: resolveMachineSizes(catalog, 'SE', curData.jobDescription),
   };
 };
 
