@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LoginScreen } from './src/screen/LoginScreen';
 import { HomeScreen } from './src/screen/HomeScreen';
 import { ProfileScreen } from './src/screen/ProfileScreen';
+import { AboutScreen } from './src/screen/AboutScreen';
 import { Ring1Screen } from './src/screen/Ring1Screen';
 import { Ring2Screen } from './src/screen/Ring2Screen';
 import { Ring3Screen } from './src/screen/Ring3Screen';
@@ -54,7 +55,13 @@ const DRAFT_KEY = '@app_form_draft_v4';
 const LAST_SCREEN_KEY = '@app_last_active_screen';
 
 /** The five production-area worksheets, in the plant's area order. */
-export type ExtendedScreenType = ScreenType | 'PROFIL';
+export type ExtendedScreenType = ScreenType | 'PROFIL' | 'ABOUT';
+
+/** Layar non-worksheet: tidak menyimpan draf, tidak punya timer, dsb. */
+const isNonWorksheetScreen = (
+  screen: ExtendedScreenType
+): screen is 'HOME' | 'PROFIL' | 'ABOUT' =>
+  screen === 'HOME' || screen === 'PROFIL' || screen === 'ABOUT';
 
 const hasValue = (val: string | number | undefined | null): boolean => {
   if (val === null || val === undefined) return false;
@@ -115,6 +122,7 @@ const hasMeaningfulData = (form: ScreenFormData | undefined): boolean => {
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [currentScreen, setCurrentScreen] = useState<ExtendedScreenType>('HOME');
+  const [showAbout, setShowAbout] = useState<boolean>(false);
   const [userToken, setUserToken] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
 
@@ -303,7 +311,7 @@ export default function App() {
 
   // Mengunci nama operator pada setiap form agar tidak hilang saat clear/simpan
   const handleClear = useCallback(async () => {
-    if (currentScreen !== 'HOME' && currentScreen !== 'PROFIL') {
+    if (!isNonWorksheetScreen(currentScreen)) {
       const activeData = formsData[currentScreen];
 
       const preservedOperator = activeData?.namaOperator || userName;
@@ -338,7 +346,7 @@ export default function App() {
   }, [currentScreen, formsData, userName, saveLastActiveScreen]);
 
   const handleNavigate = useCallback((screen: ExtendedScreenType) => {
-    if (screen !== 'HOME' && screen !== 'PROFIL') {
+    if (!isNonWorksheetScreen(screen)) {
       saveLastActiveScreen(screen as ScreenType);
       // Saat worksheet dibuka, kosongkan seluruh form kecuali nama operator.
       // Status timer (mulai/stop) tetap dipertahankan.
@@ -388,7 +396,7 @@ export default function App() {
 
   // Timer lokal saja — entry tidak lagi terikat sesi kerja CS di server.
   const handleToggleStartStop = async () => {
-    if (currentScreen === 'HOME' || currentScreen === 'PROFIL') return;
+    if (isNonWorksheetScreen(currentScreen)) return;
     const currentData = formsData[currentScreen];
 
     if (!currentData.isStarted) {
@@ -408,7 +416,7 @@ export default function App() {
   // timestamp whenever the text becomes a complete valid HH:MM. `isStarted`
   // (timer running) stays in sync = start set but stop not set yet.
   const handleChangeStartTime = (text: string) => {
-    if (currentScreen === 'HOME' || currentScreen === 'PROFIL') return;
+    if (isNonWorksheetScreen(currentScreen)) return;
     const normalized = normalizeTimeInput(text);
     const startTs = isValidTime(normalized) ? timeStringToTimestamp(normalized) : null;
     const stopTs = formsData[currentScreen]?.stopTimestamp ?? null;
@@ -418,7 +426,7 @@ export default function App() {
   };
 
   const handleChangeStopTime = (text: string) => {
-    if (currentScreen === 'HOME' || currentScreen === 'PROFIL') return;
+    if (isNonWorksheetScreen(currentScreen)) return;
     const normalized = normalizeTimeInput(text);
     const stopTs = isValidTime(normalized) ? timeStringToTimestamp(normalized) : null;
     const startTs = formsData[currentScreen]?.startTimestamp ?? null;
@@ -428,7 +436,7 @@ export default function App() {
   };
 
   const handleSimpan = async () => {
-    if (currentScreen === 'HOME' || currentScreen === 'PROFIL') return;
+    if (isNonWorksheetScreen(currentScreen)) return;
     const activeData = formsData[currentScreen];
 
     if (!hasValue(activeData.namaOperator)) {
@@ -519,7 +527,21 @@ export default function App() {
   }
 
   if (!isLoggedIn) {
-    return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
+    if (showAbout) {
+      return (
+        <SafeAreaProvider>
+          <SafeAreaView style={styles.container}>
+            <AboutScreen onBack={() => setShowAbout(false)} />
+          </SafeAreaView>
+        </SafeAreaProvider>
+      );
+    }
+    return (
+      <LoginScreen
+        onLoginSuccess={handleLoginSuccess}
+        onOpenAbout={() => setShowAbout(true)}
+      />
+    );
   }
 
   const helperOptions = {
@@ -543,6 +565,7 @@ export default function App() {
             userName={userName}
             onNavigate={handleNavigate}
             onLogout={handleLogoutSuccess}
+            onOpenAbout={() => handleNavigate('ABOUT')}
             activeScreen={activeScreen}
           />
         );
@@ -553,9 +576,13 @@ export default function App() {
             userName={userName}
             onBack={() => setCurrentScreen('HOME')}
             onLogout={handleLogoutSuccess}
+            onOpenAbout={() => handleNavigate('ABOUT')}
             onUpdateUserName={setUserName}
           />
         );
+
+      case 'ABOUT':
+        return <AboutScreen onBack={() => setCurrentScreen('HOME')} />;
 
       case 'RING_1':
         return <Ring1Screen {...getRingProps('RING_1', helperOptions, lhpCatalogs.RING_1)} />;

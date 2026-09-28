@@ -48,7 +48,9 @@
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/25232509-ce4e-4c1b-af1f-b5a98e93435a"
+      "url": "https://u.expo.dev/25232509-ce4e-4c1b-af1f-b5a98e93435a",
+      "checkAutomatically": "NEVER",
+      "fallbackToCacheTimeout": 0
     },
     "owner": "celsr13"
   }

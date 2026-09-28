@@ -16,9 +16,13 @@ import { authService } from '../api/authService';
 
 interface LoginScreenProps {
   onLoginSuccess: () => void;
+  onOpenAbout?: () => void;
 }
 
-export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
+export const LoginScreen: React.FC<LoginScreenProps> = ({
+  onLoginSuccess,
+  onOpenAbout,
+}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -115,6 +119,18 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
               )}
             </TouchableOpacity>
           </View>
+
+          {onOpenAbout && (
+            <TouchableOpacity
+              style={styles.aboutBtn}
+              onPress={onOpenAbout}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.aboutText}>
+                Tentang Aplikasi · v{require('../../app.json').expo.version}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -259,6 +275,16 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 15,
     
+    fontWeight: '600',
+  },
+  aboutBtn: {
+    marginTop: 24,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  aboutText: {
+    fontSize: 13,
+    color: '#64748B',
     fontWeight: '600',
   },
 });

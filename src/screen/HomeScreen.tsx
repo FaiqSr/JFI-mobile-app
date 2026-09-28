@@ -13,6 +13,7 @@ interface HomeScreenProps {
   userName?: string;
   onNavigate: (screen: ExtendedScreenType) => void;
   onLogout: () => void;
+  onOpenAbout?: () => void;
   activeScreen?: ExtendedScreenType | null;
 }
 
@@ -34,6 +35,7 @@ export const HomeScreen = ({
   userName = '',
   onNavigate,
   onLogout,
+  onOpenAbout,
   activeScreen,
 }: HomeScreenProps) => {
   const isTaskActive = Boolean(
@@ -43,7 +45,11 @@ export const HomeScreen = ({
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <UserHeader userName={userName} onLogout={onLogout} />
+        <UserHeader
+          userName={userName}
+          onLogout={onLogout}
+          onOpenAbout={onOpenAbout}
+        />
 
         <View style={styles.centerSection}>
           <Image

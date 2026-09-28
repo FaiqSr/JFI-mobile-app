@@ -1,37 +1,98 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 import { Alert } from '../../utils/appAlert';
 
 interface UserHeaderProps {
   userName?: string;
   onLogout?: () => void;
+  onOpenAbout?: () => void;
 }
 
 /**
- * Header bersama: badge nama pengguna + tombol "Keluar" (dengan konfirmasi).
- * Dirancang untuk diletakkan di dalam ScrollView agar ikut ter-scroll.
+ * Header bersama: badge nama pengguna + tombol titik tiga (⋯) yang membuka
+ * dropdown berisi "Tentang Aplikasi" dan "Keluar". Dirancang untuk diletakkan
+ * di dalam ScrollView agar ikut ter-scroll.
  */
-export const UserHeader = ({ userName = '', onLogout }: UserHeaderProps) => {
+export const UserHeader = ({
+  userName = '',
+  onLogout,
+  onOpenAbout,
+}: UserHeaderProps) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const handleLogoutPress = () => {
+    setMenuOpen(false);
     Alert.alert('Konfirmasi', 'Apakah Anda yakin ingin keluar?', [
       { text: 'Batal', style: 'cancel' },
       { text: 'Keluar', style: 'destructive', onPress: onLogout },
     ]);
   };
 
+  const handleAboutPress = () => {
+    setMenuOpen(false);
+    if (onOpenAbout) onOpenAbout();
+  };
+
   return (
-    <View style={styles.headerBar}>
-      <View style={styles.userBadge}>
-        <Text style={styles.userBadgeText}>{userName}</Text>
+    <View style={styles.wrapper}>
+      <View style={styles.headerBar}>
+        <View style={styles.userBadge}>
+          <Text style={styles.userBadgeText}>{userName}</Text>
+        </View>
+
+        <TouchableOpacity
+          style={styles.menuBtn}
+          onPress={() => setMenuOpen((v) => !v)}
+          activeOpacity={0.7}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
+          <Text style={styles.menuBtnText}>⋯</Text>
+        </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.logoutBtn} onPress={handleLogoutPress}>
-        <Text style={styles.logoutBtnText}>Keluar</Text>
-      </TouchableOpacity>
+      {menuOpen && (
+        <>
+          <Pressable
+            style={styles.backdrop}
+            onPress={() => setMenuOpen(false)}
+          />
+          <View style={styles.dropdown}>
+            <TouchableOpacity
+              style={styles.dropdownItem}
+              onPress={handleAboutPress}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.dropdownItemText}>Tentang Aplikasi</Text>
+            </TouchableOpacity>
+
+            <View style={styles.dropdownDivider} />
+
+            <TouchableOpacity
+              style={styles.dropdownItem}
+              onPress={handleLogoutPress}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.dropdownItemText, styles.dropdownItemDanger]}>
+                Keluar
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    width: '100%',
+  },
   headerBar: {
     width: '100%',
     flexDirection: 'row',
@@ -53,20 +114,62 @@ const styles = StyleSheet.create({
   },
   userBadgeText: {
     fontSize: 14,
-    
     color: '#333333',
     fontWeight: '500',
   },
-  logoutBtn: {
+  menuBtn: {
     backgroundColor: '#0F172A',
-    paddingHorizontal: 22,
-    paddingVertical: 8,
+    width: 44,
+    height: 38,
     borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  logoutBtnText: {
+  menuBtnText: {
     color: '#FFFFFF',
-    
-    fontWeight: '600',
+    fontSize: 22,
+    fontWeight: '700',
+    lineHeight: 24,
+    marginTop: -4,
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 10,
+  },
+  dropdown: {
+    position: 'absolute',
+    top: 62,
+    right: 0,
+    minWidth: 180,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingVertical: 6,
+    zIndex: 20,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+  },
+  dropdownItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  dropdownItemText: {
     fontSize: 14,
+    fontWeight: '600',
+    color: '#0F172A',
+  },
+  dropdownItemDanger: {
+    color: '#DC2626',
+  },
+  dropdownDivider: {
+    height: 1,
+    backgroundColor: '#F1F5F9',
+    marginHorizontal: 12,
   },
 });

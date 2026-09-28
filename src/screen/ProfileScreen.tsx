@@ -17,6 +17,7 @@ interface ProfileScreenProps {
   userName?: string;
   onBack: () => void;
   onLogout?: () => void;
+  onOpenAbout?: () => void;
   onUpdateUserName?: (newName: string) => void;
 }
 
@@ -24,6 +25,7 @@ export const ProfileScreen = ({
   userName,
   onBack,
   onLogout,
+  onOpenAbout,
   onUpdateUserName,
 }: ProfileScreenProps) => {
   const [username, setUsername] = useState<string>('');
@@ -148,6 +150,7 @@ export const ProfileScreen = ({
         <UserHeader
           userName={fullName || username || userName || '...'}
           onLogout={onLogout}
+          onOpenAbout={onOpenAbout}
         />
 
         <TouchableOpacity onPress={onBack} style={styles.backBtn}>
