@@ -31,6 +31,7 @@ import {
   getDoubleJacketProps,
   getGnmProps,
   getLhpMasterCatalog,
+  getJobDescOptions,
   type LhpMasterCatalog,
 } from './src/api/FormService';
 import { authService } from './src/api/authService';
@@ -144,12 +145,28 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isRestored, setIsRestored] = useState(false);
   const [lhpCatalogs, setLhpCatalogs] = useState<Record<string, LhpMasterCatalog>>({});
+  const [jobDescByArea, setJobDescByArea] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
     if (!isLoggedIn || !userToken) return;
     let cancelled = false;
     Promise.all(['RING_1', 'RING_2', 'RING_3', 'SE'].map((area) => getLhpMasterCatalog(area).then((catalog) => [area, catalog] as const)))
       .then((entries) => { if (!cancelled) setLhpCatalogs(Object.fromEntries(entries.filter(([, catalog]) => catalog)) as Record<string, LhpMasterCatalog>); });
+    return () => { cancelled = true; };
+  }, [isLoggedIn, userToken]);
+
+  // Opsi Job Description dinamis (master `cs_mesin_alias`) per area; hanya
+  // daftar tidak kosong yang disimpan supaya fallback statis tetap dipakai.
+  useEffect(() => {
+    if (!isLoggedIn || !userToken) return;
+    let cancelled = false;
+    Promise.all(['RING_1', 'RING_2', 'RING_3', 'SE'].map((area) => getJobDescOptions(area).then((list) => [area, list] as const)))
+      .then((entries) => {
+        if (cancelled) return;
+        setJobDescByArea(
+          Object.fromEntries(entries.filter(([, list]) => list && list.length)) as Record<string, string[]>
+        );
+      });
     return () => { cancelled = true; };
   }, [isLoggedIn, userToken]);
 
@@ -623,16 +640,16 @@ export default function App() {
         return <AboutScreen onBack={() => setCurrentScreen('HOME')} />;
 
       case 'RING_1':
-        return <Ring1Screen {...getRingProps('RING_1', helperOptions, lhpCatalogs.RING_1)} />;
+        return <Ring1Screen {...getRingProps('RING_1', helperOptions, lhpCatalogs.RING_1, jobDescByArea.RING_1)} />;
 
       case 'RING_2':
-        return <Ring2Screen {...getRingProps('RING_2', helperOptions, lhpCatalogs.RING_2)} />;
+        return <Ring2Screen {...getRingProps('RING_2', helperOptions, lhpCatalogs.RING_2, jobDescByArea.RING_2)} />;
 
       case 'RING_3':
-        return <Ring3Screen {...getRingProps('RING_3', helperOptions, lhpCatalogs.RING_3)} />;
+        return <Ring3Screen {...getRingProps('RING_3', helperOptions, lhpCatalogs.RING_3, jobDescByArea.RING_3)} />;
 
       case 'SEALING_ELEMENT':
-        return <SealingElementScreen {...getSealingProps(helperOptions, lhpCatalogs.SE)} />;
+        return <SealingElementScreen {...getSealingProps(helperOptions, lhpCatalogs.SE, jobDescByArea.SE)} />;
 
       case 'DOUBLE_JACKETED':
         return <DoubleJacketScreen {...getDoubleJacketProps(helperOptions)} />;

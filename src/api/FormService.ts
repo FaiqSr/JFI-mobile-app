@@ -13,6 +13,9 @@ import { resolveMachineSizes } from '../constants/jobDescToNamaMc';
 
 const BASE_URL = PRODUCTION_BASE_URL;
 
+/** Sentinel pertama pada daftar Job Description; wajib tetap bisa dipilih. */
+const JOB_DESC_SENTINEL = 'Tidak Ada Pilihan';
+
 export interface LhpMasterCatalog {
   area: string;
   machines: { namaMc: string; sizes: string[] }[];
@@ -29,6 +32,29 @@ export const getLhpMasterCatalog = async (area: string, retry = true): Promise<L
       return null;
     }
     return response.ok ? (await response.json() as LhpMasterCatalog) : null;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Daftar Job Description dinamis dari master `cs_mesin_alias` (distinct `jobdesc_norm`).
+ * Mengembalikan `null` bila gagal / tidak ada data; pemanggil memakai konstanta statis
+ * sebagai fallback. Daftar API TIDAK memuat sentinel, jadi sentinel disisipkan di sini.
+ */
+export const getJobDescOptions = async (area: string, retry = true): Promise<string[] | null> => {
+  const token = await AsyncStorage.getItem('userToken');
+  try {
+    const response = await fetch(`${BASE_URL.replace(/\/+$/, '')}/lhp/master/jobdesc-options?area=${encodeURIComponent(area)}`, {
+      headers: { Accept: 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    });
+    if (response.status === 401 && retry) {
+      if (await authService.refreshAccessToken()) return getJobDescOptions(area, false);
+      return null;
+    }
+    if (!response.ok) return null;
+    const body: any = await response.json();
+    return Array.isArray(body?.data) ? (body.data as string[]) : null;
   } catch {
     return null;
   }
@@ -311,7 +337,8 @@ const confirmClearAlert = (onConfirm: () => void) => {
 export const getRingProps = (
   screen: 'RING_1' | 'RING_2' | 'RING_3',
   options: HelperOptions,
-  catalog?: LhpMasterCatalog
+  catalog?: LhpMasterCatalog,
+  jobDescOptions?: string[]
 ) => {
   const {
     formsData,
@@ -332,6 +359,12 @@ export const getRingProps = (
     RING_2: RING2_JOB_DESC,
     RING_3: RING3_JOB_DESC,
   };
+
+  // Opsi dinamis dari API menang; jika kosong/gagal pakai konstanta statis.
+  // Sentinel selalu di posisi pertama agar tetap bisa dipilih.
+  const machineOptions = jobDescOptions && jobDescOptions.length
+    ? [JOB_DESC_SENTINEL, ...jobDescOptions.filter((item) => item !== JOB_DESC_SENTINEL)]
+    : ringJobDescOptions[screen];
 
   const setProductBoth = (val: string) => {
     updateFormField(screen, 'product', val);
@@ -392,12 +425,12 @@ export const getRingProps = (
     onBack: () => handleNavigate('HOME'),
     onSave: handleSimpan,
     onClear: () => confirmClearAlert(handleClear),
-    machineOptions: ringJobDescOptions[screen],
+    machineOptions,
     machineSizes: resolveMachineSizes(catalog, screen, curData.jobDescription),
   };
 };
 
-export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatalog) => {
+export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatalog, jobDescOptions?: string[]) => {
   const {
     formsData,
     updateFormField,
@@ -411,6 +444,12 @@ export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatal
     handleClear,
   } = options;
   const curData = formsData['SEALING_ELEMENT'] || initialFormState;
+
+  // Opsi dinamis dari API menang; jika kosong/gagal pakai konstanta statis.
+  // Sentinel selalu di posisi pertama agar tetap bisa dipilih.
+  const machineOptions = jobDescOptions && jobDescOptions.length
+    ? [JOB_DESC_SENTINEL, ...jobDescOptions.filter((item) => item !== JOB_DESC_SENTINEL)]
+    : SE_JOB_DESC;
 
   return {
     namaOperator: curData.namaOperator,
@@ -470,7 +509,7 @@ export const getSealingProps = (options: HelperOptions, catalog?: LhpMasterCatal
     onBack: () => handleNavigate('HOME'),
     onSave: handleSimpan,
     onClear: () => confirmClearAlert(handleClear),
-    machineOptions: SE_JOB_DESC,
+    machineOptions,
     machineSizes: resolveMachineSizes(catalog, 'SE', curData.jobDescription),
   };
 };
