@@ -23,8 +23,6 @@ interface FormProductGNMProps {
   setThickness: (v: string) => void;
   notedSize?: string;
   setNotedSize?: (v: string) => void;
-  shift: number | null;
-  setShift: (v: number | null) => void;
 }
 
 export const FormProductGNM: React.FC<FormProductGNMProps> = ({
@@ -40,13 +38,10 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
   setThickness,
   notedSize: externalNotedSize,
   setNotedSize: externalSetNotedSize,
-  shift,
-  setShift,
 }) => {
   const [type1Modal, setType1Modal] = useState(false);
   const [type2Modal, setType2Modal] = useState(false);
   const [thicknessModal, setThicknessModal] = useState(false);
-  const [shiftModal, setShiftModal] = useState(false);
   const [internalNotedSize, setInternalNotedSize] = useState('');
 
   const notedSizeVal =
@@ -102,8 +97,6 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
     '8 mm',
   ];
 
-  const shiftOptions = ['Shift 1', 'Shift 2'];
-
   const handleSelect = (
     item: string,
     setter: (v: string) => void,
@@ -112,11 +105,6 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
     const valueToSet = item.startsWith('*') ? '' : item;
     setter(valueToSet);
     modalSetter(false);
-  };
-
-  const handleSelectShift = (item: string) => {
-    setShift(item === 'Shift 2' ? 2 : 1);
-    setShiftModal(false);
   };
 
   return (
@@ -225,30 +213,6 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
           </View>
-
-          <View style={styles.column}>
-            <Text style={styles.label}>
-              Shift <Text style={styles.asterisk}>*</Text>
-            </Text>
-            <TouchableOpacity
-              style={styles.dropdownInput}
-              activeOpacity={0.7}
-              onPress={() => setShiftModal(true)}
-            >
-              <Text
-                style={[
-                  styles.dropdownText,
-                  !shift && styles.placeholderText,
-                ]}
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                minimumFontScale={0.75}
-              >
-                {shift ? `Shift ${shift}` : 'Select shift'}
-              </Text>
-              <Text style={styles.arrowIcon}>▼</Text>
-            </TouchableOpacity>
-          </View>
         </View>
 
         <Text style={styles.label}>NOTED SIZE</Text>
@@ -345,37 +309,6 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
                     style={[
                       styles.modalItemText,
                       item === thickness && styles.selectedItemText,
-                    ]}
-                  >
-                    {item}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            />
-          </View>
-        </TouchableOpacity>
-      </Modal>
-
-      <Modal visible={shiftModal} transparent animationType="fade">
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setShiftModal(false)}
-        >
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Pilih Shift</Text>
-            <FlatList
-              data={shiftOptions}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.modalItem}
-                  onPress={() => handleSelectShift(item)}
-                >
-                  <Text
-                    style={[
-                      styles.modalItemText,
-                      item === `Shift ${shift}` && styles.selectedItemText,
                     ]}
                   >
                     {item}

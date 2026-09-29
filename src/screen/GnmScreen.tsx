@@ -146,8 +146,6 @@ export const GnmScreen: React.FC<GnmScreenProps> = (props) => {
           setThickness={props.setThickness}
           notedSize={props.notedSize}
           setNotedSize={props.setNotedSize}
-          shift={props.shift}
-          setShift={props.setShift}
         />
 
         <FormMaterialGNM
@@ -178,6 +176,8 @@ export const GnmScreen: React.FC<GnmScreenProps> = (props) => {
           checking={props.checking}
           setChecking={props.setChecking}
           parseIntegerInput={props.parseIntegerInput}
+          shift={props.shift}
+          setShift={props.setShift}
           noteTimeActivities={props.noteTimeActivities}
           setNoteTimeActivities={props.setNoteTimeActivities}
         />
