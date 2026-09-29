@@ -113,6 +113,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
 
   const irOptions = [
     '*Tidak ada pilihan',
+    'Tanpa IR',
     'CS',
     'SS 304/304L',
     'SS 316/316L',
@@ -132,6 +133,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
 
   const orOptions = [
     '*Tidak ada pilihan',
+    'Tanpa OR',
     'CS',
     'SS 304/304L',
     'SS 316/316L',
