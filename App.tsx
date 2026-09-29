@@ -466,9 +466,15 @@ export default function App() {
     }
 
     // Validasi khusus GNM:
+    // - Material Noted wajib diisi.
     // - Job Noted wajib diisi jika Job Description kosong.
     // - Noted Size wajib diisi jika salah satu dari Size, Class, Type 1, atau Type 2 kosong.
     if (currentScreen === 'GNM') {
+      if (!hasValue(activeData.materialNoted)) {
+        Alert.alert('Gagal', 'Material Noted wajib diisi.');
+        return;
+      }
+
       if (!hasValue(activeData.jobDescription) && !hasValue(activeData.jobNoted)) {
         Alert.alert(
           'Gagal',

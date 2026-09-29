@@ -27,7 +27,9 @@ export const FormMaterialGNM: React.FC<FormMaterialGNMProps> = ({
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Material</Text>
 
-      <Text style={styles.label}>MATERIAL NOTED</Text>
+      <Text style={styles.label}>
+        MATERIAL NOTED <Text style={styles.asterisk}>*</Text>
+      </Text>
       <TextInput
         style={styles.input}
         placeholder="Enter material noted"
@@ -63,6 +65,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#344054',
     marginBottom: 6,
+  },
+  asterisk: {
+    color: '#D92D20',
   },
   input: {
     borderWidth: 1,
