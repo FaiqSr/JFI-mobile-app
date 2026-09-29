@@ -465,6 +465,32 @@ export default function App() {
       return;
     }
 
+    // Validasi khusus GNM:
+    // - Job Noted wajib diisi jika Job Description kosong.
+    // - Noted Size wajib diisi jika salah satu dari Size, Class, Type 1, atau Type 2 kosong.
+    if (currentScreen === 'GNM') {
+      if (!hasValue(activeData.jobDescription) && !hasValue(activeData.jobNoted)) {
+        Alert.alert(
+          'Gagal',
+          'Job Noted wajib diisi karena Job Description kosong.'
+        );
+        return;
+      }
+
+      const productFieldsEmpty =
+        !hasValue(activeData.size) ||
+        !hasValue(activeData.classVal) ||
+        !hasValue(activeData.type1) ||
+        !hasValue(activeData.type2);
+      if (productFieldsEmpty && !hasValue(activeData.notedSize)) {
+        Alert.alert(
+          'Gagal',
+          'Noted Size wajib diisi karena Size, Class, Type 1, atau Type 2 ada yang kosong.'
+        );
+        return;
+      }
+    }
+
     const strStart = formatHHMM(activeData.startTimestamp);
     const strEnd = formatHHMM(activeData.stopTimestamp);
 

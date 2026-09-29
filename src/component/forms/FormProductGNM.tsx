@@ -107,6 +107,11 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
     modalSetter(false);
   };
 
+  // Noted Size wajib diisi bila salah satu dari Size, Class, Type 1, atau
+  // Type 2 kosong (termasuk pilihan "*Tidak Ada Pilihan" yang dikosongkan).
+  const hasEmptyProductField =
+    !size.trim() || !classVal.trim() || !type1.trim() || !type2.trim();
+
   return (
     <View>
       <View style={styles.card}>
@@ -215,7 +220,9 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
           </View>
         </View>
 
-        <Text style={styles.label}>NOTED SIZE</Text>
+        <Text style={styles.label}>
+          NOTED SIZE {hasEmptyProductField && <Text style={styles.asterisk}>*</Text>}
+        </Text>
         <TextInput
           style={styles.input}
           placeholder="Enter noted size"
@@ -223,6 +230,11 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
           value={notedSizeVal}
           onChangeText={handleNotedSizeChange}
         />
+        {hasEmptyProductField && (
+          <Text style={styles.warningText}>
+            Wajib diisi karena Size, Class, Type 1, atau Type 2 ada yang kosong
+          </Text>
+        )}
       </View>
 
       <Modal visible={type1Modal} transparent animationType="fade">
@@ -357,6 +369,12 @@ const styles = StyleSheet.create({
   },
   asterisk: {
     color: '#D92D20',
+  },
+  warningText: {
+    fontSize: RFValue(11),
+    color: '#D97706',
+    marginTop: 2,
+    marginBottom: 4,
   },
   input: {
     borderWidth: 1,

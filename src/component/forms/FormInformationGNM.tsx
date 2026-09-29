@@ -35,9 +35,9 @@ export const FormInformationGNM: React.FC<FormInformationGNMProps> = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Label "*Tidak Ada Pilihan" dibersihkan sebelum dikirim sebagai jobDescription.
-  const cleanJobDesc = jobDescription.toLowerCase().replace('*', '').trim();
-  const isNoChoice = cleanJobDesc === 'tidak ada pilihan';
+  // Job Noted wajib diisi bila Job Description kosong (termasuk pilihan
+  // "*Tidak Ada Pilihan" yang dikosongkan saat dipilih).
+  const isNoChoice = !jobDescription.trim();
 
   const handleSelectJobDesc = (item: string) => {
     setJobDescription(item.startsWith('*') ? '' : item);
@@ -105,7 +105,7 @@ export const FormInformationGNM: React.FC<FormInformationGNMProps> = ({
 
       {/* Job Noted */}
       <Text style={styles.label}>
-        Job Noted <Text style={styles.asterisk}>*</Text>
+        Job Noted {isNoChoice && <Text style={styles.asterisk}>*</Text>}
       </Text>
       <TextInput
         style={styles.input}
@@ -116,7 +116,7 @@ export const FormInformationGNM: React.FC<FormInformationGNMProps> = ({
       />
       {isNoChoice && (
         <Text style={styles.warningText}>
-          Wajib diisi karena Job Description 'Tidak Ada Pilihan'
+          Wajib diisi karena Job Description kosong
         </Text>
       )}
 
