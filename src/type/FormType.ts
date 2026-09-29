@@ -4,7 +4,8 @@ export type ScreenType =
   | 'RING_2'
   | 'RING_3'
   | 'SEALING_ELEMENT'
-  | 'DOUBLE_JACKETED';
+  | 'DOUBLE_JACKETED'
+  | 'GNM';
 
 export interface ScreenFormData {
   namaOperator: string;
@@ -43,6 +44,8 @@ export interface ScreenFormData {
   rework: number;
   shift: number | null;
   noteTimeActivities: string;
+  type1: string;
+  type2: string;
 }
 
 export const initialFormState: ScreenFormData = {
@@ -82,4 +85,6 @@ export const initialFormState: ScreenFormData = {
   rework: 0,
   shift: null,
   noteTimeActivities: '',
+  type1: '',
+  type2: '',
 };

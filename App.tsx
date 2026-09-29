@@ -21,6 +21,7 @@ import { Ring2Screen } from './src/screen/Ring2Screen';
 import { Ring3Screen } from './src/screen/Ring3Screen';
 import { SealingElementScreen } from './src/screen/SealingElementScreen';
 import { DoubleJacketScreen } from './src/screen/DoubleJacketScreen';
+import { GnmScreen } from './src/screen/GnmScreen';
 
 import { ScreenType, ScreenFormData, initialFormState } from './src/type/FormType';
 import {
@@ -28,6 +29,7 @@ import {
   getRingProps,
   getSealingProps,
   getDoubleJacketProps,
+  getGnmProps,
   getLhpMasterCatalog,
   type LhpMasterCatalog,
 } from './src/api/FormService';
@@ -101,6 +103,8 @@ const hasMeaningfulData = (form: ScreenFormData | undefined): boolean => {
     'noteTimeActivities',
     'startTimeText',
     'stopTimeText',
+    'type1',
+    'type2',
   ];
   if (textFields.some((field) => hasValue(form[field] as string | undefined))) return true;
 
@@ -134,6 +138,7 @@ export default function App() {
     RING_3: { ...initialFormState },
     SEALING_ELEMENT: { ...initialFormState },
     DOUBLE_JACKETED: { ...initialFormState },
+    GNM: { ...initialFormState },
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -333,6 +338,7 @@ export default function App() {
         RING_3: { ...initialFormState, namaOperator: userName },
         SEALING_ELEMENT: { ...initialFormState, namaOperator: userName },
         DOUBLE_JACKETED: { ...initialFormState, namaOperator: userName },
+        GNM: { ...initialFormState, namaOperator: userName },
       };
       setFormsData(emptyForms);
 
@@ -598,6 +604,9 @@ export default function App() {
 
       case 'DOUBLE_JACKETED':
         return <DoubleJacketScreen {...getDoubleJacketProps(helperOptions)} />;
+
+      case 'GNM':
+        return <GnmScreen {...getGnmProps(helperOptions)} />;
 
       default:
         return null;

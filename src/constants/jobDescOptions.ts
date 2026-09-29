@@ -73,3 +73,13 @@ export const SE_JOB_DESC: string[] = [
   'ROLLING',
   'PACKAGING',
 ];
+
+export const GNM_JOB_DESC: string[] = [
+  'Tidak Ada Pilihan',
+  'Drawing',
+  'Cutting',
+  'Finishing',
+  'Cleaning',
+  'Repair',
+  'Packing',
+];

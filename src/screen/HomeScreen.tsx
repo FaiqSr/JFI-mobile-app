@@ -24,6 +24,7 @@ const WORKSHEETS: { screen: ExtendedScreenType; label: string; badge: string }[]
   { screen: 'RING_3', label: 'Ring 3', badge: 'R3' },
   { screen: 'SEALING_ELEMENT', label: 'Sealing Element', badge: 'SE' },
   { screen: 'DOUBLE_JACKETED', label: 'Double Jacketed Gasket', badge: 'DJG' },
+  { screen: 'GNM', label: 'Gasket Non Metal', badge: 'GNM' },
 ];
 
 /**

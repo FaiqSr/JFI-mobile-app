@@ -163,6 +163,30 @@ const buildPayload = (
       };
     }
 
+    case 'GNM':
+      return {
+        endpoint: 'gnm',
+        payload: {
+          soNo: activeData.nomorSO?.trim() || '',
+          jobDescription,
+          size: activeData.size?.trim() || '',
+          class: activeData.classVal?.trim() || '',
+          type1: activeData.type1 ? activeData.type1.trim() : null,
+          type2: activeData.type2 ? activeData.type2.trim() : null,
+          thickness: activeData.thickness ? activeData.thickness.trim() : null,
+          materialNoted: activeData.materialNoted
+            ? activeData.materialNoted.trim()
+            : null,
+          notedJobdesc: activeData.jobNoted ? activeData.jobNoted.trim() : null,
+          notedSizeOdId: activeData.notedSizeOdId
+            ? activeData.notedSizeOdId.trim()
+            : activeData.notedSize
+            ? activeData.notedSize.trim()
+            : null,
+          ...commonTime,
+        },
+      };
+
     default:
       return null;
   }
@@ -525,6 +549,78 @@ export const getDoubleJacketProps = (options: HelperOptions) => {
     setFinishGood: (val: number) => updateFormField('DOUBLE_JACKETED', 'finishGood', Number(val)),
     rework: curData.rework,
     setRework: (val: number) => updateFormField('DOUBLE_JACKETED', 'rework', Number(val)),
+    parseIntegerInput,
+    onBack: () => handleNavigate('HOME'),
+    onSave: handleSimpan,
+    onClear: () => confirmClearAlert(handleClear),
+  };
+};
+
+export const getGnmProps = (options: HelperOptions) => {
+  const {
+    formsData,
+    updateFormField,
+    handleToggleStartStop,
+    handleChangeStartTime,
+    handleChangeStopTime,
+    formatHHMM,
+    parseIntegerInput,
+    handleNavigate,
+    handleSimpan,
+    handleClear,
+  } = options;
+  const curData = formsData['GNM'] || initialFormState;
+
+  return {
+    namaOperator: curData.namaOperator,
+    setNamaOperator: (val: string) => updateFormField('GNM', 'namaOperator', val),
+    nomorSO: curData.nomorSO,
+    setNomorSO: (val: string) => updateFormField('GNM', 'nomorSO', val),
+    jobDescription: curData.jobDescription,
+    setJobDescription: (val: string) => updateFormField('GNM', 'jobDescription', val),
+    jobNoted: curData.jobNoted,
+    setJobNoted: (val: string) => updateFormField('GNM', 'jobNoted', val),
+    size: curData.size,
+    setSize: (val: string) => updateFormField('GNM', 'size', val),
+    classVal: curData.classVal,
+    setClassVal: (val: string) => updateFormField('GNM', 'classVal', val),
+    type1: curData.type1,
+    setType1: (val: string) => updateFormField('GNM', 'type1', val),
+    type2: curData.type2,
+    setType2: (val: string) => updateFormField('GNM', 'type2', val),
+    thickness: curData.thickness,
+    setThickness: (val: string) => updateFormField('GNM', 'thickness', val),
+    notedSize: curData.notedSize,
+    setNotedSize: (val: string) => updateFormField('GNM', 'notedSize', val),
+    materialNoted: curData.materialNoted,
+    setMaterialNoted: (val: string) => updateFormField('GNM', 'materialNoted', val),
+    shift: curData.shift,
+    setShift: (val: number | null) => updateFormField('GNM', 'shift', val),
+    startTimestamp: curData.startTimestamp,
+    stopTimestamp: curData.stopTimestamp,
+    startTimeText: curData.startTimeText,
+    stopTimeText: curData.stopTimeText,
+    isStarted: curData.isStarted,
+    handleToggleStartStop,
+    handleChangeStartTime,
+    handleChangeStopTime,
+    formatHHMM,
+    gantiOrder: curData.gantiOrder,
+    setGantiOrder: (val: number) => updateFormField('GNM', 'gantiOrder', Number(val)),
+    repair: curData.repair,
+    setRepair: (val: number) => updateFormField('GNM', 'repair', Number(val)),
+    materialTunggu: curData.materialTunggu,
+    setMaterialTunggu: (val: number) => updateFormField('GNM', 'materialTunggu', Number(val)),
+    operatorTime: curData.operatorTime,
+    setOperatorTime: (val: number) => updateFormField('GNM', 'operatorTime', Number(val)),
+    maintenance: curData.maintenance,
+    setMaintenance: (val: number) => updateFormField('GNM', 'maintenance', Number(val)),
+    checking: curData.checking,
+    setChecking: (val: number) => updateFormField('GNM', 'checking', Number(val)),
+    noteTimeActivities: curData.noteTimeActivities,
+    setNoteTimeActivities: (val: string) => updateFormField('GNM', 'noteTimeActivities', val),
+    finishGood: curData.finishGood,
+    setFinishGood: (val: number) => updateFormField('GNM', 'finishGood', Number(val)),
     parseIntegerInput,
     onBack: () => handleNavigate('HOME'),
     onSave: handleSimpan,
