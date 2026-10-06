@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useTranslation } from '../../i18n';
 
 interface FormQuantityDJGProps {
   finishGood: number;
@@ -17,13 +18,14 @@ export const FormQuantityDJG: React.FC<FormQuantityDJGProps> = ({
   setRework,
   parseIntegerInput,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>Quantity</Text>
+      <Text style={styles.cardTitle}>{t('form.quantity')}</Text>
 
       <View style={styles.row}>
         <View style={styles.column}>
-          <Text style={styles.label}>Finish Good</Text>
+          <Text style={styles.label}>{t('form.finishGood')}</Text>
           <TextInput
             style={styles.input}
             placeholder="0"
@@ -35,7 +37,7 @@ export const FormQuantityDJG: React.FC<FormQuantityDJGProps> = ({
         </View>
 
         <View style={styles.column}>
-          <Text style={styles.label}>Rework</Text>
+          <Text style={styles.label}>{t('form.rework')}</Text>
           <TextInput
             style={styles.input}
             placeholder="0"

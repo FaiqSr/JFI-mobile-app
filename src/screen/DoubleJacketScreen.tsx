@@ -12,6 +12,7 @@ import { FormInformationDJG } from '../component/forms/FormInformationDJG';
 import { FormDoubleJacket } from '../component/forms/FormDoubleJacket';
 import { FormTime } from '../component/forms/FormTime';
 import { FormQuantityDJG } from '../component/forms/FormQuantityDJG';
+import { useTranslation } from '../i18n';
 
 interface DoubleJacketScreenProps {
   namaOperator: string;
@@ -77,6 +78,7 @@ interface DoubleJacketScreenProps {
 }
 
 export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => {
+  const { t } = useTranslation();
   const handleClearForm = async () => {
     const activeOperator = props.namaOperator;
 
@@ -122,9 +124,9 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets={true}
       >
-        <Text style={styles.pageTitle}>Production Double Jacketed Gasket</Text>
+        <Text style={styles.pageTitle}>{t('screens.doubleJacketTitle')}</Text>
         <Text style={styles.pageSubtitle}>
-          Fill in the required information, product details, and production quantities.
+          {t('screens.ringSubtitle')}
         </Text>
 
         <FormInformationDJG
@@ -196,16 +198,16 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
 
         <View style={styles.actionRow}>
           <TouchableOpacity style={styles.actionButtonHalf} onPress={props.onBack}>
-            <Text style={styles.actionButtonText}>Back</Text>
+            <Text style={styles.actionButtonText}>{t('common.backShort')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.actionButtonHalf} onPress={props.onSave}>
-            <Text style={styles.actionButtonText}>Save</Text>
+            <Text style={styles.actionButtonText}>{t('common.saveShort')}</Text>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.clearButtonFull} onPress={handleClearForm}>
-          <Text style={styles.actionButtonText}>Clear</Text>
+          <Text style={styles.actionButtonText}>{t('common.clearShort')}</Text>
         </TouchableOpacity>
       </ScrollView>
   </View>

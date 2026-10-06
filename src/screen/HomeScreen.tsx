@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { ExtendedScreenType } from '../../App';
 import { UserHeader } from '../component/common/UserHeader';
+import { useTranslation } from '../i18n';
 
 interface HomeScreenProps {
   userName?: string;
@@ -39,6 +40,7 @@ export const HomeScreen = ({
   onOpenAbout,
   activeScreen,
 }: HomeScreenProps) => {
+  const { t } = useTranslation();
   const isTaskActive = Boolean(
     activeScreen && activeScreen !== 'HOME' && activeScreen !== 'PROFIL'
   );
@@ -60,7 +62,7 @@ export const HomeScreen = ({
           />
 
           <View style={styles.worksheetBadge}>
-            <Text style={styles.worksheetText}>WORK SHEET JFI</Text>
+            <Text style={styles.worksheetText}>{t('home.worksheetBadge')}</Text>
           </View>
 
           <View style={styles.dividerContainer}>
@@ -90,16 +92,16 @@ export const HomeScreen = ({
             onPress={() => onNavigate('PROFIL')}
             activeOpacity={0.7}
           >
-            <Text style={styles.cardLabel}>Profil Saya</Text>
+            <Text style={styles.cardLabel}>{t('home.profile')}</Text>
             <View style={[styles.badgeTag, styles.akunBadge]}>
-              <Text style={styles.akunBadgeText}>AKUN</Text>
+              <Text style={styles.akunBadgeText}>{t('home.accountBadge')}</Text>
             </View>
           </TouchableOpacity>
         </View>
 
         {isTaskActive && (
           <Text style={styles.activeHint}>
-            Ada isian yang belum disimpan pada salah satu worksheet.
+            {t('home.unsavedHint')}
           </Text>
         )}
       </ScrollView>

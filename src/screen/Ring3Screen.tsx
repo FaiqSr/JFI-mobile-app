@@ -12,6 +12,7 @@ import { FormInformationRing3 } from '../component/forms/FormInformationRing3';
 import { FormProductRing3 } from '../component/forms/FormProductRing3';
 import { FormTime } from '../component/forms/FormTime';
 import { FormQuantity } from '../component/forms/FormQuantity';
+import { useTranslation } from '../i18n';
 
 interface Ring3ScreenProps {
   namaOperator: string;
@@ -75,6 +76,7 @@ interface Ring3ScreenProps {
 }
 
 export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
+  const { t } = useTranslation();
   const handleClearForm = async () => {
     const activeOperator = props.namaOperator;
 
@@ -119,9 +121,9 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets={true}
       >
-        <Text style={styles.pageTitle}>Production Ring 3</Text>
+        <Text style={styles.pageTitle}>{t('screens.ring3Title')}</Text>
         <Text style={styles.pageSubtitle}>
-          Fill in the required information, product details, and production quantities.
+          {t('screens.ringSubtitle')}
         </Text>
 
         <FormInformationRing3
@@ -191,16 +193,16 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
 
         <View style={styles.actionRow}>
           <TouchableOpacity style={styles.actionButtonHalf} onPress={props.onBack}>
-            <Text style={styles.actionButtonText}>Back</Text>
+            <Text style={styles.actionButtonText}>{t('common.backShort')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.actionButtonHalf} onPress={props.onSave}>
-            <Text style={styles.actionButtonText}>Save</Text>
+            <Text style={styles.actionButtonText}>{t('common.saveShort')}</Text>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.clearButtonFull} onPress={handleClearForm}>
-          <Text style={styles.actionButtonText}>Clear</Text>
+          <Text style={styles.actionButtonText}>{t('common.clearShort')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

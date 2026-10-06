@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useTranslation } from '../../i18n';
 
 interface FormMaterialGNMProps {
   materialNoted?: string;
@@ -11,6 +12,7 @@ export const FormMaterialGNM: React.FC<FormMaterialGNMProps> = ({
   materialNoted: externalMaterialNoted,
   setMaterialNoted: externalSetMaterialNoted,
 }) => {
+  const { t } = useTranslation();
   const [internalMaterialNoted, setInternalMaterialNoted] = useState('');
 
   const materialNotedVal =
@@ -25,14 +27,14 @@ export const FormMaterialGNM: React.FC<FormMaterialGNMProps> = ({
 
   return (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>Material</Text>
+      <Text style={styles.cardTitle}>{t('form.material')}</Text>
 
       <Text style={styles.label}>
-        MATERIAL NOTED <Text style={styles.asterisk}>*</Text>
+        {t('gnm.materialNotedUpper')} <Text style={styles.asterisk}>*</Text>
       </Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter material noted"
+        placeholder={t('gnm.materialNotedPlaceholder')}
         placeholderTextColor="#98A2B3"
         value={materialNotedVal}
         onChangeText={handleMaterialNotedChange}

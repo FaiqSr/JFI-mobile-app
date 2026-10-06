@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { CustomInput } from '../common/CustomInput';
+import { useTranslation } from '../../i18n';
 
 interface FormTimeProps {
   startTimestamp: number | null;
@@ -60,6 +61,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
   noteTimeActivities = '',
   setNoteTimeActivities,
 }) => {
+  const { t } = useTranslation();
   const isEnded = startTimestamp !== null && stopTimestamp !== null;
 
   let buttonLabel = 'START';
@@ -75,11 +77,11 @@ export const FormTime: React.FC<FormTimeProps> = ({
 
   return (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>Time & Activities</Text>
+      <Text style={styles.cardTitle}>{t('form.timeActivities')}</Text>
 
       {Boolean(setShift) && (
         <View style={styles.shiftContainer}>
-          <Text style={styles.shiftLabel}>Shift</Text>
+          <Text style={styles.shiftLabel}>{t('form.shift')}</Text>
           <View style={styles.shiftRow}>
             {[1, 2, 3].map((option) => {
               const isActive = shift === option;
@@ -96,7 +98,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
                       isActive && styles.shiftChipTextActive,
                     ]}
                   >
-                    Shift {option}
+                    {t('form.shiftN', { n: option })}
                   </Text>
                 </TouchableOpacity>
               );
@@ -108,7 +110,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
       <View style={styles.row}>
         <View style={styles.col}>
           <CustomInput
-            label="Time Start"
+            label={t('form.timeStart')}
             placeholder="HH:MM"
             keyboardType="number-pad"
             maxLength={5}
@@ -119,7 +121,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
         </View>
         <View style={styles.col}>
           <CustomInput
-            label="Time Stop"
+            label={t('form.timeStop')}
             placeholder="HH:MM"
             keyboardType="number-pad"
             maxLength={5}
@@ -142,8 +144,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
       <View style={styles.row}>
         <View style={styles.col}>
           <CustomInput
-            label="Ganti Order - A"
-            unit="menit"
+            label={t('form.gantiOrder')}
+            unit={t('common.minutes')}
             keyboardType="number-pad"
             value={gantiOrder === 0 ? '' : String(gantiOrder)}
             placeholder="0"
@@ -152,8 +154,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
         </View>
         <View style={styles.col}>
           <CustomInput
-            label="Repair - B"
-            unit="menit"
+            label={t('form.repair')}
+            unit={t('common.minutes')}
             keyboardType="number-pad"
             value={repair === 0 ? '' : String(repair)}
             placeholder="0"
@@ -165,8 +167,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
       <View style={styles.row}>
         <View style={styles.col}>
           <CustomInput
-            label="Material Tunggu - C"
-            unit="menit"
+            label={t('form.materialTunggu')}
+            unit={t('common.minutes')}
             keyboardType="number-pad"
             value={materialTunggu === 0 ? '' : String(materialTunggu)}
             placeholder="0"
@@ -175,8 +177,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
         </View>
         <View style={styles.col}>
           <CustomInput
-            label="Operator - D"
-            unit="menit"
+            label={t('form.operatorTime')}
+            unit={t('common.minutes')}
             keyboardType="number-pad"
             value={operatorTime === 0 ? '' : String(operatorTime)}
             placeholder="0"
@@ -188,8 +190,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
       <View style={styles.row}>
         <View style={styles.col}>
           <CustomInput
-            label="Maintenance - E"
-            unit="menit"
+            label={t('form.maintenance')}
+            unit={t('common.minutes')}
             keyboardType="number-pad"
             value={maintenance === 0 ? '' : String(maintenance)}
             placeholder="0"
@@ -198,8 +200,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
         </View>
         <View style={styles.col}>
           <CustomInput
-            label="Checking - F"
-            unit="menit"
+            label={t('form.checking')}
+            unit={t('common.minutes')}
             keyboardType="number-pad"
             value={checking === 0 ? '' : String(checking)}
             placeholder="0"
@@ -211,8 +213,8 @@ export const FormTime: React.FC<FormTimeProps> = ({
       {Boolean(setNoteTimeActivities) && (
         <View style={styles.noteContainer}>
           <CustomInput
-            label="Note time"
-            placeholder="Enter note"
+            label={t('form.noteTime')}
+            placeholder={t('form.noteTimePlaceholder')}
             value={noteTimeActivities}
             onChangeText={(v: string) => setNoteTimeActivities?.(v)}
           />

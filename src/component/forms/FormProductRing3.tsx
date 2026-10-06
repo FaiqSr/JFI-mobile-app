@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { SizeCombobox } from '../common/SizeCombobox';
+import { useTranslation } from '../../i18n';
 
 interface FormProductRing3Props {
   product: string;
@@ -46,6 +47,7 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
   setNotedSize: externalSetNotedSize,
   machineSizes = [],
 }) => {
+  const { t } = useTranslation();
   const [activeModal, setActiveModal] = useState<
     'product' | 'material' | 'thickness' | null
   >(null);
@@ -127,21 +129,21 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
     switch (activeModal) {
       case 'product':
         return {
-          title: 'Pilih Product',
+          title: t('form.selectProduct'),
           data: productOptions,
           onSelect: setProduct,
           selected: product,
         };
       case 'material':
         return {
-          title: 'Pilih Material Type',
+          title: t('form.selectMaterialType'),
           data: materialTypeOptions,
           onSelect: setMaterialType,
           selected: materialType,
         };
       case 'thickness':
         return {
-          title: 'Pilih Thickness',
+          title: t('form.selectThickness'),
           data: thicknessOptions,
           onSelect: handleThicknessSelect,
           selected: thicknessVal,
@@ -160,10 +162,10 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
 
   return (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>Product</Text>
+      <Text style={styles.cardTitle}>{t('form.product')}</Text>
 
       <Text style={styles.label}>
-        Product <Text style={styles.asterisk}>*</Text>
+        {t('form.productLabel')} <Text style={styles.asterisk}>*</Text>
       </Text>
       <TouchableOpacity
         style={styles.dropdownInput}
@@ -171,18 +173,18 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
         onPress={() => setActiveModal('product')}
       >
         <Text style={[styles.dropdownText, !product && styles.placeholderText]}>
-          {product || 'Select product'}
+          {product || t('form.productPlaceholder')}
         </Text>
         <Text style={styles.arrowIcon}>▼</Text>
       </TouchableOpacity>
       {isNoProduct && (
-        <Text style={styles.warningText}>Material Noted wajib diisi</Text>
+        <Text style={styles.warningText}>{t('form.warnMaterialNotedRequired')}</Text>
       )}
 
       <View style={styles.row}>
         <View style={styles.column}>
           <Text style={styles.label}>
-            Material Type <Text style={styles.asterisk}>*</Text>
+            {t('form.materialType')} <Text style={styles.asterisk}>*</Text>
           </Text>
           <TouchableOpacity
             style={styles.dropdownInput}
@@ -196,36 +198,36 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
               ]}
               numberOfLines={1}
             >
-              {materialType || 'Select type'}
+              {materialType || t('form.materialTypePlaceholder')}
             </Text>
             <Text style={styles.arrowIcon}>▼</Text>
           </TouchableOpacity>
           {isNoMaterialType && (
-            <Text style={styles.warningText}>Material Noted wajib diisi</Text>
+            <Text style={styles.warningText}>{t('form.warnMaterialNotedRequired')}</Text>
           )}
         </View>
 
         <View style={styles.column}>
           <Text style={styles.label}>
-            Material Noted <Text style={styles.asterisk}>*</Text>
+            {t('form.materialNoted')} <Text style={styles.asterisk}>*</Text>
           </Text>
           <TextInput
             style={styles.input}
-            placeholder="Cert No. Material: -"
+            placeholder={t('form.certNoMaterial')}
             placeholderTextColor="#98A2B3"
             value={materialNotedVal}
             onChangeText={handleMaterialNotedChange}
           />
           {isNoChoiceMaterialNoted && (
             <Text style={styles.warningText}>
-              Wajib diisi karena Product/Material Type 'Tidak Ada Pilihan'
+              {t('form.warnBecauseProductOrMaterial')}
             </Text>
           )}
         </View>
       </View>
 
       
-      <Text style={styles.label}>Thickness</Text>
+      <Text style={styles.label}>{t('form.thickness')}</Text>
       <TouchableOpacity
         style={styles.dropdownInput}
         activeOpacity={0.7}
@@ -237,19 +239,19 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
             !thicknessVal && styles.placeholderText,
           ]}
         >
-          {thicknessVal || 'Select thickness'}
+          {thicknessVal || t('form.thicknessPlaceholder')}
         </Text>
         <Text style={styles.arrowIcon}>▼</Text>
       </TouchableOpacity>
       {isNoThickness && (
-        <Text style={styles.warningText}>Noted Size wajib diisi</Text>
+        <Text style={styles.warningText}>{t('form.warnNotedSizeRequired')}</Text>
       )}
 
       
       <View style={styles.row}>
         <View style={styles.column}>
           <Text style={styles.label}>
-            Size <Text style={styles.asterisk}>*</Text>
+            {t('form.size')} <Text style={styles.asterisk}>*</Text>
           </Text>
           <SizeCombobox
             value={size}
@@ -261,7 +263,7 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
 
         <View style={styles.column}>
           <Text style={styles.label}>
-            Class <Text style={styles.asterisk}>*</Text>
+            {t('form.class')} <Text style={styles.asterisk}>*</Text>
           </Text>
           <TextInput
             style={styles.input}
@@ -275,18 +277,18 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
 
       
       <Text style={styles.label}>
-        Noted Size (OD/ID) <Text style={styles.asterisk}>*</Text>
+        {t('form.notedSize')} <Text style={styles.asterisk}>*</Text>
       </Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter size note"
+        placeholder={t('form.notedSizePlaceholder')}
         placeholderTextColor="#98A2B3"
         value={notedSizeVal}
         onChangeText={handleNotedSizeChange}
       />
       {isNoThickness && (
         <Text style={styles.warningText}>
-          Wajib diisi karena Thickness 'Tidak Ada Pilihan'
+          {t('form.warnBecauseThickness')}
         </Text>
       )}
 

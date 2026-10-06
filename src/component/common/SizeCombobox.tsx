@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useTranslation } from '../../i18n';
 
 interface SizeComboboxProps {
   value: string;
@@ -25,6 +26,7 @@ export const SizeCombobox: React.FC<SizeComboboxProps> = ({
   placeholder,
   disabled = false,
 }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const hasSuggestions = suggestions.length > 0;
 
@@ -67,7 +69,7 @@ export const SizeCombobox: React.FC<SizeComboboxProps> = ({
           onPress={() => setOpen(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Pilih Size</Text>
+            <Text style={styles.modalTitle}>{t('gnm.selectSize')}</Text>
             <FlatList
               data={suggestions}
               keyExtractor={(item) => item}

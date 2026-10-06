@@ -7,6 +7,7 @@ import {
   resolveAlert,
   subscribeToAlert,
 } from '../../utils/appAlert';
+import { useTranslation } from '../../i18n';
 
 /**
  * Renders one alert at a time from the appAlert store.
@@ -14,6 +15,7 @@ import {
  * loading / login / logged-in states of App (which early-returns).
  */
 export const AlertModalHost: React.FC = () => {
+  const { t } = useTranslation();
   const [request, setRequest] = useState<AlertRequest | null>(null);
 
   useEffect(() => subscribeToAlert(setRequest), []);
@@ -57,7 +59,7 @@ export const AlertModalHost: React.FC = () => {
                     styles.buttonText,
                   ]}
                 >
-                  {button.text || 'OK'}
+                  {button.text || t('common.ok')}
                 </Text>
               </TouchableOpacity>
             ))}

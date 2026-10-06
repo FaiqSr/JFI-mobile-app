@@ -7,6 +7,7 @@ import {
   Pressable,
 } from 'react-native';
 import { Alert } from '../../utils/appAlert';
+import { useTranslation } from '../../i18n';
 
 interface UserHeaderProps {
   userName?: string;
@@ -24,13 +25,14 @@ export const UserHeader = ({
   onLogout,
   onOpenAbout,
 }: UserHeaderProps) => {
+  const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogoutPress = () => {
     setMenuOpen(false);
-    Alert.alert('Konfirmasi', 'Apakah Anda yakin ingin keluar?', [
-      { text: 'Batal', style: 'cancel' },
-      { text: 'Keluar', style: 'destructive', onPress: onLogout },
+    Alert.alert(t('common.confirm'), t('home.confirmLogout'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('common.logout'), style: 'destructive', onPress: onLogout },
     ]);
   };
 
@@ -68,7 +70,7 @@ export const UserHeader = ({
               onPress={handleAboutPress}
               activeOpacity={0.7}
             >
-              <Text style={styles.dropdownItemText}>Tentang Aplikasi</Text>
+              <Text style={styles.dropdownItemText}>{t('common.aboutApp')}</Text>
             </TouchableOpacity>
 
             <View style={styles.dropdownDivider} />
@@ -79,7 +81,7 @@ export const UserHeader = ({
               activeOpacity={0.7}
             >
               <Text style={[styles.dropdownItemText, styles.dropdownItemDanger]}>
-                Keluar
+                {t('common.logout')}
               </Text>
             </TouchableOpacity>
           </View>

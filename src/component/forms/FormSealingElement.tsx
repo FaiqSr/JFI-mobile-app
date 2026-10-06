@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { SizeCombobox } from '../common/SizeCombobox';
+import { useTranslation } from '../../i18n';
 
 interface FormSealingElementProps {
   size: string;
@@ -54,6 +55,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
   materialNoted: externalMaterialNoted,
   setMaterialNoted: externalSetMaterialNoted,
 }) => {
+  const { t } = useTranslation();
   const [activeModal, setActiveModal] = useState<
     'thickness' | 'hoop' | 'filler' | 'ir' | 'or' | null
   >(null);
@@ -164,35 +166,35 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
     switch (activeModal) {
       case 'thickness':
         return {
-          title: 'Pilih Thickness',
+          title: t('form.selectThickness'),
           data: thicknessOptions,
           onSelect: setThickness,
           selected: thickness,
         };
       case 'hoop':
         return {
-          title: 'Pilih HOOP Material',
+          title: t('se.selectHoop'),
           data: hoopOptions,
           onSelect: setHoop,
           selected: hoop,
         };
       case 'filler':
         return {
-          title: 'Pilih FILLER Material',
+          title: t('se.selectFiller'),
           data: fillerOptions,
           onSelect: setFiller,
           selected: filler,
         };
       case 'ir':
         return {
-          title: 'Pilih IR Material',
+          title: t('se.selectIr'),
           data: irOptions,
           onSelect: setIr,
           selected: ir,
         };
       case 'or':
         return {
-          title: 'Pilih OR Material',
+          title: t('se.selectOr'),
           data: orOptions,
           onSelect: setOrVal,
           selected: orVal,
@@ -208,26 +210,26 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
     <>
       
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Type</Text>
+        <Text style={styles.cardTitle}>{t('form.type')}</Text>
         <View style={styles.row}>
           <View style={styles.halfInputContainer}>
             <Text style={styles.label}>
-              Size <Text style={styles.asterisk}>*</Text>
+              {t('form.size')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <SizeCombobox
               value={size}
               onChange={setSize}
               suggestions={machineSizes}
-              placeholder="Enter size"
+              placeholder={t('se.sizePlaceholder')}
             />
           </View>
           <View style={styles.halfInputContainer}>
             <Text style={styles.label}>
-              Class <Text style={styles.asterisk}>*</Text>
+              {t('form.class')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter class"
+              placeholder={t('se.classPlaceholder')}
               placeholderTextColor="#98A2B3"
               value={className}
               onChangeText={setClassName}
@@ -236,7 +238,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
         </View>
 
         <Text style={styles.label}>
-          Thickness <Text style={styles.asterisk}>*</Text>
+          {t('form.thickness')} <Text style={styles.asterisk}>*</Text>
         </Text>
         <TouchableOpacity
           style={styles.dropdownInput}
@@ -249,15 +251,15 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
             adjustsFontSizeToFit
             minimumFontScale={0.75}
           >
-            {thickness || 'Select thickness'}
+            {thickness || t('form.thicknessPlaceholder')}
           </Text>
           <Text style={styles.arrowIcon}>▼</Text>
         </TouchableOpacity>
 
-        <Text style={styles.label}>NOTED SIZE</Text>
+        <Text style={styles.label}>{t('form.notedSizeShort')}</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter noted size"
+          placeholder={t('form.notedSizePlaceholderShort')}
           placeholderTextColor="#98A2B3"
           value={notedSizeVal}
           onChangeText={handleNotedSizeChange}
@@ -266,11 +268,11 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
 
       
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Material</Text>
+        <Text style={styles.cardTitle}>{t('form.material')}</Text>
         <View style={styles.row}>
           <View style={styles.halfInputContainer}>
             <Text style={styles.label}>
-              HOOP <Text style={styles.asterisk}>*</Text>
+              {t('se.hoop')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
@@ -283,7 +285,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {hoop || 'Select hoop'}
+                {hoop || t('se.hoopPlaceholder')}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
@@ -291,7 +293,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
 
           <View style={styles.halfInputContainer}>
             <Text style={styles.label}>
-              FILLER <Text style={styles.asterisk}>*</Text>
+              {t('se.filler')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
@@ -304,7 +306,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {filler || 'Select filler'}
+                {filler || t('se.fillerPlaceholder')}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
@@ -314,7 +316,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
         <View style={styles.row}>
           <View style={styles.halfInputContainer}>
             <Text style={styles.label}>
-              IR <Text style={styles.asterisk}>*</Text>
+              {t('se.ir')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
@@ -327,7 +329,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {ir || 'Select IR'}
+                {ir || t('se.irPlaceholder')}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
@@ -335,7 +337,7 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
 
           <View style={styles.halfInputContainer}>
             <Text style={styles.label}>
-              OR <Text style={styles.asterisk}>*</Text>
+              {t('se.or')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
@@ -348,17 +350,17 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {orVal || 'Select OR'}
+                {orVal || t('se.orPlaceholder')}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <Text style={styles.label}>Material Noted</Text>
+        <Text style={styles.label}>{t('se.materialNoted')}</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter material noted"
+          placeholder={t('form.materialNotedPlaceholder')}
           placeholderTextColor="#98A2B3"
           value={materialNotedVal}
           onChangeText={handleMaterialNotedChange}

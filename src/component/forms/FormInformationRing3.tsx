@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { RING3_JOB_DESC } from '../../constants/jobDescOptions';
+import { useTranslation } from '../../i18n';
 
 interface FormInformationProps {
   namaOperator: string;
@@ -34,6 +35,7 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
   setJobNoted = () => {},
   machineOptions,
 }) => {
+  const { t } = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);
 
   const jobOptions = machineOptions ?? RING3_JOB_DESC;
@@ -45,17 +47,17 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
 
   return (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>Information</Text>
+      <Text style={styles.cardTitle}>{t('form.information')}</Text>
 
       {/* Operator Name */}
       <View style={styles.labelRow}>
         <Text style={styles.label}>
-          Operator Name <Text style={styles.asterisk}>*</Text>
+          {t('form.operatorName')} <Text style={styles.asterisk}>*</Text>
         </Text>
       </View>
       <TextInput
         style={[styles.input, styles.disabledInput]}
-        placeholder="Enter operator name"
+        placeholder={t('form.operatorNamePlaceholder')}
         placeholderTextColor="#98A2B3"
         value={namaOperator}
         onChangeText={setNamaOperator}
@@ -65,12 +67,12 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
       {/* SO Number */}
       <View style={styles.labelRow}>
         <Text style={styles.label}>
-          SO Number <Text style={styles.asterisk}>*</Text>
+          {t('form.soNumber')} <Text style={styles.asterisk}>*</Text>
         </Text>
       </View>
       <TextInput
         style={styles.input}
-        placeholder="Enter SO number"
+        placeholder={t('form.soNumberPlaceholder')}
         placeholderTextColor="#98A2B3"
         value={nomorSO}
         onChangeText={setNomorSO}
@@ -80,7 +82,7 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
 
       {/* Job Description Dropdown */}
       <Text style={styles.label}>
-        Job Description <Text style={styles.asterisk}>*</Text>
+        {t('form.jobDescription')} <Text style={styles.asterisk}>*</Text>
       </Text>
       <TouchableOpacity
         style={styles.dropdownInput}
@@ -94,28 +96,28 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
           ]}
           numberOfLines={1}
         >
-          {jobDescription || 'Select job description'}
+          {jobDescription || t('form.jobDescriptionPlaceholder')}
         </Text>
         <Text style={styles.arrowIcon}>▼</Text>
       </TouchableOpacity>
       {isNoChoice && (
-        <Text style={styles.warningText}>Noted Jobdesc wajib diisi</Text>
+        <Text style={styles.warningText}>{t('form.warnNotedJobdesc')}</Text>
       )}
 
       {/* Job Noted */}
       <Text style={styles.label}>
-        Job Noted <Text style={styles.asterisk}>*</Text>
+        {t('form.jobNoted')} <Text style={styles.asterisk}>*</Text>
       </Text>
       <TextInput
         style={styles.input}
-        placeholder="Notes"
+        placeholder={t('form.jobNotedPlaceholder')}
         placeholderTextColor="#98A2B3"
         value={jobNoted}
         onChangeText={setJobNoted}
       />
       {isNoChoice && (
         <Text style={styles.warningText}>
-          Wajib diisi karena Job Description 'Tidak Ada Pilihan'
+          {t('form.warnBecauseJobDescNoChoice')}
         </Text>
       )}
 
@@ -127,7 +129,7 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
           onPress={() => setModalVisible(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Pilih Job Description</Text>
+            <Text style={styles.modalTitle}>{t('form.selectJobDescription')}</Text>
             <FlatList
               data={jobOptions}
               keyExtractor={(item) => item}

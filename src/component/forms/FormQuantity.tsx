@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useTranslation } from '../../i18n';
 
 interface FormQuantityProps {
   finishGood: number;
@@ -13,11 +14,12 @@ export const FormQuantity: React.FC<FormQuantityProps> = ({
   setFinishGood,
   parseIntegerInput,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>Quantity</Text>
+      <Text style={styles.cardTitle}>{t('form.quantity')}</Text>
 
-      <Text style={styles.label}>Finish Good</Text>
+      <Text style={styles.label}>{t('form.finishGood')}</Text>
       <TextInput
         style={styles.input}
         keyboardType="numeric"

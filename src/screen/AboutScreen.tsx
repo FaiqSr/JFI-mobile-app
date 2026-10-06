@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import * as Updates from 'expo-updates';
 import { Alert } from '../utils/appAlert';
+import { useTranslation, type Language } from '../i18n';
 
 const appJson = require('../../app.json');
 const APP_VERSION: string = appJson?.expo?.version ?? '-';
@@ -38,6 +39,7 @@ const formatDate = (date?: Date | null): string => {
  * plus tombol untuk memasang update terbaru secara manual (update tidak otomatis).
  */
 export const AboutScreen = ({ onBack }: AboutScreenProps) => {
+  const { t, language, setLanguage } = useTranslation();
   const updatesEnabled = Updates.isEnabled;
 
   const [status, setStatus] = useState<UpdateStatus>(
@@ -76,23 +78,23 @@ export const AboutScreen = ({ onBack }: AboutScreenProps) => {
       const result = await Updates.fetchUpdateAsync();
       if (!result.isNew) {
         setStatus('up-to-date');
-        Alert.alert('Info', 'Tidak ada update baru untuk diunduh.');
+        Alert.alert(t('common.info'), t('about.noUpdate'));
         return;
       }
       setStatus('available');
       Alert.alert(
-        'Update Siap',
-        'Update berhasil diunduh. Muat ulang aplikasi sekarang untuk memakai versi terbaru?',
+        t('about.updateReadyTitle'),
+        t('about.updateReadyMessage'),
         [
-          { text: 'Nanti', style: 'cancel' },
+          { text: t('about.later'), style: 'cancel' },
           {
-            text: 'Muat Ulang',
+            text: t('about.reload'),
             onPress: async () => {
               try {
                 await Updates.reloadAsync();
               } catch (err) {
                 console.error('Gagal memuat ulang:', err);
-                Alert.alert('Gagal', 'Tidak dapat memuat ulang aplikasi.');
+                Alert.alert(t('common.failed'), t('about.errReload'));
               }
             },
           },
@@ -100,7 +102,7 @@ export const AboutScreen = ({ onBack }: AboutScreenProps) => {
       );
     } catch (err) {
       console.error('Gagal mengunduh update:', err);
-      Alert.alert('Gagal', 'Gagal mengunduh update. Silakan coba lagi.');
+      Alert.alert(t('common.failed'), t('about.errDownload'));
     } finally {
       setInstalling(false);
     }
@@ -112,7 +114,7 @@ export const AboutScreen = ({ onBack }: AboutScreenProps) => {
         return (
           <View style={[styles.statusBadge, styles.statusChecking]}>
             <Text style={[styles.statusBadgeText, styles.statusCheckingText]}>
-              Memeriksa update…
+              {t('about.statusChecking')}
             </Text>
           </View>
         );
@@ -120,7 +122,7 @@ export const AboutScreen = ({ onBack }: AboutScreenProps) => {
         return (
           <View style={[styles.statusBadge, styles.statusAvailable]}>
             <Text style={[styles.statusBadgeText, styles.statusAvailableText]}>
-              Update tersedia
+              {t('about.statusAvailable')}
             </Text>
           </View>
         );
@@ -128,7 +130,7 @@ export const AboutScreen = ({ onBack }: AboutScreenProps) => {
         return (
           <View style={[styles.statusBadge, styles.statusUpToDate]}>
             <Text style={[styles.statusBadgeText, styles.statusUpToDateText]}>
-              Sudah versi terbaru
+              {t('about.statusUpToDate')}
             </Text>
           </View>
         );
@@ -136,7 +138,7 @@ export const AboutScreen = ({ onBack }: AboutScreenProps) => {
         return (
           <View style={[styles.statusBadge, styles.statusUnavailable]}>
             <Text style={[styles.statusBadgeText, styles.statusUnavailableText]}>
-              OTA tidak tersedia pada build ini
+              {t('about.statusUnavailable')}
             </Text>
           </View>
         );
@@ -144,6 +146,11 @@ export const AboutScreen = ({ onBack }: AboutScreenProps) => {
         return null;
     }
   };
+
+  const LANGUAGE_OPTIONS: { value: Language; label: string }[] = [
+    { value: 'id', label: t('about.indonesian') },
+    { value: 'en', label: t('about.english') },
+  ];
 
   const canInstall = status === 'available' && !installing;
 
@@ -154,63 +161,92 @@ export const AboutScreen = ({ onBack }: AboutScreenProps) => {
         showsVerticalScrollIndicator={false}
       >
         <TouchableOpacity onPress={onBack} style={styles.backBtn}>
-          <Text style={styles.backText}>‹ Kembali</Text>
+          <Text style={styles.backText}>‹ {t('common.back')}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.title}>Tentang Aplikasi</Text>
+        <Text style={styles.title}>{t('about.title')}</Text>
         <Text style={styles.subtitle}>
-          Informasi versi dan pembaruan aplikasi (update OTA).
+          {t('about.subtitle')}
         </Text>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Informasi Versi</Text>
+          <Text style={styles.cardTitle}>{t('about.languageTitle')}</Text>
+          <Text style={styles.cardDescription}>
+            {t('about.languageDescription')}
+          </Text>
+
+          <View style={styles.segmentRow}>
+            {LANGUAGE_OPTIONS.map((option) => {
+              const active = language === option.value;
+              return (
+                <TouchableOpacity
+                  key={option.value}
+                  style={[styles.segmentBtn, active && styles.segmentBtnActive]}
+                  onPress={() => setLanguage(option.value)}
+                  activeOpacity={0.8}
+                >
+                  <Text
+                    style={[
+                      styles.segmentBtnText,
+                      active && styles.segmentBtnTextActive,
+                    ]}
+                  >
+                    {option.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>{t('about.versionInfo')}</Text>
 
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Versi aplikasi</Text>
+            <Text style={styles.infoLabel}>{t('about.appVersion')}</Text>
             <Text style={styles.infoValueBold}>v{APP_VERSION}</Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Runtime version</Text>
+            <Text style={styles.infoLabel}>{t('about.runtimeVersion')}</Text>
             <Text style={styles.infoValueBold}>
               {Updates.runtimeVersion ?? '-'}
             </Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Update terpasang</Text>
+            <Text style={styles.infoLabel}>{t('about.installedUpdate')}</Text>
             <Text style={styles.infoValueBold}>
               {Updates.updateId
                 ? shortId(Updates.updateId)
-                : 'Bawaan (build awal)'}
+                : t('about.builtIn')}
             </Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Channel</Text>
+            <Text style={styles.infoLabel}>{t('about.channel')}</Text>
             <Text style={styles.infoValueBold}>{Updates.channel ?? '-'}</Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Tanggal update</Text>
+            <Text style={styles.infoLabel}>{t('about.updateDate')}</Text>
             <Text style={styles.infoValueBold}>
               {formatDate(Updates.createdAt)}
             </Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Status OTA</Text>
+            <Text style={styles.infoLabel}>{t('about.otaStatus')}</Text>
             <Text style={styles.infoValueBold}>
-              {updatesEnabled ? 'Aktif' : 'Tidak aktif'}
+              {updatesEnabled ? t('about.active') : t('about.inactive')}
             </Text>
           </View>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Update OTA</Text>
+          <Text style={styles.cardTitle}>{t('about.otaUpdate')}</Text>
           <Text style={styles.cardDescription}>
-            Aplikasi tidak diperbarui otomatis. Tekan tombol di bawah untuk
-            memeriksa dan memasang versi terbaru.
+            {t('about.otaDescription')}
           </Text>
 
           <View style={styles.statusRow}>{renderStatusBadge()}</View>
@@ -224,7 +260,7 @@ export const AboutScreen = ({ onBack }: AboutScreenProps) => {
             {installing ? (
               <ActivityIndicator color="#FFFFFF" size="small" />
             ) : (
-              <Text style={styles.blackBtnText}>Update Sekarang</Text>
+              <Text style={styles.blackBtnText}>{t('about.updateNow')}</Text>
             )}
           </TouchableOpacity>
 
@@ -237,7 +273,7 @@ export const AboutScreen = ({ onBack }: AboutScreenProps) => {
             {checking ? (
               <ActivityIndicator color="#0F172A" size="small" />
             ) : (
-              <Text style={styles.outlineBtnText}>Cek Ulang</Text>
+              <Text style={styles.outlineBtnText}>{t('about.recheck')}</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -308,6 +344,31 @@ const styles = StyleSheet.create({
   infoLabel: {
     fontSize: 14,
     color: '#64748B',
+  },
+  segmentRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  segmentBtn: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+  },
+  segmentBtnActive: {
+    backgroundColor: '#000000',
+    borderColor: '#000000',
+  },
+  segmentBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#0F172A',
+  },
+  segmentBtnTextActive: {
+    color: '#FFFFFF',
   },
   infoValueBold: {
     fontSize: 14,

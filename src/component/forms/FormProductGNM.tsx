@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useTranslation } from '../../i18n';
 
 interface FormProductGNMProps {
   size: string;
@@ -39,6 +40,7 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
   notedSize: externalNotedSize,
   setNotedSize: externalSetNotedSize,
 }) => {
+  const { t } = useTranslation();
   const [type1Modal, setType1Modal] = useState(false);
   const [type2Modal, setType2Modal] = useState(false);
   const [thicknessModal, setThicknessModal] = useState(false);
@@ -115,16 +117,16 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
   return (
     <View>
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Product</Text>
+        <Text style={styles.cardTitle}>{t('form.product')}</Text>
 
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.label}>
-              Size <Text style={styles.asterisk}>*</Text>
+              {t('form.size')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter size"
+              placeholder={t('form.sizePlaceholder')}
               placeholderTextColor="#98A2B3"
               value={size}
               onChangeText={setSize}
@@ -132,11 +134,11 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
           </View>
           <View style={styles.column}>
             <Text style={styles.label}>
-              Class <Text style={styles.asterisk}>*</Text>
+              {t('form.class')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter class"
+              placeholder={t('form.classPlaceholder')}
               placeholderTextColor="#98A2B3"
               value={classVal}
               onChangeText={setClassVal}
@@ -147,7 +149,7 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.label}>
-              Type 1 <Text style={styles.asterisk}>*</Text>
+              {t('form.type1')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
@@ -163,7 +165,7 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {type1 || 'Select type 1'}
+                {type1 || t('form.type1Placeholder')}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
@@ -171,7 +173,7 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
 
           <View style={styles.column}>
             <Text style={styles.label}>
-              Type 2 <Text style={styles.asterisk}>*</Text>
+              {t('form.type2')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
@@ -187,7 +189,7 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {type2 || 'Select type 2'}
+                {type2 || t('form.type2Placeholder')}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
@@ -197,7 +199,7 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.label}>
-              Thickness <Text style={styles.asterisk}>*</Text>
+              {t('form.thickness')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
@@ -213,7 +215,7 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {thickness || 'Select thickness'}
+                {thickness || t('form.thicknessPlaceholder')}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
@@ -221,18 +223,18 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
         </View>
 
         <Text style={styles.label}>
-          NOTED SIZE {hasEmptyProductField && <Text style={styles.asterisk}>*</Text>}
+          {t('form.notedSizeShort')} {hasEmptyProductField && <Text style={styles.asterisk}>*</Text>}
         </Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter noted size"
+          placeholder={t('form.notedSizePlaceholderShort')}
           placeholderTextColor="#98A2B3"
           value={notedSizeVal}
           onChangeText={handleNotedSizeChange}
         />
         {hasEmptyProductField && (
           <Text style={styles.warningText}>
-            Wajib diisi karena Size, Class, Type 1, atau Type 2 ada yang kosong
+            {t('form.warnBecauseProductFields')}
           </Text>
         )}
       </View>
@@ -244,7 +246,7 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
           onPress={() => setType1Modal(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Type 1</Text>
+            <Text style={styles.modalTitle}>{t('form.selectType1')}</Text>
             <FlatList
               data={type1Options}
               keyExtractor={(item) => item}
@@ -275,7 +277,7 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
           onPress={() => setType2Modal(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Type 2</Text>
+            <Text style={styles.modalTitle}>{t('form.selectType2')}</Text>
             <FlatList
               data={type2Options}
               keyExtractor={(item) => item}
@@ -306,7 +308,7 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
           onPress={() => setThicknessModal(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Thickness</Text>
+            <Text style={styles.modalTitle}>{t('form.selectThickness')}</Text>
             <FlatList
               data={thicknessOptions}
               keyExtractor={(item) => item}

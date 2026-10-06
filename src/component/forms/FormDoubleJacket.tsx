@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useTranslation } from '../../i18n';
 
 interface FormDoubleJacketProps {
   idVal: string;
@@ -48,6 +49,7 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
   setMaterialNoted: externalSetMaterialNoted,
 }) => {
 
+  const { t } = useTranslation();
   const [productTypeModal, setProductTypeModal] = useState(false);
   const [thicknessModal, setThicknessModal] = useState(false);
   const [metalModal, setMetalModal] = useState(false);
@@ -154,16 +156,16 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
   return (
     <View>
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Size</Text>
+        <Text style={styles.cardTitle}>{t('form.size')}</Text>
 
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.label}>
-              ID <Text style={styles.asterisk}>*</Text>
+              {t('djf.id')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter ID"
+              placeholder={t('djf.idPlaceholder')}
               placeholderTextColor="#98A2B3"
               value={idVal}
               onChangeText={setIdVal}
@@ -171,11 +173,11 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           </View>
           <View style={styles.column}>
             <Text style={styles.label}>
-              OD <Text style={styles.asterisk}>*</Text>
+              {t('djf.od')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter OD"
+              placeholder={t('djf.odPlaceholder')}
               placeholderTextColor="#98A2B3"
               value={odVal}
               onChangeText={setOdVal}
@@ -186,7 +188,7 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.label}>
-              Product Type <Text style={styles.asterisk}>*</Text>
+              {t('djf.productType')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
@@ -202,7 +204,7 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {productType || 'Select product type'}
+                {productType || t('djf.productTypePlaceholder')}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
@@ -210,7 +212,7 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
 
           <View style={styles.column}>
             <Text style={styles.label}>
-              Thickness <Text style={styles.asterisk}>*</Text>
+              {t('form.thickness')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
@@ -226,17 +228,17 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {thickness || 'Select thickness'}
+                {thickness || t('form.thicknessPlaceholder')}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <Text style={styles.label}>NOTED SIZE</Text>
+        <Text style={styles.label}>{t('form.notedSizeShort')}</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter noted size"
+          placeholder={t('form.notedSizePlaceholderShort')}
           placeholderTextColor="#98A2B3"
           value={notedSizeVal}
           onChangeText={handleNotedSizeChange}
@@ -244,12 +246,12 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
       </View>
 
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Material</Text>
+        <Text style={styles.cardTitle}>{t('form.material')}</Text>
 
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.label}>
-              Metal <Text style={styles.asterisk}>*</Text>
+              {t('djf.metal')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
@@ -265,7 +267,7 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {metal || 'Select metal'}
+                {metal || t('djf.metalPlaceholder')}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
@@ -273,7 +275,7 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
 
           <View style={styles.column}>
             <Text style={styles.label}>
-              Filler <Text style={styles.asterisk}>*</Text>
+              {t('djf.filler')} <Text style={styles.asterisk}>*</Text>
             </Text>
             <TouchableOpacity
               style={styles.dropdownInput}
@@ -289,17 +291,17 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
               >
-                {filler || 'Select filler'}
+                {filler || t('djf.fillerPlaceholder')}
               </Text>
               <Text style={styles.arrowIcon}>▼</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <Text style={styles.label}>MATERIAL NOTED</Text>
+        <Text style={styles.label}>{t('djf.materialNotedUpper')}</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter material noted"
+          placeholder={t('form.materialNotedPlaceholder')}
           placeholderTextColor="#98A2B3"
           value={materialNotedVal}
           onChangeText={handleMaterialNotedChange}
@@ -313,7 +315,7 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           onPress={() => setProductTypeModal(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Product Type</Text>
+            <Text style={styles.modalTitle}>{t('djf.selectProductType')}</Text>
             <FlatList
               data={productTypeOptions}
               keyExtractor={(item) => item}
@@ -346,7 +348,7 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           onPress={() => setThicknessModal(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Thickness</Text>
+            <Text style={styles.modalTitle}>{t('form.selectThickness')}</Text>
             <FlatList
               data={thicknessOptions}
               keyExtractor={(item) => item}
@@ -379,7 +381,7 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           onPress={() => setMetalModal(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Metal</Text>
+            <Text style={styles.modalTitle}>{t('djf.selectMetal')}</Text>
             <FlatList
               data={metalOptions}
               keyExtractor={(item) => item}
@@ -410,7 +412,7 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           onPress={() => setFillerModal(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Filler</Text>
+            <Text style={styles.modalTitle}>{t('djf.selectFiller')}</Text>
             <FlatList
               data={fillerOptions}
               keyExtractor={(item) => item}

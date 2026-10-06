@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { Alert } from '../utils/appAlert';
 import { authService } from '../api/authService';
+import { useTranslation } from '../i18n';
 
 interface LoginScreenProps {
   onLoginSuccess: () => void;
@@ -23,6 +24,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   onLoginSuccess,
   onOpenAbout,
 }) => {
+  const { t } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,7 +32,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
   const handleLogin = async () => {
     if (!username.trim() || !password.trim()) {
-      Alert.alert('Peringatan', 'Nama pengguna dan kata sandi wajib diisi.');
+      Alert.alert(t('common.warning'), t('login.emptyFields'));
       return;
     }
 
@@ -69,12 +71,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </View>
 
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>Masuk</Text>
+            <Text style={styles.cardTitle}>{t('login.title')}</Text>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Nama pengguna</Text>
+              <Text style={styles.label}>{t('login.username')}</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Masukkan nama pengguna"
+                placeholder={t('login.usernamePlaceholder')}
                 placeholderTextColor="#A0AEC0"
                 value={username}
                 onChangeText={setUsername}
@@ -83,11 +85,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Kata sandi</Text>
+              <Text style={styles.label}>{t('login.password')}</Text>
               <View style={styles.passwordWrapper}>
                 <TextInput
                   style={[styles.input, styles.passwordInput]}
-                  placeholder="Masukkan kata sandi"
+                  placeholder={t('login.passwordPlaceholder')}
                   placeholderTextColor="#A0AEC0"
                   value={password}
                   onChangeText={setPassword}
@@ -100,7 +102,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                   activeOpacity={0.7}
                 >
                   <Text style={styles.eyeIcon}>
-                    {showPassword ? 'Sembunyikan' : 'Tampilkan'}
+                    {showPassword ? t('login.hide') : t('login.show')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -115,7 +117,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               {loading ? (
                 <ActivityIndicator color="#FFFFFF" />
               ) : (
-                <Text style={styles.buttonText}>Masuk</Text>
+                <Text style={styles.buttonText}>{t('login.button')}</Text>
               )}
             </TouchableOpacity>
           </View>
@@ -127,7 +129,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               activeOpacity={0.7}
             >
               <Text style={styles.aboutText}>
-                Tentang Aplikasi · v{require('../../app.json').expo.version}
+                {t('login.aboutLink')} · v{require('../../app.json').expo.version}
               </Text>
             </TouchableOpacity>
           )}

@@ -41,6 +41,7 @@ import {
   timestampToHHMM,
   timeStringToTimestamp,
 } from './src/utils/time';
+import { useTranslation } from './src/i18n';
 
 if ((Text as any).defaultProps) {
   (Text as any).defaultProps.allowFontScaling = false;
@@ -125,6 +126,7 @@ const hasMeaningfulData = (form: ScreenFormData | undefined): boolean => {
 };
 
 export default function App() {
+  const { t } = useTranslation();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [currentScreen, setCurrentScreen] = useState<ExtendedScreenType>('HOME');
   const [showAbout, setShowAbout] = useState<boolean>(false);
@@ -463,22 +465,19 @@ export default function App() {
     const activeData = formsData[currentScreen];
 
     if (!hasValue(activeData.namaOperator)) {
-      Alert.alert('Gagal', 'Nama operator tidak boleh kosong.');
+      Alert.alert(t('common.failed'), t('alerts.operatorRequired'));
       return;
     }
     if (!hasValue(activeData.nomorSO)) {
-      Alert.alert('Gagal', 'Nomor SO wajib diisi.');
+      Alert.alert(t('common.failed'), t('alerts.soRequired'));
       return;
     }
     if (!activeData.startTimestamp) {
-      Alert.alert('Gagal', 'Tombol START belum ditekan!');
+      Alert.alert(t('common.failed'), t('alerts.startNotPressed'));
       return;
     }
     if (activeData.isStarted || !activeData.stopTimestamp) {
-      Alert.alert(
-        'Gagal',
-        'Tombol STOP belum ditekan! Silakan tekan STOP terlebih dahulu.'
-      );
+      Alert.alert(t('common.failed'), t('alerts.stopNotPressed'));
       return;
     }
 
@@ -488,15 +487,12 @@ export default function App() {
     // - Noted Size wajib diisi jika salah satu dari Size, Class, Type 1, atau Type 2 kosong.
     if (currentScreen === 'GNM') {
       if (!hasValue(activeData.materialNoted)) {
-        Alert.alert('Gagal', 'Material Noted wajib diisi.');
+        Alert.alert(t('common.failed'), t('alerts.gnmMaterialNotedRequired'));
         return;
       }
 
       if (!hasValue(activeData.jobDescription) && !hasValue(activeData.jobNoted)) {
-        Alert.alert(
-          'Gagal',
-          'Job Noted wajib diisi karena Job Description kosong.'
-        );
+        Alert.alert(t('common.failed'), t('alerts.gnmJobNotedRequired'));
         return;
       }
 
@@ -506,10 +502,7 @@ export default function App() {
         !hasValue(activeData.type1) ||
         !hasValue(activeData.type2);
       if (productFieldsEmpty && !hasValue(activeData.notedSize)) {
-        Alert.alert(
-          'Gagal',
-          'Noted Size wajib diisi karena Size, Class, Type 1, atau Type 2 ada yang kosong.'
-        );
+        Alert.alert(t('common.failed'), t('alerts.gnmNotedSizeRequired'));
         return;
       }
     }
@@ -530,7 +523,7 @@ export default function App() {
         await handleClear();
       }
     } catch (error) {
-      Alert.alert('Kendala Jaringan', `${error}`);
+      Alert.alert(t('common.networkIssue'), `${error}`);
     } finally {
       setIsLoading(false);
     }

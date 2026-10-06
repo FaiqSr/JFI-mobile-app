@@ -12,6 +12,7 @@ import { Alert } from '../utils/appAlert';
 import { UserHeader } from '../component/common/UserHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../api/authService';
+import { useTranslation } from '../i18n';
 
 interface ProfileScreenProps {
   userName?: string;
@@ -28,6 +29,7 @@ export const ProfileScreen = ({
   onOpenAbout,
   onUpdateUserName,
 }: ProfileScreenProps) => {
+  const { t } = useTranslation();
   const [username, setUsername] = useState<string>('');
   const [role, setRole] = useState<string>('');
   const [createdAt, setCreatedAt] = useState<string>('');
@@ -88,7 +90,7 @@ export const ProfileScreen = ({
   const handleSaveFullName = async () => {
     const trimmedName = fullName.trim();
     if (!trimmedName) {
-      Alert.alert('Peringatan', 'Nama lengkap tidak boleh kosong');
+      Alert.alert(t('common.warning'), t('profile.errFullNameEmpty'));
       return;
     }
 
@@ -103,11 +105,11 @@ export const ProfileScreen = ({
           onUpdateUserName(trimmedName);
         }
 
-        Alert.alert('Sukses', 'Nama lengkap berhasil diperbarui');
+        Alert.alert(t('common.success'), t('profile.successFullName'));
         loadProfile();
       }
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'Gagal menyimpan nama lengkap');
+      Alert.alert(t('common.error'), err.message || t('profile.errSaveFullName'));
     } finally {
       setSavingName(false);
     }
@@ -115,17 +117,17 @@ export const ProfileScreen = ({
 
   const handleSavePassword = async () => {
     if (!newPassword || !confirmPassword) {
-      Alert.alert('Peringatan', 'Harap isi kata sandi baru dan konfirmasinya');
+      Alert.alert(t('common.warning'), t('profile.errPasswordEmpty'));
       return;
     }
 
     if (newPassword.length < 8) {
-      Alert.alert('Peringatan', 'Kata sandi baru minimal 8 karakter');
+      Alert.alert(t('common.warning'), t('profile.errPasswordShort'));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      Alert.alert('Peringatan', 'Ulangi kata sandi tidak cocok');
+      Alert.alert(t('common.warning'), t('profile.errPasswordMismatch'));
       return;
     }
 
@@ -133,12 +135,12 @@ export const ProfileScreen = ({
       setSavingPassword(true);
       const res = await authService.updateProfile({ password: newPassword });
       if (res.success) {
-        Alert.alert('Sukses', 'Kata sandi berhasil diperbarui');
+        Alert.alert(t('common.success'), t('profile.successPassword'));
         setNewPassword('');
         setConfirmPassword('');
       }
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'Gagal memperbarui kata sandi');
+      Alert.alert(t('common.error'), err.message || t('profile.errSavePassword'));
     } finally {
       setSavingPassword(false);
     }
@@ -154,11 +156,11 @@ export const ProfileScreen = ({
         />
 
         <TouchableOpacity onPress={onBack} style={styles.backBtn}>
-          <Text style={styles.backText}>‹ Kembali</Text>
+          <Text style={styles.backText}>‹ {t('common.back')}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.title}>Profil Saya</Text>
-        <Text style={styles.subtitle}>Kelola informasi akun dan kata sandi Anda.</Text>
+        <Text style={styles.title}>{t('profile.title')}</Text>
+        <Text style={styles.subtitle}>{t('profile.subtitle')}</Text>
 
         {loadingProfile ? (
           <ActivityIndicator size="large" color="#000000" style={{ marginTop: 40 }} />
@@ -166,41 +168,41 @@ export const ProfileScreen = ({
           <>
             
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Informasi Akun</Text>
+              <Text style={styles.cardTitle}>{t('profile.accountInfo')}</Text>
 
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Nama Pengguna</Text>
+                <Text style={styles.infoLabel}>{t('profile.username')}</Text>
                 <Text style={styles.infoValueBold}>{username || '-'}</Text>
               </View>
 
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Peran</Text>
+                <Text style={styles.infoLabel}>{t('profile.role')}</Text>
                 <Text style={styles.infoValueBold}>{role ? role.toUpperCase() : '-'}</Text>
               </View>
 
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Akun dibuat</Text>
+                <Text style={styles.infoLabel}>{t('profile.accountCreated')}</Text>
                 <Text style={styles.infoValueBold}>{createdAt}</Text>
               </View>
 
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Terakhir diperbarui</Text>
+                <Text style={styles.infoLabel}>{t('profile.lastUpdated')}</Text>
                 <Text style={styles.infoValueBold}>{updatedAt}</Text>
               </View>
             </View>
 
             
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Nama Lengkap</Text>
+              <Text style={styles.cardTitle}>{t('profile.fullName')}</Text>
               <Text style={styles.cardDescription}>
-                Dipakai sebagai nama operator pada lembar kerja produksi.
+                {t('profile.fullNameDescription')}
               </Text>
 
               <TextInput
                 style={styles.input}
                 value={fullName}
                 onChangeText={setFullName}
-                placeholder="Masukkan nama lengkap"
+                placeholder={t('profile.fullNamePlaceholder')}
                 placeholderTextColor="#94A3B8"
               />
 
@@ -212,36 +214,36 @@ export const ProfileScreen = ({
                 {savingName ? (
                   <ActivityIndicator color="#FFFFFF" size="small" />
                 ) : (
-                  <Text style={styles.blackBtnText}>Simpan Nama Lengkap</Text>
+                  <Text style={styles.blackBtnText}>{t('profile.saveFullName')}</Text>
                 )}
               </TouchableOpacity>
             </View>
 
             
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Kata Sandi</Text>
-              <Text style={styles.cardDescription}>Kata sandi baru minimal 8 karakter.</Text>
+              <Text style={styles.cardTitle}>{t('profile.password')}</Text>
+              <Text style={styles.cardDescription}>{t('profile.passwordDescription')}</Text>
 
               <View style={styles.fieldGroup}>
-                <Text style={styles.label}>Kata sandi baru</Text>
+                <Text style={styles.label}>{t('profile.newPassword')}</Text>
                 <TextInput
                   style={styles.input}
                   secureTextEntry
                   value={newPassword}
                   onChangeText={setNewPassword}
-                  placeholder="Masukkan kata sandi baru"
+                  placeholder={t('profile.newPasswordPlaceholder')}
                   placeholderTextColor="#94A3B8"
                 />
               </View>
 
               <View style={styles.fieldGroup}>
-                <Text style={styles.label}>Ulangi kata sandi</Text>
+                <Text style={styles.label}>{t('profile.confirmPassword')}</Text>
                 <TextInput
                   style={styles.input}
                   secureTextEntry
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
-                  placeholder="Ulangi kata sandi baru"
+                  placeholder={t('profile.confirmPasswordPlaceholder')}
                   placeholderTextColor="#94A3B8"
                 />
               </View>
@@ -254,7 +256,7 @@ export const ProfileScreen = ({
                 {savingPassword ? (
                   <ActivityIndicator color="#FFFFFF" size="small" />
                 ) : (
-                  <Text style={styles.blackBtnText}>Simpan Kata Sandi</Text>
+                  <Text style={styles.blackBtnText}>{t('profile.savePassword')}</Text>
                 )}
               </TouchableOpacity>
             </View>
