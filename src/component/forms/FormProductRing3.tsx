@@ -10,6 +10,10 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { SizeCombobox } from '../common/SizeCombobox';
+import {
+  requiredFieldStyle,
+  normalFieldStyle,
+} from '../common/requiredFieldStyle';
 import { useTranslation } from '../../i18n';
 
 interface FormProductRing3Props {
@@ -164,30 +168,36 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
     <View style={styles.card}>
       <Text style={styles.cardTitle}>{t('form.product')}</Text>
 
-      <Text style={styles.label}>
-        {t('form.productLabel')} <Text style={styles.asterisk}>*</Text>
-      </Text>
-      <TouchableOpacity
-        style={styles.dropdownInput}
-        activeOpacity={0.7}
-        onPress={() => setActiveModal('product')}
-      >
-        <Text style={[styles.dropdownText, !product && styles.placeholderText]}>
-          {product || t('form.productPlaceholder')}
-        </Text>
-        <Text style={styles.arrowIcon}>▼</Text>
-      </TouchableOpacity>
-      {isNoProduct && (
-        <Text style={styles.warningText}>{t('form.warnMaterialNotedRequired')}</Text>
-      )}
-
       <View style={styles.row}>
         <View style={styles.column}>
-          <Text style={styles.label}>
-            {t('form.materialType')} <Text style={styles.asterisk}>*</Text>
-          </Text>
+          <Text style={styles.label}>{t('form.productLabel')}</Text>
           <TouchableOpacity
-            style={styles.dropdownInput}
+            style={[
+              styles.dropdownInput,
+              normalFieldStyle,
+              !product && requiredFieldStyle,
+            ]}
+            activeOpacity={0.7}
+            onPress={() => setActiveModal('product')}
+          >
+            <Text
+              style={[styles.dropdownText, !product && styles.placeholderText]}
+              numberOfLines={1}
+            >
+              {product || t('form.productPlaceholder')}
+            </Text>
+            <Text style={styles.arrowIcon}>▼</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.column}>
+          <Text style={styles.label}>{t('form.materialType')}</Text>
+          <TouchableOpacity
+            style={[
+              styles.dropdownInput,
+              normalFieldStyle,
+              !materialType && requiredFieldStyle,
+            ]}
             activeOpacity={0.7}
             onPress={() => setActiveModal('material')}
           >
@@ -202,34 +212,41 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
             </Text>
             <Text style={styles.arrowIcon}>▼</Text>
           </TouchableOpacity>
-          {isNoMaterialType && (
-            <Text style={styles.warningText}>{t('form.warnMaterialNotedRequired')}</Text>
-          )}
-        </View>
-
-        <View style={styles.column}>
-          <Text style={styles.label}>
-            {t('form.materialNoted')} <Text style={styles.asterisk}>*</Text>
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder={t('form.certNoMaterial')}
-            placeholderTextColor="#98A2B3"
-            value={materialNotedVal}
-            onChangeText={handleMaterialNotedChange}
-          />
-          {isNoChoiceMaterialNoted && (
-            <Text style={styles.warningText}>
-              {t('form.warnBecauseProductOrMaterial')}
-            </Text>
-          )}
         </View>
       </View>
+      {isNoProduct && (
+        <Text style={styles.warningText}>{t('form.warnMaterialNotedRequired')}</Text>
+      )}
+      {isNoMaterialType && (
+        <Text style={styles.warningText}>{t('form.warnMaterialNotedRequired')}</Text>
+      )}
+
+      <Text style={styles.label}>{t('form.materialNoted')}</Text>
+      <TextInput
+        style={[
+          styles.input,
+          normalFieldStyle,
+          isNoChoiceMaterialNoted && !materialNotedVal && requiredFieldStyle,
+        ]}
+        placeholder={t('form.certNoMaterial')}
+        placeholderTextColor="#98A2B3"
+        value={materialNotedVal}
+        onChangeText={handleMaterialNotedChange}
+      />
+      {isNoChoiceMaterialNoted && (
+        <Text style={styles.warningText}>
+          {t('form.warnBecauseProductOrMaterial')}
+        </Text>
+      )}
 
       
       <Text style={styles.label}>{t('form.thickness')}</Text>
       <TouchableOpacity
-        style={styles.dropdownInput}
+        style={[
+          styles.dropdownInput,
+          normalFieldStyle,
+          !thicknessVal && requiredFieldStyle,
+        ]}
         activeOpacity={0.7}
         onPress={() => setActiveModal('thickness')}
       >
@@ -250,23 +267,20 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
       
       <View style={styles.row}>
         <View style={styles.column}>
-          <Text style={styles.label}>
-            {t('form.size')} <Text style={styles.asterisk}>*</Text>
-          </Text>
+          <Text style={styles.label}>{t('form.size')}</Text>
           <SizeCombobox
             value={size}
             onChange={setSize}
             suggestions={machineSizes}
             placeholder='1"'
+            required={!size}
           />
         </View>
 
         <View style={styles.column}>
-          <Text style={styles.label}>
-            {t('form.class')} <Text style={styles.asterisk}>*</Text>
-          </Text>
+          <Text style={styles.label}>{t('form.class')}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, normalFieldStyle, !classVal && requiredFieldStyle]}
             placeholder="#150"
             placeholderTextColor="#98A2B3"
             value={classVal}
@@ -276,11 +290,13 @@ export const FormProductRing3: React.FC<FormProductRing3Props> = ({
       </View>
 
       
-      <Text style={styles.label}>
-        {t('form.notedSize')} <Text style={styles.asterisk}>*</Text>
-      </Text>
+      <Text style={styles.label}>{t('form.notedSize')}</Text>
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          normalFieldStyle,
+          isNoThickness && !notedSizeVal && requiredFieldStyle,
+        ]}
         placeholder={t('form.notedSizePlaceholder')}
         placeholderTextColor="#98A2B3"
         value={notedSizeVal}
@@ -355,9 +371,6 @@ const styles = StyleSheet.create({
     
     color: '#344054',
     marginBottom: 6,
-  },
-  asterisk: {
-    color: '#D92D20',
   },
   input: {
     borderWidth: 1,

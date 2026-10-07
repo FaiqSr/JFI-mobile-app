@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTranslation } from '../../i18n';
+import { requiredFieldStyle } from '../common/requiredFieldStyle';
 
 interface FormQuantityDJGProps {
   finishGood: number;
@@ -27,7 +28,7 @@ export const FormQuantityDJG: React.FC<FormQuantityDJGProps> = ({
         <View style={styles.column}>
           <Text style={styles.label}>{t('form.finishGood')}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, !finishGood && requiredFieldStyle]}
             placeholder="0"
             placeholderTextColor="#98A2B3"
             keyboardType="numeric"

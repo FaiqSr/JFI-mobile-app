@@ -11,6 +11,10 @@ import {
 import { RFValue } from 'react-native-responsive-fontsize';
 import { RING3_JOB_DESC } from '../../constants/jobDescOptions';
 import { useTranslation } from '../../i18n';
+import {
+  requiredFieldStyle,
+  normalFieldStyle,
+} from '../common/requiredFieldStyle';
 
 interface FormInformationProps {
   namaOperator: string;
@@ -51,12 +55,10 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
 
       {/* Operator Name */}
       <View style={styles.labelRow}>
-        <Text style={styles.label}>
-          {t('form.operatorName')} <Text style={styles.asterisk}>*</Text>
-        </Text>
+        <Text style={styles.label}>{t('form.operatorName')}</Text>
       </View>
       <TextInput
-        style={[styles.input, styles.disabledInput]}
+        style={[styles.input, styles.disabledInput, normalFieldStyle]}
         placeholder={t('form.operatorNamePlaceholder')}
         placeholderTextColor="#98A2B3"
         value={namaOperator}
@@ -66,12 +68,10 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
 
       {/* SO Number */}
       <View style={styles.labelRow}>
-        <Text style={styles.label}>
-          {t('form.soNumber')} <Text style={styles.asterisk}>*</Text>
-        </Text>
+        <Text style={styles.label}>{t('form.soNumber')}</Text>
       </View>
       <TextInput
-        style={styles.input}
+        style={[styles.input, normalFieldStyle, !nomorSO && requiredFieldStyle]}
         placeholder={t('form.soNumberPlaceholder')}
         placeholderTextColor="#98A2B3"
         value={nomorSO}
@@ -81,11 +81,13 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
       />
 
       {/* Job Description Dropdown */}
-      <Text style={styles.label}>
-        {t('form.jobDescription')} <Text style={styles.asterisk}>*</Text>
-      </Text>
+      <Text style={styles.label}>{t('form.jobDescription')}</Text>
       <TouchableOpacity
-        style={styles.dropdownInput}
+        style={[
+          styles.dropdownInput,
+          normalFieldStyle,
+          !jobDescription && requiredFieldStyle,
+        ]}
         activeOpacity={0.7}
         onPress={() => setModalVisible(true)}
       >
@@ -105,11 +107,13 @@ export const FormInformationRing3: React.FC<FormInformationProps> = ({
       )}
 
       {/* Job Noted */}
-      <Text style={styles.label}>
-        {t('form.jobNoted')} <Text style={styles.asterisk}>*</Text>
-      </Text>
+      <Text style={styles.label}>{t('form.jobNoted')}</Text>
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          normalFieldStyle,
+          isNoChoice && !jobNoted && requiredFieldStyle,
+        ]}
         placeholder={t('form.jobNotedPlaceholder')}
         placeholderTextColor="#98A2B3"
         value={jobNoted}
@@ -188,9 +192,6 @@ const styles = StyleSheet.create({
     
     color: '#344054',
     marginBottom: 6,
-  },
-  asterisk: {
-    color: '#D92D20',
   },
   input: {
     borderWidth: 1,

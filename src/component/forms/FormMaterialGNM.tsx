@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTranslation } from '../../i18n';
+import {
+  requiredFieldStyle,
+  normalFieldStyle,
+} from '../common/requiredFieldStyle';
 
 interface FormMaterialGNMProps {
   materialNoted?: string;
@@ -29,11 +33,13 @@ export const FormMaterialGNM: React.FC<FormMaterialGNMProps> = ({
     <View style={styles.card}>
       <Text style={styles.cardTitle}>{t('form.material')}</Text>
 
-      <Text style={styles.label}>
-        {t('gnm.materialNotedUpper')} <Text style={styles.asterisk}>*</Text>
-      </Text>
+      <Text style={styles.label}>{t('gnm.materialNotedUpper')}</Text>
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          normalFieldStyle,
+          !materialNotedVal && requiredFieldStyle,
+        ]}
         placeholder={t('gnm.materialNotedPlaceholder')}
         placeholderTextColor="#98A2B3"
         value={materialNotedVal}
@@ -67,9 +73,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#344054',
     marginBottom: 6,
-  },
-  asterisk: {
-    color: '#D92D20',
   },
   input: {
     borderWidth: 1,

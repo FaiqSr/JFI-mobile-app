@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { CustomInput } from '../common/CustomInput';
+import { requiredFieldStyle } from '../common/requiredFieldStyle';
 import { useTranslation } from '../../i18n';
 
 interface FormTimeProps {
@@ -66,7 +67,12 @@ export const FormTime: React.FC<FormTimeProps> = ({
               return (
                 <TouchableOpacity
                   key={option}
-                  style={[styles.shiftChip, isActive && styles.shiftChipActive]}
+                  style={[
+                    styles.shiftChip,
+                    isActive
+                      ? styles.shiftChipActive
+                      : shift == null && requiredFieldStyle,
+                  ]}
                   onPress={() => setShift?.(isActive ? null : option)}
                   activeOpacity={0.8}
                 >
@@ -95,6 +101,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
             value={startTimeText}
             onChangeText={handleChangeStartTime}
             style={{ textAlign: 'center' }}
+            required={!startTimeText}
           />
         </View>
         <View style={styles.col}>
@@ -106,6 +113,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
             value={stopTimeText}
             onChangeText={handleChangeStopTime}
             style={{ textAlign: 'center' }}
+            required={!stopTimeText}
           />
         </View>
       </View>

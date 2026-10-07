@@ -10,6 +10,10 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTranslation } from '../../i18n';
+import {
+  requiredFieldStyle,
+  normalFieldStyle,
+} from '../common/requiredFieldStyle';
 
 interface FormDoubleJacketProps {
   idVal: string;
@@ -160,11 +164,9 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
 
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.label}>
-              {t('djf.id')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('djf.id')}</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, normalFieldStyle, !idVal && requiredFieldStyle]}
               placeholder={t('djf.idPlaceholder')}
               placeholderTextColor="#98A2B3"
               value={idVal}
@@ -172,11 +174,9 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
             />
           </View>
           <View style={styles.column}>
-            <Text style={styles.label}>
-              {t('djf.od')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('djf.od')}</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, normalFieldStyle, !odVal && requiredFieldStyle]}
               placeholder={t('djf.odPlaceholder')}
               placeholderTextColor="#98A2B3"
               value={odVal}
@@ -187,11 +187,13 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
 
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.label}>
-              {t('djf.productType')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('djf.productType')}</Text>
             <TouchableOpacity
-              style={styles.dropdownInput}
+              style={[
+                styles.dropdownInput,
+                normalFieldStyle,
+                !productType && requiredFieldStyle,
+              ]}
               activeOpacity={0.7}
               onPress={() => setProductTypeModal(true)}
             >
@@ -211,11 +213,13 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           </View>
 
           <View style={styles.column}>
-            <Text style={styles.label}>
-              {t('form.thickness')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('form.thickness')}</Text>
             <TouchableOpacity
-              style={styles.dropdownInput}
+              style={[
+                styles.dropdownInput,
+                normalFieldStyle,
+                !thickness && requiredFieldStyle,
+              ]}
               activeOpacity={0.7}
               onPress={() => setThicknessModal(true)}
             >
@@ -250,11 +254,13 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
 
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.label}>
-              {t('djf.metal')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('djf.metal')}</Text>
             <TouchableOpacity
-              style={styles.dropdownInput}
+              style={[
+                styles.dropdownInput,
+                normalFieldStyle,
+                !metal && requiredFieldStyle,
+              ]}
               activeOpacity={0.7}
               onPress={() => setMetalModal(true)}
             >
@@ -274,11 +280,13 @@ export const FormDoubleJacket: React.FC<FormDoubleJacketProps> = ({
           </View>
 
           <View style={styles.column}>
-            <Text style={styles.label}>
-              {t('djf.filler')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('djf.filler')}</Text>
             <TouchableOpacity
-              style={styles.dropdownInput}
+              style={[
+                styles.dropdownInput,
+                normalFieldStyle,
+                !filler && requiredFieldStyle,
+              ]}
               activeOpacity={0.7}
               onPress={() => setFillerModal(true)}
             >
@@ -472,9 +480,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#344054',
     marginBottom: 6,
-  },
-  asterisk: {
-    color: '#D92D20',
   },
   input: {
     borderWidth: 1,

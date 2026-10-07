@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTranslation } from '../../i18n';
+import { requiredFieldStyle } from './requiredFieldStyle';
 
 interface SizeComboboxProps {
   value: string;
@@ -17,6 +18,8 @@ interface SizeComboboxProps {
   suggestions?: string[];
   placeholder?: string;
   disabled?: boolean;
+  /** Tandai field wajib: border lebih tebal + warna merah, tanpa teks. */
+  required?: boolean;
 }
 
 export const SizeCombobox: React.FC<SizeComboboxProps> = ({
@@ -25,6 +28,7 @@ export const SizeCombobox: React.FC<SizeComboboxProps> = ({
   suggestions = [],
   placeholder,
   disabled = false,
+  required = false,
 }) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -39,7 +43,7 @@ export const SizeCombobox: React.FC<SizeComboboxProps> = ({
     <View>
       <View style={styles.inputRow}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, required && requiredFieldStyle]}
           placeholder={placeholder}
           placeholderTextColor="#98A2B3"
           value={value}

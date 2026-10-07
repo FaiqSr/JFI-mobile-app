@@ -10,6 +10,10 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { SizeCombobox } from '../common/SizeCombobox';
+import {
+  requiredFieldStyle,
+  normalFieldStyle,
+} from '../common/requiredFieldStyle';
 import { useTranslation } from '../../i18n';
 
 interface FormSealingElementProps {
@@ -213,22 +217,23 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
         <Text style={styles.cardTitle}>{t('form.type')}</Text>
         <View style={styles.row}>
           <View style={styles.halfInputContainer}>
-            <Text style={styles.label}>
-              {t('form.size')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('form.size')}</Text>
             <SizeCombobox
               value={size}
               onChange={setSize}
               suggestions={machineSizes}
               placeholder={t('se.sizePlaceholder')}
+              required={!size}
             />
           </View>
           <View style={styles.halfInputContainer}>
-            <Text style={styles.label}>
-              {t('form.class')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('form.class')}</Text>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                normalFieldStyle,
+                !className && requiredFieldStyle,
+              ]}
               placeholder={t('se.classPlaceholder')}
               placeholderTextColor="#98A2B3"
               value={className}
@@ -237,11 +242,13 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
           </View>
         </View>
 
-        <Text style={styles.label}>
-          {t('form.thickness')} <Text style={styles.asterisk}>*</Text>
-        </Text>
+        <Text style={styles.label}>{t('form.thickness')}</Text>
         <TouchableOpacity
-          style={styles.dropdownInput}
+          style={[
+            styles.dropdownInput,
+            normalFieldStyle,
+            !thickness && requiredFieldStyle,
+          ]}
           activeOpacity={0.7}
           onPress={() => setActiveModal('thickness')}
         >
@@ -271,11 +278,13 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
         <Text style={styles.cardTitle}>{t('form.material')}</Text>
         <View style={styles.row}>
           <View style={styles.halfInputContainer}>
-            <Text style={styles.label}>
-              {t('se.hoop')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('se.hoop')}</Text>
             <TouchableOpacity
-              style={styles.dropdownInput}
+              style={[
+                styles.dropdownInput,
+                normalFieldStyle,
+                !hoop && requiredFieldStyle,
+              ]}
               activeOpacity={0.7}
               onPress={() => setActiveModal('hoop')}
             >
@@ -292,11 +301,13 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
           </View>
 
           <View style={styles.halfInputContainer}>
-            <Text style={styles.label}>
-              {t('se.filler')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('se.filler')}</Text>
             <TouchableOpacity
-              style={styles.dropdownInput}
+              style={[
+                styles.dropdownInput,
+                normalFieldStyle,
+                !filler && requiredFieldStyle,
+              ]}
               activeOpacity={0.7}
               onPress={() => setActiveModal('filler')}
             >
@@ -315,11 +326,13 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
 
         <View style={styles.row}>
           <View style={styles.halfInputContainer}>
-            <Text style={styles.label}>
-              {t('se.ir')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('se.ir')}</Text>
             <TouchableOpacity
-              style={styles.dropdownInput}
+              style={[
+                styles.dropdownInput,
+                normalFieldStyle,
+                !ir && requiredFieldStyle,
+              ]}
               activeOpacity={0.7}
               onPress={() => setActiveModal('ir')}
             >
@@ -336,11 +349,13 @@ export const FormSealingElement: React.FC<FormSealingElementProps> = ({
           </View>
 
           <View style={styles.halfInputContainer}>
-            <Text style={styles.label}>
-              {t('se.or')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('se.or')}</Text>
             <TouchableOpacity
-              style={styles.dropdownInput}
+              style={[
+                styles.dropdownInput,
+                normalFieldStyle,
+                !orVal && requiredFieldStyle,
+              ]}
               activeOpacity={0.7}
               onPress={() => setActiveModal('or')}
             >
@@ -432,9 +447,6 @@ const styles = StyleSheet.create({
     
     color: '#344054',
     marginBottom: 6,
-  },
-  asterisk: {
-    color: '#D92D20',
   },
   input: {
     borderWidth: 1,

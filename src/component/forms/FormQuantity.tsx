@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTranslation } from '../../i18n';
+import { requiredFieldStyle } from '../common/requiredFieldStyle';
 
 interface FormQuantityProps {
   finishGood: number;
@@ -21,7 +22,7 @@ export const FormQuantity: React.FC<FormQuantityProps> = ({
 
       <Text style={styles.label}>{t('form.finishGood')}</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, !finishGood && requiredFieldStyle]}
         keyboardType="numeric"
         placeholder="0"
         placeholderTextColor="#98A2B3"

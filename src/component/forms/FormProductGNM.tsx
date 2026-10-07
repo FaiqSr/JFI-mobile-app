@@ -10,6 +10,10 @@ import {
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTranslation } from '../../i18n';
+import {
+  requiredFieldStyle,
+  normalFieldStyle,
+} from '../common/requiredFieldStyle';
 
 interface FormProductGNMProps {
   size: string;
@@ -121,11 +125,9 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
 
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.label}>
-              {t('form.size')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('form.size')}</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, normalFieldStyle, !size && requiredFieldStyle]}
               placeholder={t('form.sizePlaceholder')}
               placeholderTextColor="#98A2B3"
               value={size}
@@ -133,11 +135,13 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
             />
           </View>
           <View style={styles.column}>
-            <Text style={styles.label}>
-              {t('form.class')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('form.class')}</Text>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                normalFieldStyle,
+                !classVal && requiredFieldStyle,
+              ]}
               placeholder={t('form.classPlaceholder')}
               placeholderTextColor="#98A2B3"
               value={classVal}
@@ -148,11 +152,13 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
 
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.label}>
-              {t('form.type1')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('form.type1')}</Text>
             <TouchableOpacity
-              style={styles.dropdownInput}
+              style={[
+                styles.dropdownInput,
+                normalFieldStyle,
+                !type1 && requiredFieldStyle,
+              ]}
               activeOpacity={0.7}
               onPress={() => setType1Modal(true)}
             >
@@ -172,11 +178,13 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
           </View>
 
           <View style={styles.column}>
-            <Text style={styles.label}>
-              {t('form.type2')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('form.type2')}</Text>
             <TouchableOpacity
-              style={styles.dropdownInput}
+              style={[
+                styles.dropdownInput,
+                normalFieldStyle,
+                !type2 && requiredFieldStyle,
+              ]}
               activeOpacity={0.7}
               onPress={() => setType2Modal(true)}
             >
@@ -198,11 +206,13 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
 
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.label}>
-              {t('form.thickness')} <Text style={styles.asterisk}>*</Text>
-            </Text>
+            <Text style={styles.label}>{t('form.thickness')}</Text>
             <TouchableOpacity
-              style={styles.dropdownInput}
+              style={[
+                styles.dropdownInput,
+                normalFieldStyle,
+                !thickness && requiredFieldStyle,
+              ]}
               activeOpacity={0.7}
               onPress={() => setThicknessModal(true)}
             >
@@ -222,11 +232,13 @@ export const FormProductGNM: React.FC<FormProductGNMProps> = ({
           </View>
         </View>
 
-        <Text style={styles.label}>
-          {t('form.notedSizeShort')} {hasEmptyProductField && <Text style={styles.asterisk}>*</Text>}
-        </Text>
+        <Text style={styles.label}>{t('form.notedSizeShort')}</Text>
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            normalFieldStyle,
+            hasEmptyProductField && !notedSizeVal && requiredFieldStyle,
+          ]}
           placeholder={t('form.notedSizePlaceholderShort')}
           placeholderTextColor="#98A2B3"
           value={notedSizeVal}
@@ -368,9 +380,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#344054',
     marginBottom: 6,
-  },
-  asterisk: {
-    color: '#D92D20',
   },
   warningText: {
     fontSize: RFValue(11),

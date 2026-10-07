@@ -1,15 +1,19 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { requiredFieldStyle } from './requiredFieldStyle';
 
 interface CustomInputProps extends TextInputProps {
   label?: string;
   unit?: string;
+  /** Tandai field wajib: border lebih tebal + warna merah, tanpa teks. */
+  required?: boolean;
 }
 
 export const CustomInput: React.FC<CustomInputProps> = ({
   label,
   unit,
+  required = false,
   style,
   ...restProps
 }) => {
@@ -18,7 +22,9 @@ export const CustomInput: React.FC<CustomInputProps> = ({
       {label && <Text style={styles.inputLabel}>{label}</Text>}
 
       {unit ? (
-        <View style={styles.minuteInputContainer}>
+        <View
+          style={[styles.minuteInputContainer, required && requiredFieldStyle]}
+        >
           <TextInput
             style={[styles.minuteTextInput, style]}
             placeholderTextColor="#A0A0A0"
@@ -28,7 +34,7 @@ export const CustomInput: React.FC<CustomInputProps> = ({
         </View>
       ) : (
         <TextInput
-          style={[styles.textInput, style]}
+          style={[styles.textInput, required && requiredFieldStyle, style]}
           placeholderTextColor="#A0A0A0"
           {...restProps}
         />
