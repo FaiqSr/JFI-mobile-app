@@ -1,4 +1,4 @@
-const API_ORIGIN = 'https://jfi-next.vercel.app/';
+const API_ORIGIN = 'https://jfi.faiqsr.my.id/';
 
 export const AUTH_BASE_URL = `${API_ORIGIN}/api/auth`;
 export const PRODUCTION_BASE_URL = `${API_ORIGIN}/api/cs/produksi`;
