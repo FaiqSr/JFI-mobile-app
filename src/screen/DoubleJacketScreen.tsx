@@ -41,16 +41,8 @@ interface DoubleJacketScreenProps {
   setFiller: (v: string) => void;
   materialNoted?: string;
   setMaterialNoted?: (v: string) => void;
-  startTimestamp: number | null;
-  setStartTimestamp?: (v: number | null) => void;
-  stopTimestamp: number | null;
-  setStopTimestamp?: (v: number | null) => void;
-  isStarted: boolean;
-  setIsStarted?: (v: boolean) => void;
-  handleToggleStartStop: () => void;
   handleChangeStartTime: (text: string) => void;
   handleChangeStopTime: (text: string) => void;
-  formatHHMM: (time: number | null) => string;
   startTimeText: string;
   stopTimeText: string;
   gantiOrder: number;
@@ -93,9 +85,6 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
     props.setMetal('');
     props.setFiller('');
     if (props.setMaterialNoted) props.setMaterialNoted('');
-    if (props.setStartTimestamp) props.setStartTimestamp(null);
-    if (props.setStopTimestamp) props.setStopTimestamp(null);
-    if (props.setIsStarted) props.setIsStarted(false);
 
     props.setGantiOrder(0);
     props.setRepair(0);
@@ -162,13 +151,8 @@ export const DoubleJacketScreen: React.FC<DoubleJacketScreenProps> = (props) => 
         />
 
         <FormTime
-          startTimestamp={props.startTimestamp}
-          stopTimestamp={props.stopTimestamp}
-          isStarted={props.isStarted}
-          handleToggleStartStop={props.handleToggleStartStop}
           handleChangeStartTime={props.handleChangeStartTime}
           handleChangeStopTime={props.handleChangeStopTime}
-          formatHHMM={props.formatHHMM}
           startTimeText={props.startTimeText}
           stopTimeText={props.stopTimeText}
           gantiOrder={props.gantiOrder}

@@ -25,7 +25,6 @@ export interface ScreenFormData {
   stopTimestamp: number | null;
   startTimeText: string;
   stopTimeText: string;
-  isStarted: boolean;
   gantiOrder: number;
   repair: number;
   materialTunggu: number;
@@ -66,7 +65,6 @@ export const initialFormState: ScreenFormData = {
   stopTimestamp: null,
   startTimeText: '',
   stopTimeText: '',
-  isStarted: false,
   gantiOrder: 0,
   repair: 0,
   materialTunggu: 0,

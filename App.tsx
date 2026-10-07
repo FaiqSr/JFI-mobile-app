@@ -4,8 +4,6 @@ import {
   BackHandler,
   ActivityIndicator,
   View,
-  Text,
-  TextInput,
   DeviceEventEmitter,
 } from 'react-native';
 import { Alert } from './src/utils/appAlert';
@@ -42,18 +40,6 @@ import {
   timeStringToTimestamp,
 } from './src/utils/time';
 import { useTranslation } from './src/i18n';
-
-if ((Text as any).defaultProps) {
-  (Text as any).defaultProps.allowFontScaling = false;
-} else {
-  (Text as any).defaultProps = { allowFontScaling: false };
-}
-
-if ((TextInput as any).defaultProps) {
-  (TextInput as any).defaultProps.allowFontScaling = false;
-} else {
-  (TextInput as any).defaultProps = { allowFontScaling: false };
-}
 
 const DRAFT_KEY = '@app_form_draft_v4';
 const LAST_SCREEN_KEY = '@app_last_active_screen';
@@ -216,7 +202,7 @@ export default function App() {
   const activeScreen = useMemo(() => {
     const runningTimerKey = Object.keys(formsData).find((key) => {
       const form = formsData[key];
-      return form && (form.isStarted || form.startTimestamp !== null);
+      return form && form.startTimestamp !== null;
     });
     if (runningTimerKey) return runningTimerKey as ScreenType;
 
@@ -386,7 +372,6 @@ export default function App() {
             stopTimestamp: existing?.stopTimestamp ?? null,
             startTimeText: existing?.startTimeText ?? '',
             stopTimeText: existing?.stopTimeText ?? '',
-            isStarted: existing?.isStarted ?? false,
           },
         };
       });
@@ -417,47 +402,22 @@ export default function App() {
 
   const formatHHMM = (time: number | null): string => timestampToHHMM(time);
 
-  const nowHHMM = (): string => timestampToHHMM(Date.now());
-
-  // Timer lokal saja — entry tidak lagi terikat sesi kerja CS di server.
-  const handleToggleStartStop = async () => {
-    if (isNonWorksheetScreen(currentScreen)) return;
-    const currentData = formsData[currentScreen];
-
-    if (!currentData.isStarted) {
-      updateFormField(currentScreen, 'startTimestamp', Date.now());
-      updateFormField(currentScreen, 'startTimeText', nowHHMM());
-      updateFormField(currentScreen, 'stopTimestamp', null);
-      updateFormField(currentScreen, 'stopTimeText', '');
-      updateFormField(currentScreen, 'isStarted', true);
-    } else {
-      updateFormField(currentScreen, 'stopTimestamp', Date.now());
-      updateFormField(currentScreen, 'stopTimeText', nowHHMM());
-      updateFormField(currentScreen, 'isStarted', false);
-    }
-  };
-
   // Manual time entry: typing updates the text mirror immediately and the
-  // timestamp whenever the text becomes a complete valid HH:MM. `isStarted`
-  // (timer running) stays in sync = start set but stop not set yet.
+  // timestamp whenever the text becomes a complete valid HH:MM.
   const handleChangeStartTime = (text: string) => {
     if (isNonWorksheetScreen(currentScreen)) return;
     const normalized = normalizeTimeInput(text);
     const startTs = isValidTime(normalized) ? timeStringToTimestamp(normalized) : null;
-    const stopTs = formsData[currentScreen]?.stopTimestamp ?? null;
     updateFormField(currentScreen, 'startTimeText', normalized);
     updateFormField(currentScreen, 'startTimestamp', startTs);
-    updateFormField(currentScreen, 'isStarted', startTs !== null && stopTs === null);
   };
 
   const handleChangeStopTime = (text: string) => {
     if (isNonWorksheetScreen(currentScreen)) return;
     const normalized = normalizeTimeInput(text);
     const stopTs = isValidTime(normalized) ? timeStringToTimestamp(normalized) : null;
-    const startTs = formsData[currentScreen]?.startTimestamp ?? null;
     updateFormField(currentScreen, 'stopTimeText', normalized);
     updateFormField(currentScreen, 'stopTimestamp', stopTs);
-    updateFormField(currentScreen, 'isStarted', startTs !== null && stopTs === null);
   };
 
   const handleSimpan = async () => {
@@ -476,7 +436,7 @@ export default function App() {
       Alert.alert(t('common.failed'), t('alerts.startNotPressed'));
       return;
     }
-    if (activeData.isStarted || !activeData.stopTimestamp) {
+    if (!activeData.stopTimestamp) {
       Alert.alert(t('common.failed'), t('alerts.stopNotPressed'));
       return;
     }
@@ -595,10 +555,8 @@ export default function App() {
   const helperOptions = {
     formsData,
     updateFormField,
-    handleToggleStartStop,
     handleChangeStartTime,
     handleChangeStopTime,
-    formatHHMM,
     parseIntegerInput,
     handleNavigate,
     handleSimpan,

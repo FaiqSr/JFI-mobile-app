@@ -37,16 +37,8 @@ interface Ring3ScreenProps {
   setClassVal: (v: string) => void;
   notedSize?: string;
   setNotedSize?: (v: string) => void;
-  startTimestamp: number | null;
-  setStartTimestamp?: (v: number | null) => void;
-  stopTimestamp: number | null;
-  setStopTimestamp?: (v: number | null) => void;
-  isStarted: boolean;
-  setIsStarted?: (v: boolean) => void;
-  handleToggleStartStop: () => void;
   handleChangeStartTime: (text: string) => void;
   handleChangeStopTime: (text: string) => void;
-  formatHHMM: (time: number | null) => string;
   startTimeText: string;
   stopTimeText: string;
   gantiOrder: number;
@@ -89,10 +81,6 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
     props.setSize('');
     props.setClassVal('');
     if (props.setNotedSize) props.setNotedSize('');
-
-    if (props.setStartTimestamp) props.setStartTimestamp(null);
-    if (props.setStopTimestamp) props.setStopTimestamp(null);
-    if (props.setIsStarted) props.setIsStarted(false);
 
     props.setGantiOrder(0);
     props.setRepair(0);
@@ -157,13 +145,8 @@ export const Ring3Screen: React.FC<Ring3ScreenProps> = (props) => {
         />
 
         <FormTime
-          startTimestamp={props.startTimestamp}
-          stopTimestamp={props.stopTimestamp}
-          isStarted={props.isStarted}
-          handleToggleStartStop={props.handleToggleStartStop}
           handleChangeStartTime={props.handleChangeStartTime}
           handleChangeStopTime={props.handleChangeStopTime}
-          formatHHMM={props.formatHHMM}
           startTimeText={props.startTimeText}
           stopTimeText={props.stopTimeText}
           gantiOrder={props.gantiOrder}

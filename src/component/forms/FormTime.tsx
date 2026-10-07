@@ -5,15 +5,10 @@ import { CustomInput } from '../common/CustomInput';
 import { useTranslation } from '../../i18n';
 
 interface FormTimeProps {
-  startTimestamp: number | null;
-  stopTimestamp: number | null;
   startTimeText: string;
   stopTimeText: string;
-  isStarted: boolean;
-  handleToggleStartStop: () => void;
   handleChangeStartTime: (text: string) => void;
   handleChangeStopTime: (text: string) => void;
-  formatHHMM: (time: number | null) => string;
   gantiOrder: number;
   setGantiOrder: (v: number) => void;
   repair: number;
@@ -34,15 +29,10 @@ interface FormTimeProps {
 }
 
 export const FormTime: React.FC<FormTimeProps> = ({
-  startTimestamp,
-  stopTimestamp,
   startTimeText,
   stopTimeText,
-  isStarted,
-  handleToggleStartStop,
   handleChangeStartTime,
   handleChangeStopTime,
-  formatHHMM,
   gantiOrder,
   setGantiOrder,
   repair,
@@ -62,18 +52,6 @@ export const FormTime: React.FC<FormTimeProps> = ({
   setNoteTimeActivities,
 }) => {
   const { t } = useTranslation();
-  const isEnded = startTimestamp !== null && stopTimestamp !== null;
-
-  let buttonLabel = 'START';
-  let buttonStyle = styles.startButtonStyle;
-
-  if (isEnded) {
-    buttonLabel = 'END';
-    buttonStyle = styles.endButtonStyle;
-  } else if (isStarted) {
-    buttonLabel = 'STOP';
-    buttonStyle = styles.stopButtonStyle;
-  }
 
   return (
     <View style={styles.card}>
@@ -114,7 +92,7 @@ export const FormTime: React.FC<FormTimeProps> = ({
             placeholder="HH:MM"
             keyboardType="number-pad"
             maxLength={5}
-            value={startTimeText || formatHHMM(startTimestamp)}
+            value={startTimeText}
             onChangeText={handleChangeStartTime}
             style={{ textAlign: 'center' }}
           />
@@ -125,21 +103,12 @@ export const FormTime: React.FC<FormTimeProps> = ({
             placeholder="HH:MM"
             keyboardType="number-pad"
             maxLength={5}
-            value={stopTimeText || formatHHMM(stopTimestamp)}
+            value={stopTimeText}
             onChangeText={handleChangeStopTime}
             style={{ textAlign: 'center' }}
           />
         </View>
       </View>
-
-      <TouchableOpacity
-        style={[styles.startStopButton, buttonStyle]}
-        onPress={handleToggleStartStop}
-        disabled={isEnded}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.startStopButtonText}>{buttonLabel}</Text>
-      </TouchableOpacity>
 
       <View style={styles.row}>
         <View style={styles.col}>
@@ -229,11 +198,6 @@ const styles = StyleSheet.create({
   cardTitle: { fontSize: RFValue(18),  color: '#101828', marginBottom: 16 },
   row: { flexDirection: 'row', justifyContent: 'space-between' },
   col: { width: '48%' },
-  startStopButton: { paddingVertical: 12, borderRadius: 12, alignItems: 'center', marginBottom: 16 },
-  startButtonStyle: { backgroundColor: '#000000' },
-  stopButtonStyle: { backgroundColor: '#D92D20' },
-  endButtonStyle: { backgroundColor: '#667085' },
-  startStopButtonText: { color: '#FFFFFF',  fontSize: RFValue(15), letterSpacing: 1 },
   shiftContainer: { marginBottom: 16 },
   shiftLabel: { fontSize: RFValue(12), fontWeight: '600', color: '#344054', marginBottom: 6 },
   shiftRow: { flexDirection: 'row', justifyContent: 'space-between' },

@@ -245,8 +245,8 @@ export const translations = {
     alerts: {
       operatorRequired: 'Nama operator tidak boleh kosong.',
       soRequired: 'Nomor SO wajib diisi.',
-      startNotPressed: 'Tombol START belum ditekan!',
-      stopNotPressed: 'Tombol STOP belum ditekan! Silakan tekan STOP terlebih dahulu.',
+      startNotPressed: 'Waktu mulai belum diisi.',
+      stopNotPressed: 'Waktu selesai belum diisi.',
       gnmMaterialNotedRequired: 'Material Noted wajib diisi.',
       gnmJobNotedRequired:
         'Job Noted wajib diisi karena Job Description kosong.',
@@ -487,8 +487,8 @@ export const translations = {
     alerts: {
       operatorRequired: 'Operator name cannot be empty.',
       soRequired: 'SO Number is required.',
-      startNotPressed: 'START button has not been pressed!',
-      stopNotPressed: 'STOP button has not been pressed! Please press STOP first.',
+      startNotPressed: 'Start time has not been filled in.',
+      stopNotPressed: 'Stop time has not been filled in.',
       gnmMaterialNotedRequired: 'Material Noted is required.',
       gnmJobNotedRequired:
         'Job Noted is required because Job Description is empty.',
